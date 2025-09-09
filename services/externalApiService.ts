@@ -1,33 +1,22 @@
 import type { GitHubStats, LeetCodeStats, PortfolioProject } from '../types';
-
-/**
- * Fetches real-time data for a given GitHub username.
- * @param username The GitHub username.
- * @returns A promise that resolves to the user's stats and projects, or null on failure.
- */
 export const fetchGithubData = async (username: string): Promise<{ stats: GitHubStats, projects: PortfolioProject[] } | null> => {
     try {
         const [userRes, reposRes] = await Promise.all([
             fetch(`https://api.github.com/users/${username}`),
             fetch(`https://api.github.com/users/${username}/repos?per_page=100&sort=pushed`)
         ]);
-
         if (!userRes.ok || !reposRes.ok) {
             console.error(`GitHub API error: User=${userRes.status}, Repos=${reposRes.status}`);
             return null;
         }
-
         const userData = await userRes.json();
         const reposData = await reposRes.json();
-
         const totalStars = reposData.reduce((acc: number, repo: any) => acc + repo.stargazers_count, 0);
-
         const stats: GitHubStats = {
             stars: totalStars,
             followers: userData.followers || 0,
             repos: userData.public_repos || 0,
         };
-
         const projects: PortfolioProject[] = reposData
             .sort((a: any, b: any) => b.stargazers_count - a.stargazers_count) // Sort by stars
             .slice(0, 5) // Take top 5
@@ -40,36 +29,25 @@ export const fetchGithubData = async (username: string): Promise<{ stats: GitHub
                 repoUrl: repo.html_url,
                 liveUrl: repo.homepage || undefined,
             }));
-
         return { stats, projects };
     } catch (error) {
         console.error("Failed to fetch GitHub data:", error);
         return null;
     }
 };
-
-/**
- * Fetches real-time data for a given LeetCode username.
- * @param username The LeetCode username.
- * @returns A promise that resolves to the user's LeetCode stats, or null on failure.
- */
 export const fetchLeetcodeData = async (username: string): Promise<LeetCodeStats | null> => {
     try {
         // Replaced deprecated Heroku API with a working Vercel-hosted one.
         const response = await fetch(`https://leetcode-stats-api.vercel.app/${username}`);
-        
         if (!response.ok || response.status === 404) {
              console.error(`LeetCode API error: Status=${response.status}`);
              return null;
         }
-
         const data = await response.json();
-
         if (data.status === 'error') {
             console.error(`LeetCode API error: ${data.message}`);
             return null;
         }
-
         const stats: LeetCodeStats = {
             solved: data.totalSolved || 0,
             easySolved: data.easySolved || 0,

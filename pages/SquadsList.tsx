@@ -1,5 +1,4 @@
 
-
 import React, { useState, useEffect } from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
 import Card from '../components/Card';
@@ -10,7 +9,6 @@ import { useSquadStore } from '../stores/useSquadStore';
 import { Users, Clock, PlusCircle, Key } from 'lucide-react';
 import type { StudySquad } from '../types';
 import { motion } from 'framer-motion';
-
 // ElegantShape Component (inline, no external import required)
 const ElegantShape = ({
   className,
@@ -54,18 +52,15 @@ const ElegantShape = ({
     </motion.div>
   </motion.div>
 );
-
 const SquadsList: React.FC = () => {
   const navigate = ReactRouterDOM.useNavigate();
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [isJoinModalOpen, setJoinModalOpen] = useState(false);
   const [version, setVersion] = useState(0);
-
   const squads = useSquadStore(state => state.squads);
   const joinSquad = useSquadStore(state => state.joinSquad);
   const subscribeToAllSquads = useSquadStore(state => state.subscribeToAllSquads);
   const unsubscribeFromAllSquads = useSquadStore(state => state.unsubscribeFromAllSquads);
-
   // Subscribe to all squads when component mounts
   useEffect(() => {
     console.log('SquadsList: Subscribing to all squads');
@@ -75,12 +70,10 @@ const SquadsList: React.FC = () => {
       unsubscribeFromAllSquads();
     };
   }, []);
-
   // Debug logging
   useEffect(() => {
     console.log('SquadsList: Current squads:', squads);
   }, [squads]);
-
   useEffect(() => {
     const handler = (e: StorageEvent) => {
       if (e.key === 'lumina-squad-store') {
@@ -90,16 +83,14 @@ const SquadsList: React.FC = () => {
     window.addEventListener('storage', handler);
     return () => window.removeEventListener('storage', handler);
   }, []);
-
   const handleJoinSquad = async (id: string) => {
     const success = await joinSquad(id);
     if (success) navigate(`/squad/${id}`);
     else alert("Could not join squad. Please login.");
   };
-
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
-      {/* Animated Dashboard-like Glassmorphic Background */}
+      {}
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl pointer-events-none" />
       <div className="absolute inset-0 overflow-hidden pointer-events-none dark">
         <ElegantShape
@@ -135,7 +126,6 @@ const SquadsList: React.FC = () => {
           className="right-[18%] top-[23%]"
         />
       </div>
-
       <motion.div
         initial={{ opacity: 0, y: -24 }}
         animate={{ opacity: 1, y: 0 }}
@@ -162,7 +152,6 @@ const SquadsList: React.FC = () => {
             </Button>
           </div>
         </header>
-
         <div className="flex flex-wrap gap-6 justify-center">
           {squads && squads.length > 0 ? (
             squads.map((squad: StudySquad, i) => (
@@ -219,12 +208,10 @@ const SquadsList: React.FC = () => {
           )}
         </div>
       </motion.div>
-
       <CreateSquadModal isOpen={isCreateModalOpen} onClose={() => setCreateModalOpen(false)} />
       <JoinSquadByCodeModal isOpen={isJoinModalOpen} onClose={() => setJoinModalOpen(false)} />
       <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/80 pointer-events-none" />
     </div>
   );
 };
-
 export default SquadsList;

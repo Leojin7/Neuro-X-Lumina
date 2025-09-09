@@ -4,7 +4,6 @@ import { useUserStore } from '../stores/useUserStore';
 import { Plus, X, Palette } from 'lucide-react';
 import type { Note } from '../types';
 import Button from './Button';
-
 const NOTE_COLORS = {
     yellow: 'bg-yellow-300/20 border-yellow-400/50 hover:border-yellow-400',
     blue: 'bg-blue-300/20 border-blue-400/50 hover:border-blue-400',
@@ -12,25 +11,20 @@ const NOTE_COLORS = {
     pink: 'bg-pink-300/20 border-pink-400/50 hover:border-pink-400',
     purple: 'bg-purple-300/20 border-purple-400/50 hover:border-purple-400',
 };
-
 type NoteColor = keyof typeof NOTE_COLORS;
-
 const NoteCard = ({ note }: { note: Note }) => {
     const { updateNote, deleteNote } = useUserStore();
     const [content, setContent] = useState(note.content);
     const [isColorPickerOpen, setColorPickerOpen] = useState(false);
-
     const handleBlur = () => {
         if (content !== note.content) {
             updateNote(note.id, content, note.color);
         }
     };
-    
     const handleColorChange = (color: NoteColor) => {
         updateNote(note.id, note.content, color);
         setColorPickerOpen(false);
     }
-
     return (
         <motion.div
             layout
@@ -74,10 +68,8 @@ const NoteCard = ({ note }: { note: Note }) => {
         </motion.div>
     );
 };
-
 const NotesTaker = () => {
     const { notes, addNote } = useUserStore();
-
     return (
         <div>
             <div className="flex justify-between items-center mb-4">
@@ -103,5 +95,4 @@ const NotesTaker = () => {
         </div>
     );
 };
-
 export default NotesTaker;

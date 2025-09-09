@@ -3,17 +3,14 @@ import React from 'react';
 import type { FocusStory } from '../types';
 import { useUserStore } from '../stores/useUserStore';
 import { BrainCircuit, Coins, Sun, Activity, Zap, Circle, MousePointerClick, Frown, Battery } from 'lucide-react';
-
 interface FocusStoryCardProps {
   story: FocusStory;
   cardRef: React.RefObject<HTMLDivElement>;
 }
-
 const FocusStoryCard: React.FC<FocusStoryCardProps> = ({ story, cardRef }) => {
   const { currentUser } = useUserStore();
   const userAvatar = currentUser?.photoURL || `https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${currentUser?.uid}`;
   const userName = currentUser?.displayName || 'A Focused Learner';
-
   const cognitiveStateIcons: Record<string, React.ReactNode> = {
     'Deep Focus': <BrainCircuit className="text-green-300" />,
     'Neutral': <Circle className="text-yellow-300" />,
@@ -21,13 +18,11 @@ const FocusStoryCard: React.FC<FocusStoryCardProps> = ({ story, cardRef }) => {
     'Visibly Stressed': <Frown className="text-red-300" />,
     'Tired': <Battery className="text-blue-300" />,
   };
-
   const loadColors = {
       low: 'text-green-400',
       medium: 'text-yellow-400',
       high: 'text-red-400'
   }
-
   return (
     <div 
         ref={cardRef}
@@ -41,13 +36,11 @@ const FocusStoryCard: React.FC<FocusStoryCardProps> = ({ story, cardRef }) => {
             </div>
             <BrainCircuit className="ml-auto text-primary" size={32} />
         </div>
-
         <div className="flex-1 flex flex-col items-center justify-center text-center my-4">
             <h2 className="text-2xl font-semibold tracking-tighter">Completed a</h2>
             <h1 className="text-6xl font-bold my-2 bg-clip-text text-transparent bg-gradient-to-r from-primary to-green-400">Focus Session</h1>
             <p className="text-muted-foreground">and stayed on track!</p>
         </div>
-        
         <div className="grid grid-cols-2 gap-4 text-center">
              <div className="bg-muted/30 p-4 rounded-xl border border-border">
                 <Sun className="mx-auto text-primary mb-2" size={28} />
@@ -60,8 +53,7 @@ const FocusStoryCard: React.FC<FocusStoryCardProps> = ({ story, cardRef }) => {
                 <p className="text-xs text-muted-foreground uppercase tracking-wider">FocusCoins</p>
             </div>
         </div>
-
-        {/* New Analytics Section */}
+        {}
         <div className="bg-muted/30 p-4 rounded-xl border border-border mt-4">
             <h4 className="text-sm font-bold text-muted-foreground mb-3 text-center uppercase tracking-wider">Post-Focus Analytics</h4>
             <div className="grid grid-cols-2 gap-2">
@@ -88,13 +80,10 @@ const FocusStoryCard: React.FC<FocusStoryCardProps> = ({ story, cardRef }) => {
                 </div>
             )}
         </div>
-
-
         <div className="mt-auto text-center pt-4">
-            <p className="text-sm font-bold text-primary">Powered by Lumina 2.0</p>
+            <p className="text-sm font-bold text-primary">Powered by NeuroLearn</p>
         </div>
     </div>
   );
 };
-
 export default FocusStoryCard;

@@ -4,10 +4,8 @@ import Card from './Card';
 import Button from './Button';
 import { CheckCircle, Star, Shield, XCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
-
 const BillingTab = () => {
     const { subscriptionTier, upgradeSubscription, cancelSubscription } = useUserStore();
-
     const plans = [
         {
             name: 'Pro',
@@ -34,21 +32,18 @@ const BillingTab = () => {
             ]
         }
     ];
-
     const handleUpgrade = (tier: 'pro' | 'elite') => {
         if (window.confirm(`Are you sure you want to upgrade to the ${tier.toUpperCase()} plan?`)) {
             upgradeSubscription(tier);
             alert('Subscription upgraded successfully! (This is a simulation)');
         }
     };
-
     const handleCancel = () => {
         if (window.confirm('Are you sure you want to cancel your subscription? You will be downgraded to the Free plan at the end of your billing cycle.')) {
             cancelSubscription();
             alert('Subscription canceled. (This is a simulation)');
         }
     };
-
     return (
         <div className="space-y-8 animate-fade-in-up">
             <Card title="Current Plan">
@@ -89,7 +84,6 @@ const BillingTab = () => {
                     )}
                 </div>
             </Card>
-
             <Card title="Upgrade Your Plan">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {plans.map((plan, i) => (
@@ -137,5 +131,4 @@ const BillingTab = () => {
         </div>
     );
 }
-
 export default BillingTab;

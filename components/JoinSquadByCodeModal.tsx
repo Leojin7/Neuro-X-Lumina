@@ -1,32 +1,25 @@
 
-
 import React, { useState, MouseEvent, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Key, Loader2, AlertCircle } from 'lucide-react';
 import Button from './Button';
 import { useSquadStore } from '../stores/useSquadStore';
 import * as ReactRouterDOM from 'react-router-dom';
-
 interface JoinSquadByCodeModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
 const JoinSquadByCodeModal = ({ isOpen, onClose }: JoinSquadByCodeModalProps) => {
   const [code, setCode] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  
   const joinSquadByCode = useSquadStore(state => state.joinSquadByCode);
   const navigate = ReactRouterDOM.useNavigate();
-
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!code.trim()) return;
-    
     setIsLoading(true);
     setError(null);
-
     try {
       const squad = await joinSquadByCode(code);
       if (squad) {
@@ -41,7 +34,6 @@ const JoinSquadByCodeModal = ({ isOpen, onClose }: JoinSquadByCodeModalProps) =>
       setIsLoading(false);
     }
   };
-
   return (
     <AnimatePresence>
       {isOpen && (
@@ -63,7 +55,6 @@ const JoinSquadByCodeModal = ({ isOpen, onClose }: JoinSquadByCodeModalProps) =>
             <button onClick={onClose} className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors z-20" aria-label="Close">
               <X size={24} />
             </button>
-
             <h2 className="text-2xl font-bold text-foreground mb-4">Join Squad with Code</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -82,14 +73,12 @@ const JoinSquadByCodeModal = ({ isOpen, onClose }: JoinSquadByCodeModalProps) =>
                   />
                 </div>
               </div>
-
               {error && (
                 <div className="flex items-center gap-2 text-sm text-destructive bg-destructive/10 p-3 rounded-md">
                     <AlertCircle size={16} />
                     <p>{error}</p>
                 </div>
               )}
-              
               <div className="pt-4">
                 <Button type="submit" className="w-full" disabled={isLoading || !code.trim()}>
                   {isLoading ? <Loader2 className="animate-spin" /> : 'Join Squad'}
@@ -102,5 +91,4 @@ const JoinSquadByCodeModal = ({ isOpen, onClose }: JoinSquadByCodeModalProps) =>
     </AnimatePresence>
   );
 };
-
 export default JoinSquadByCodeModal;

@@ -1,7 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, push, set, onValue, off, remove, update } from 'firebase/database';
 import type { StudySquad, SquadMessage } from '../types';
-
 // Initialize Firebase Database with error handling
 let database: any = null;
 try {
@@ -11,7 +10,6 @@ try {
 } catch (error) {
   console.error('Failed to initialize Firebase Database:', error);
 }
-
 export class FirebaseSquadService {
   // Create a new squad in Firebase
   static async createSquad(squad: StudySquad): Promise<void> {
@@ -22,7 +20,6 @@ export class FirebaseSquadService {
     const squadRef = ref(database, `squads/${squad.id}`);
     await set(squadRef, squad);
   }
-
   // Join an existing squad
   static async joinSquad(squadId: string, member: any): Promise<void> {
     if (!database) {
@@ -32,7 +29,6 @@ export class FirebaseSquadService {
     const memberRef = ref(database, `squads/${squadId}/members/${member.uid}`);
     await set(memberRef, member);
   }
-
   // Leave a squad
   static async leaveSquad(squadId: string, userId: string): Promise<void> {
     if (!database) {
@@ -41,19 +37,16 @@ export class FirebaseSquadService {
     }
     const memberRef = ref(database, `squads/${squadId}/members/${userId}`);
     await remove(memberRef);
-    
     // Check if squad is empty and delete it
     const squadRef = ref(database, `squads/${squadId}`);
     const snapshot = await new Promise((resolve) => {
       onValue(squadRef, resolve, { onlyOnce: true });
     }) as any;
-    
     const squadData = snapshot.val();
     if (!squadData || !squadData.members || Object.keys(squadData.members).length === 0) {
       await this.deleteSquad(squadId);
     }
   }
-
   // Send a message to a squad
   static async sendMessage(squadId: string, message: SquadMessage): Promise<void> {
     if (!database) {
@@ -63,7 +56,6 @@ export class FirebaseSquadService {
     const messagesRef = ref(database, `squads/${squadId}/messages`);
     await push(messagesRef, message);
   }
-
   // Update timer state
   static async updateTimer(squadId: string, timerState: any): Promise<void> {
     if (!database) {
@@ -73,7 +65,6 @@ export class FirebaseSquadService {
     const timerRef = ref(database, `squads/${squadId}/timerState`);
     await set(timerRef, timerState);
   }
-
   // Listen to squad changes
   static subscribeToSquad(squadId: string, callback: (squad: StudySquad | null) => void): () => void {
     if (!database) {
@@ -82,7 +73,6 @@ export class FirebaseSquadService {
       return () => {};
     }
     const squadRef = ref(database, `squads/${squadId}`);
-    
     const unsubscribe = onValue(squadRef, (snapshot) => {
       try {
         const data = snapshot.val();
@@ -107,10 +97,8 @@ export class FirebaseSquadService {
       console.error('Firebase subscription error:', error);
       callback(null);
     });
-
     return () => off(squadRef, 'value', unsubscribe);
   }
-
   // Get all available squads
   static subscribeToAllSquads(callback: (squads: StudySquad[]) => void): () => void {
     if (!database) {
@@ -119,7 +107,6 @@ export class FirebaseSquadService {
       return () => {};
     }
     const squadsRef = ref(database, 'squads');
-    
     const unsubscribe = onValue(squadsRef, (snapshot) => {
       try {
         const data = snapshot.val();
@@ -145,10 +132,8 @@ export class FirebaseSquadService {
       console.error('Firebase squads subscription error:', error);
       callback([]);
     });
-
     return () => off(squadsRef, 'value', unsubscribe);
   }
-
   // Delete empty squads
   static async deleteSquad(squadId: string): Promise<void> {
     if (!database) {

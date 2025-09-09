@@ -1,6 +1,6 @@
 {
-  "name": "Lumina 2.0 – Cognitive Productivity OS",
-  "description": "An intelligent operating system for your mind. Lumina 2.0 merges AI coaching, neuro-adaptive productivity tools, and gamified personal growth to unlock peak cognitive performance.",
+  "name": "NeuroLearn – Cognitive Productivity OS",
+  "description": "An intelligent operating system for your mind. NeuroLearn merges AI coaching, neuro-adaptive productivity tools, and gamified personal growth to unlock peak cognitive performance.",
   "requestFramePermissions": [
     "camera",
     "microphone"

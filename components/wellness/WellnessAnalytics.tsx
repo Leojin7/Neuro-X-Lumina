@@ -4,18 +4,15 @@ import { BarChart3, Loader2, Sparkles, BrainCircuit, Moon } from 'lucide-react';
 import Button from '../Button';
 import { useUserStore } from '../../stores/useUserStore';
 import { generateWellnessInsights } from '../../services/geminiService';
-
 interface Insight {
     title: string;
     insight: string;
 }
-
 const WellnessAnalytics = () => {
     const { dailyCheckins, sleepEntries, focusStories } = useUserStore();
     const [insights, setInsights] = useState<Insight[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-
     useEffect(() => {
         const fetchInsights = async () => {
             setIsLoading(true);
@@ -34,16 +31,13 @@ const WellnessAnalytics = () => {
                 setIsLoading(false);
             }
         };
-
         fetchInsights();
     }, [dailyCheckins, sleepEntries, focusStories]);
-
     const insightIcons = [
         <Sparkles className="h-6 w-6 text-yellow-400" />,
         <BrainCircuit className="h-6 w-6 text-blue-400" />,
         <Moon className="h-6 w-6 text-indigo-400" />,
     ];
-
     if (isLoading) {
         return (
             <div className="flex flex-col items-center justify-center text-center py-16">
@@ -53,7 +47,6 @@ const WellnessAnalytics = () => {
             </div>
         );
     }
-    
     if (error) {
          return (
             <div className="text-center py-16 text-red-400">
@@ -61,7 +54,6 @@ const WellnessAnalytics = () => {
             </div>
         );
     }
-
     return (
         <div className="max-w-4xl mx-auto space-y-8">
             <div className="text-center">
@@ -72,10 +64,9 @@ const WellnessAnalytics = () => {
                     Your Correlation Stories
                 </h2>
                 <p className="text-white/70 text-lg max-w-2xl mx-auto mt-2">
-                    Lumina's AI has analyzed your recent activity to uncover connections between your habits, mood, and performance. Here are your personalized insights.
+                    NeuroLearn's AI has analyzed your recent activity to uncover connections between your habits, mood, and performance. Here are your personalized insights.
                 </p>
             </div>
-
             <div className="space-y-6">
                 <AnimatePresence>
                     {insights.map((insight, index) => (
@@ -99,12 +90,11 @@ const WellnessAnalytics = () => {
                  {insights.length === 0 && !isLoading && (
                      <div className="text-center py-16 text-white/60">
                          <p>Not enough data to generate insights yet.</p>
-                         <p className="text-sm">Keep using Lumina's features to unlock your stories!</p>
+                         <p className="text-sm">Keep using NeuroLearn's features to unlock your stories!</p>
                      </div>
                  )}
             </div>
         </div>
     );
 };
-
 export default WellnessAnalytics;

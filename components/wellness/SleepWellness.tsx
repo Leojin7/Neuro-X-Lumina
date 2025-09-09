@@ -5,20 +5,15 @@ import Button from '../Button';
 import CircularProgress from '../CircularProgress';
 import { generateSleepAdvice } from '../../services/geminiService';
 import { useUserStore } from '../../stores/useUserStore';
-
 const toYYYYMMDD = (date: Date) => date.toISOString().slice(0, 10);
-
 const SleepWellness = () => {
     const { sleepEntries, addSleepEntry } = useUserStore();
-    
     // Form state
     const [duration, setDuration] = useState(7.5);
     const [quality, setQuality] = useState(85);
-    
     // UI/Flow state
     const [view, setView] = useState<'loading' | 'form' | 'result'>('loading');
     const [result, setResult] = useState<{ score: number; advice: string } | null>(null);
-
     const runAnalysis = async (sleepDuration: number, sleepQuality: number) => {
         setView('loading');
         try {
@@ -31,12 +26,10 @@ const SleepWellness = () => {
             setView('result');
         }
     };
-
     // On component mount, check if today's sleep has been logged.
     useEffect(() => {
         const todayStr = toYYYYMMDD(new Date());
         const todaysEntry = sleepEntries.find(entry => entry.date === todayStr);
-
         if (todaysEntry) {
             setDuration(todaysEntry.duration);
             setQuality(todaysEntry.quality);
@@ -45,13 +38,11 @@ const SleepWellness = () => {
             setView('form');
         }
     }, []); // Run only on mount
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         addSleepEntry({ duration, quality });
         await runAnalysis(duration, quality);
     };
-    
     return (
         <div className="max-w-4xl mx-auto space-y-8">
             <div className="text-center">
@@ -65,14 +56,12 @@ const SleepWellness = () => {
                     Log your sleep to receive an AI-powered "Cognitive Recharge Score" and personalized advice to optimize your day for peak performance.
                 </p>
             </div>
-
             <AnimatePresence mode="wait">
                 {view === 'loading' && (
                     <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex justify-center items-center h-64">
                         <Loader2 className="h-12 w-12 animate-spin text-indigo-400" />
                     </motion.div>
                 )}
-
                 {view === 'form' && (
                     <motion.div
                         key="form"
@@ -121,7 +110,6 @@ const SleepWellness = () => {
                         </div>
                     </motion.div>
                 )}
-                
                 {view === 'result' && result && (
                      <motion.div
                         key="result"
@@ -149,5 +137,4 @@ const SleepWellness = () => {
         </div>
     );
 };
-
 export default SleepWellness;

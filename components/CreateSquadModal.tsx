@@ -5,23 +5,19 @@ import { X, Users, Type } from 'lucide-react';
 import Button from './Button';
 import { useSquadStore } from '../stores/useSquadStore';
 import * as ReactRouterDOM from 'react-router-dom';
-
 interface CreateSquadModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
 const CreateSquadModal = ({ isOpen, onClose }: CreateSquadModalProps) => {
   const [name, setName] = useState('');
   const [topic, setTopic] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const createSquad = useSquadStore(state => state.createSquad);
   const navigate = ReactRouterDOM.useNavigate();
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !topic.trim()) return;
-    
     console.log('Creating squad with name:', name, 'topic:', topic);
     setIsLoading(true);
     try {
@@ -43,7 +39,6 @@ const CreateSquadModal = ({ isOpen, onClose }: CreateSquadModalProps) => {
       setIsLoading(false);
     }
   };
-
   return (
     <AnimatePresence>
       {isOpen && (
@@ -65,7 +60,6 @@ const CreateSquadModal = ({ isOpen, onClose }: CreateSquadModalProps) => {
             <button onClick={onClose} className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors z-20" aria-label="Close">
               <X size={24} />
             </button>
-
             <h2 className="text-2xl font-bold text-foreground mb-4">Create a New Study Squad</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -110,5 +104,4 @@ const CreateSquadModal = ({ isOpen, onClose }: CreateSquadModalProps) => {
     </AnimatePresence>
   );
 };
-
 export default CreateSquadModal;

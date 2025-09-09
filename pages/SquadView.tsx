@@ -9,7 +9,6 @@ import CircularProgress from '../components/CircularProgress';
 import { LogOut, Send, BrainCircuit, Users, Play, Pause, RotateCcw, Copy, Check, Lock, Trash2 } from 'lucide-react';
 import type { SquadMessage } from '../types';
 import { motion } from 'framer-motion';
-
 // ElegantShape (inline)
 const ElegantShape = ({
   className,
@@ -53,13 +52,11 @@ const ElegantShape = ({
     </motion.div>
   </motion.div>
 );
-
 const SquadView: React.FC = () => {
   const { squadId } = ReactRouterDOM.useParams<{ squadId: string }>();
   const navigate = ReactRouterDOM.useNavigate();
   const { currentUser } = useUserStore();
   const [version, setVersion] = useState(0);
-
   useEffect(() => {
     const handler = (e: StorageEvent) => {
       if (e.key === 'lumina-squad-store') setVersion(v => v + 1);
@@ -67,7 +64,6 @@ const SquadView: React.FC = () => {
     window.addEventListener('storage', handler);
     return () => window.removeEventListener('storage', handler);
   }, []);
-
   const squad = useSquadStore(state => state.getSquadById(squadId || ''));
   const leaveSquad = useSquadStore(state => state.leaveSquad);
   const sendMessage = useSquadStore(state => state.sendMessage);
@@ -78,12 +74,10 @@ const SquadView: React.FC = () => {
   const subscribeToSquad = useSquadStore(state => state.subscribeToSquad);
   const unsubscribeFromSquad = useSquadStore(state => state.unsubscribeFromSquad);
   const deleteSquad = useSquadStore(state => state.deleteSquad);
-
   const [chatInput, setChatInput] = useState('');
   const [copied, setCopied] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const timerIntervalRef = useRef<number | null>(null);
-
   // Subscribe to squad updates when component mounts
   useEffect(() => {
     if (squadId) {
@@ -91,17 +85,14 @@ const SquadView: React.FC = () => {
       return () => unsubscribeFromSquad(squadId);
     }
   }, [squadId]);
-
   useEffect(() => {
     if (!squad || !currentUser || !squad.members.some(m => m.uid === currentUser.uid)) {
       navigate('/squads');
     }
   }, [squad, currentUser, navigate]);
-
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [squad?.messages]);
-
   useEffect(() => {
     const isHost = squad?.hostId === currentUser?.uid;
     if (squad?.timerState.isActive && isHost) {
@@ -115,7 +106,6 @@ const SquadView: React.FC = () => {
       if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
     };
   }, [squad?.timerState.isActive, squad?.hostId, squad?.id, currentUser?.uid, decrementTimer]);
-
   useEffect(() => {
     if (!squadId || !squad) return;
     const hasWelcomed = squad.messages.some(m => m.isAIMessage && m.content.includes('Welcome'));
@@ -134,7 +124,6 @@ const SquadView: React.FC = () => {
     }, 90000);
     return () => clearInterval(tipInterval);
   }, [squadId, postAIMessage, squad?.name, squad?.messages]);
-
   const handleLeaveSquad = async () => {
     if (squadId) {
       console.log('Attempting to leave squad:', squadId);
@@ -148,7 +137,6 @@ const SquadView: React.FC = () => {
       }
     }
   };
-
   const handleDeleteSquad = async () => {
     if (squadId && squad && squad.hostId === currentUser?.uid) {
       const confirmed = window.confirm('Are you sure you want to delete this squad? This action cannot be undone.');
@@ -167,7 +155,6 @@ const SquadView: React.FC = () => {
       console.warn('Cannot delete squad - not host or missing data:', { squadId, squad, currentUser: currentUser?.uid });
     }
   };
-
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (chatInput.trim() && squadId) {
@@ -175,14 +162,12 @@ const SquadView: React.FC = () => {
       setChatInput('');
     }
   };
-
   const handleCopyCode = () => {
     if (!squad) return;
     navigator.clipboard.writeText(squad.joinCode);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
-
   if (!squad) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -192,7 +177,6 @@ const SquadView: React.FC = () => {
       </div>
     );
   }
-
   const isHost = squad.hostId === currentUser?.uid;
   const { timerState } = squad;
   const totalDuration = 25 * 60;
@@ -202,10 +186,9 @@ const SquadView: React.FC = () => {
     const sec = (s % 60).toString().padStart(2, '0');
     return `${m}:${sec}`;
   };
-
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
-      {/* Animated Glassmorphic Dashboard-like Background */}
+      {}
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl pointer-events-none" />
       <div className="absolute inset-0 overflow-hidden pointer-events-none dark">
         <ElegantShape
@@ -233,9 +216,8 @@ const SquadView: React.FC = () => {
           className="right-[17%] top-[57%]"
         />
       </div>
-
       <div className="relative z-10 p-6 flex flex-col lg:flex-row gap-8 max-w-7xl mx-auto">
-        {/* Left */}
+        {}
         <div className="flex-1 flex flex-col gap-8">
           <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
             <div>
@@ -259,7 +241,6 @@ const SquadView: React.FC = () => {
               </Button>
             </div>
           </header>
-
           <Card className="flex-1 flex flex-col items-center justify-center text-center bg-card/80 backdrop-blur-xl">
             <div className="relative flex items-center justify-center my-6">
               <CircularProgress progress={progress} size={216} strokeWidth={10} />
@@ -283,8 +264,7 @@ const SquadView: React.FC = () => {
             )}
           </Card>
         </div>
-
-        {/* Right */}
+        {}
         <div className="w-full max-w-md flex flex-col gap-8 flex-shrink-0">
           <Card className="flex-1 flex flex-col bg-card/80 backdrop-blur-lg border-border rounded-3xl p-6 shadow-xl">
             <h3 className="text-lg font-semibold text-foreground flex items-center gap-2 mb-6">
@@ -299,7 +279,6 @@ const SquadView: React.FC = () => {
               ))}
             </div>
           </Card>
-
           <Card className="flex-[2] flex flex-col bg-card/80 backdrop-blur-lg border-border rounded-3xl p-6 shadow-xl">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">Live Chat</h3>
@@ -372,5 +351,4 @@ const SquadView: React.FC = () => {
     </div>
   );
 };
-
 export default SquadView;

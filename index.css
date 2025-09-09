@@ -1,7 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Typo+Round:wght@400;700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --default-font-family: 'Inter', 'SF Pro Display', 'Segoe UI', 'Roboto', Arial, sans-serif;
+  --default-font-family: 'Typo Round', 'Inter', 'SF Pro Display', 'Segoe UI', 'Roboto', Arial, sans-serif;
   
   --color-border: hsl(214 30% 18%);
   --color-input: hsl(214 30% 15%);
@@ -41,6 +42,11 @@
   --animate-aurora: aurora 60s infinite linear;
   
   --shadow-glow: 0 0 24px hsl(213 90% 55% / 0.2);
+}
+
+/* Apply TypoRound to all elements */
+* {
+  font-family: 'Typo Round', sans-serif;
 }
 
 @layer base {
@@ -169,32 +175,73 @@ body::before {
   box-shadow: 0 2px 8px hsl(var(--primary) / 0.3);
 }
 
+/* Custom Scrollbar for Webkit browsers (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted)/0.3);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, hsl(var(--muted-foreground)/0.5), hsl(var(--muted-foreground)/0.7));
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: all 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, hsl(var(--primary)/0.7), hsl(var(--primary)/0.9));
+  transform: scale(1.1);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Custom Scrollbar for Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted-foreground)/0.5) hsl(var(--muted)/0.3);
+  scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar for the entire page */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* Custom Scrollbar for specific elements */
 .custom-scrollbar {
   scrollbar-gutter: stable both-edges;
+  scroll-behavior: smooth;
+  overflow: overlay;
 }
+
 .custom-scrollbar::-webkit-scrollbar {
-  width: 9px;
-  background: transparent;
+  width: 8px;
+  height: 8px;
 }
+
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, hsl(var(--muted)), hsl(var(--muted-foreground)));
-  border-radius: 5.5px;
+  background: linear-gradient(135deg, hsl(var(--muted-foreground)/0.6), hsl(var(--muted-foreground)/0.8));
+  border-radius: 10px;
   border: 2px solid transparent;
-  background-clip: content-box;
-  transition: background .25s;
+  background-clip: padding-box;
 }
+
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(110deg, hsl(var(--primary)/.18), hsl(var(--primary)/.29));
+  background: linear-gradient(135deg, hsl(var(--primary)/0.8), hsl(var(--primary)));
 }
+
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-.custom-scrollbar::-webkit-scrollbar-corner {
-  background: transparent;
-}
-.custom-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: hsl(var(--muted)) transparent;
+  background: hsl(var(--muted)/0.2);
+  border-radius: 10px;
+  margin: 4px;
 }
 
 :focus-visible {

@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, Sparkles, Loader2, FileText, AudioLines, Video, Map, Play, Pause, Download } from 'lucide-react';
+import MindMap from '../components/MindMap';
 import * as gemini from '../services/geminiService';
 import type { NotebookScript, NotebookSlide } from '../types';
 import Button from '../components/Button';
 import toast from 'react-hot-toast';
 import html2canvas from 'html2canvas';
-
 type StudioTab = 'summary' | 'audio' | 'video' | 'map';
-
 const ElegantShape = ({ className, delay = 0, width = 400, height = 100, rotate = 0, gradient = "from-white/[0.08]" }: { className?: string; delay?: number; width?: number; height?: number; rotate?: number; gradient?: string; }) => (
     <motion.div initial={{ opacity: 0, y: -150, rotate: rotate - 15 }} animate={{ opacity: 1, y: 0, rotate }} transition={{ duration: 2.4, delay, ease: [0.23, 0.86, 0.39, 0.96], opacity: { duration: 1.2 } }} className={`absolute ${className}`}>
         <motion.div animate={{ y: [0, 15, 0] }} transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }} style={{ width, height }} className="relative">
@@ -16,14 +15,12 @@ const ElegantShape = ({ className, delay = 0, width = 400, height = 100, rotate 
         </motion.div>
     </motion.div>
 );
-
 const NotebookLM: React.FC = () => {
     const [sourceText, setSourceText] = useState('');
     const [script, setScript] = useState<NotebookScript | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<StudioTab>('summary');
-
     const handleAnalyze = async () => {
         if (!sourceText.trim()) {
             setError('Please provide some source text to analyze.');
@@ -44,7 +41,6 @@ const NotebookLM: React.FC = () => {
             setIsLoading(false);
         }
     };
-
     return (
         <div className="min-h-screen bg-background text-foreground relative overflow-hidden p-6">
             <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl" />
@@ -52,13 +48,11 @@ const NotebookLM: React.FC = () => {
                 <ElegantShape delay={0.2} width={500} height={120} rotate={8} gradient="from-blue-500/[0.12]" className="left-[-8%] top-[8%]" />
                 <ElegantShape delay={0.4} width={400} height={100} rotate={-12} gradient="from-purple-500/[0.12]" className="right-[-5%] top-[45%]" />
             </div>
-
             <div className="relative z-10 max-w-7xl mx-auto space-y-8">
                 <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
                     <h1 className="text-4xl md:text-5xl font-bold text-foreground">NotebookLM</h1>
                     <p className="text-muted-foreground text-lg max-w-3xl mt-2">Your AI-powered research and learning assistant. Transform any text into summaries, audio, and video presentations.</p>
                 </motion.div>
-
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
                     <SourceInputPanel onAnalyze={handleAnalyze} isLoading={isLoading} setSourceText={setSourceText} sourceText={sourceText} />
                     <StudioPanel script={script} activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -67,7 +61,6 @@ const NotebookLM: React.FC = () => {
         </div>
     );
 };
-
 const SourceInputPanel = ({ onAnalyze, isLoading, sourceText, setSourceText }: any) => (
     <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }} className="bg-card/80 backdrop-blur-xl border border-border rounded-3xl shadow-2xl p-6 h-full flex flex-col">
         <h2 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2"><BookOpen /> Source Material</h2>
@@ -84,7 +77,6 @@ const SourceInputPanel = ({ onAnalyze, isLoading, sourceText, setSourceText }: a
         </Button>
     </motion.div>
 );
-
 const StudioPanel = ({ script, activeTab, setActiveTab }: { script: NotebookScript | null, activeTab: StudioTab, setActiveTab: (tab: StudioTab) => void }) => {
     const tabs = [
         { id: 'summary', icon: <FileText size={18} />, label: 'Summary' },
@@ -92,7 +84,6 @@ const StudioPanel = ({ script, activeTab, setActiveTab }: { script: NotebookScri
         { id: 'video', icon: <Video size={18} />, label: 'Video Overview' },
         { id: 'map', icon: <Map size={18} />, label: 'Mind Map' },
     ];
-
     return (
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.4 }} className="bg-card/80 backdrop-blur-xl border border-border rounded-3xl shadow-2xl min-h-[400px] lg:min-h-[612px] flex flex-col">
             {!script ? (
@@ -117,7 +108,11 @@ const StudioPanel = ({ script, activeTab, setActiveTab }: { script: NotebookScri
                                 {activeTab === 'summary' && <div className="prose prose-invert max-w-none prose-p:text-muted-foreground whitespace-pre-line">{script.summary}</div>}
                                 {activeTab === 'audio' && <AudioPlayer script={script} />}
                                 {activeTab === 'video' && <VideoPlayer script={script} />}
-                                {activeTab === 'map' && <div className="text-muted-foreground text-center py-16">Mind Map generation is coming soon!</div>}
+                                {activeTab === 'map' && script && (
+                                    <div className="h-[600px] w-full">
+                                        <MindMap slides={script.slides} summary={script.summary} />
+                                    </div>
+                                )}
                             </motion.div>
                         </AnimatePresence>
                     </div>
@@ -126,11 +121,9 @@ const StudioPanel = ({ script, activeTab, setActiveTab }: { script: NotebookScri
         </motion.div>
     );
 };
-
 const AudioPlayer = ({ script }: { script: NotebookScript }) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const fullNarration = script.slides.map(s => s.narration).join(' ');
-
     const handleTogglePlay = () => {
         if (isPlaying) {
             window.speechSynthesis.pause();
@@ -150,14 +143,12 @@ const AudioPlayer = ({ script }: { script: NotebookScript }) => {
             setIsPlaying(true);
         }
     };
-    
     useEffect(() => {
       // Cleanup when component unmounts or script changes
       return () => {
           window.speechSynthesis.cancel();
       };
     }, [script]);
-
     return (
         <div className="space-y-4">
             <h3 className="text-lg font-bold">Audio Overview</h3>
@@ -173,13 +164,11 @@ const AudioPlayer = ({ script }: { script: NotebookScript }) => {
         </div>
     );
 };
-
 const VideoPlayer = ({ script }: { script: NotebookScript }) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
     const slideRef = useRef<HTMLDivElement>(null);
     const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
-
     const playNarrationForSlide = (index: number) => {
         window.speechSynthesis.cancel();
         if (index >= script.slides.length) {
@@ -199,13 +188,11 @@ const VideoPlayer = ({ script }: { script: NotebookScript }) => {
         };
         window.speechSynthesis.speak(utterance);
     };
-
     useEffect(() => {
         if (isPlaying) {
             playNarrationForSlide(currentSlideIndex);
         }
     }, [isPlaying, currentSlideIndex]);
-
     const handleTogglePlay = () => {
         if (isPlaying) {
             window.speechSynthesis.cancel();
@@ -215,11 +202,9 @@ const VideoPlayer = ({ script }: { script: NotebookScript }) => {
             setIsPlaying(true);
         }
     };
-    
     useEffect(() => {
         return () => window.speechSynthesis.cancel();
     }, [script]);
-    
     const handleDownloadSlide = async () => {
         if (slideRef.current) {
             const toastId = toast.loading("Generating image...");
@@ -227,7 +212,7 @@ const VideoPlayer = ({ script }: { script: NotebookScript }) => {
                 const canvas = await html2canvas(slideRef.current, { backgroundColor: '#1a1d2c' });
                 const link = document.createElement('a');
                 link.href = canvas.toDataURL('image/png');
-                link.download = `lumina-slide-${currentSlideIndex + 1}.png`;
+                link.download = `neurolearn-slide-${currentSlideIndex + 1}.png`;
                 link.click();
                 toast.success("Slide downloaded!", { id: toastId });
             } catch (error) {
@@ -235,9 +220,7 @@ const VideoPlayer = ({ script }: { script: NotebookScript }) => {
             }
         }
     };
-    
     const currentSlide = script.slides[currentSlideIndex] || script.slides[0];
-
     return (
         <div className="space-y-4">
             <h3 className="text-lg font-bold">Video Overview</h3>
@@ -263,5 +246,4 @@ const VideoPlayer = ({ script }: { script: NotebookScript }) => {
         </div>
     );
 };
-
 export default NotebookLM;

@@ -3,17 +3,9 @@ import React from "react";
 import { motion } from "framer-motion";
 import Button from "./Button";
 import { ArrowRight, Circle } from "lucide-react";
-
-/* ------------------------------------------------------------------ */
-/*  small “cn” helper – avoids importing from your utils              */
-/* ------------------------------------------------------------------ */
 function cn(...cls: (string | undefined | null | false)[]) {
   return cls.filter(Boolean).join(" ");
 }
-
-/* ------------------------------------------------------------------ */
-/*  Animated pill / ribbon element                                    */
-/* ------------------------------------------------------------------ */
 function ElegantShape({
   className,
   delay = 0,
@@ -66,17 +58,12 @@ function ElegantShape({
     </motion.div>
   );
 }
-
-/* ================================================================== */
-/*  MAIN COMPONENT                                                    */
-/* ================================================================== */
 interface Props {
   title: string;
   subtitle: string;
   buttonText: string;
   onButtonClick: () => void;
 }
-
 export function BackgroundPaths({
   title,
   subtitle,
@@ -85,10 +72,9 @@ export function BackgroundPaths({
 }: Props) {
   return (
     <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-[#030303] p-4">
-      {/* very soft diagonal wash */}
+      {}
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl" />
-
-      {/* ------------------ animated decorative shapes ------------------ */}
+      {}
       <div className="absolute inset-0 overflow-hidden">
         <ElegantShape
           delay={0.3}
@@ -131,10 +117,9 @@ export function BackgroundPaths({
           className="left-[22%] md:left-[26%] top-[6%] md:top-[9%]"
         />
       </div>
-
-      {/* ------------------------------ content ------------------------- */}
+      {}
       <main className="relative z-10 container mx-auto px-4 md:px-6 text-center flex flex-col items-center">
-        {/* badge */}
+        {}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -146,8 +131,7 @@ export function BackgroundPaths({
             Adaptive Learning OS
           </span>
         </motion.div>
-
-        {/* heading */}
+        {}
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -162,15 +146,14 @@ export function BackgroundPaths({
             {subtitle}
           </span>
         </motion.h1>
-
-        {/* CTA */}
+        {}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 1.1 }}
           className="relative"
         >
-          {/* glow halo */}
+          {}
           <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-600 via-fuchsia-600 to-blue-400 blur-lg opacity-40" />
           <Button
             onClick={onButtonClick}
@@ -182,11 +165,9 @@ export function BackgroundPaths({
           </Button>
         </motion.div>
       </main>
-
-      {/* subtle vignette */}
+      {}
       <div className="absolute inset-0 bg-gradient-to-t from-[#030303] via-transparent to-[#030303]/80 pointer-events-none" />
     </div>
   );
 }
-
 export default BackgroundPaths;

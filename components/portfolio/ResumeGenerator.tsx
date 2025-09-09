@@ -5,12 +5,10 @@ import { Sparkles, FileText, Loader2 } from 'lucide-react';
 import Card from '../Card';
 import ResumeModal from './ResumeModal';
 import { usePortfolioStore } from '../../stores/usePortfolioStore';
-
 const ResumeGenerator = () => {
     const [isGenerating, setIsGenerating] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const generateAndSetResume = usePortfolioStore(state => state.generateAndSetResume);
-
     const handleGenerate = async () => {
         setIsGenerating(true);
         try {
@@ -23,7 +21,6 @@ const ResumeGenerator = () => {
             setIsGenerating(false);
         }
     };
-
     return (
         <>
             <Card title="AI Resume Builder" className="h-full">
@@ -58,5 +55,4 @@ const ResumeGenerator = () => {
         </>
     );
 };
-
 export default ResumeGenerator;

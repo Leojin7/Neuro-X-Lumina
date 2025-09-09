@@ -19,9 +19,7 @@ import {
   Brain
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-
 const PREMIUM_QUIZ_COST = 50;
-
 // Elegant Shape Component for Background
 const ElegantShape = ({
   className,
@@ -65,7 +63,6 @@ const ElegantShape = ({
     </motion.div>
   </motion.div>
 );
-
 // Glass Card Component
 const GlassQuizCard = ({
   quiz,
@@ -92,7 +89,6 @@ const GlassQuizCard = ({
       default: return 'from-gray-400 to-gray-500';
     }
   };
-
   const getDifficultyIcon = (difficulty: string) => {
     switch (difficulty) {
       case 'Easy': return <Target className="h-4 w-4" />;
@@ -101,7 +97,6 @@ const GlassQuizCard = ({
       default: return <BookOpen className="h-4 w-4" />;
     }
   };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -115,7 +110,7 @@ const GlassQuizCard = ({
         : 'border-border bg-card/80 hover:bg-muted/80'
         }`}>
         <div className="p-6 h-full flex flex-col">
-          {/* Header Section */}
+          {}
           <div className="flex justify-between items-start mb-4">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-3">
@@ -126,18 +121,15 @@ const GlassQuizCard = ({
                   </div>
                 )}
               </div>
-
               <h3 className="text-xl font-bold text-foreground mb-2 leading-tight">
                 {quiz.title}
               </h3>
-
               <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2">
                 {quiz.description}
               </p>
             </div>
           </div>
-
-          {/* Metadata Section */}
+          {}
           <div className="flex items-center gap-4 mb-6">
             <div className={`flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r ${getDifficultyColor(quiz.difficulty)} bg-opacity-10 border border-current border-opacity-20`}>
               <div className={`bg-gradient-to-r ${getDifficultyColor(quiz.difficulty)} bg-clip-text text-transparent`}>
@@ -147,19 +139,16 @@ const GlassQuizCard = ({
                 {quiz.difficulty}
               </span>
             </div>
-
             <div className="flex items-center gap-1 text-muted-foreground">
               <Clock className="h-4 w-4" />
               <span className="text-sm">~15 min</span>
             </div>
-
             <div className="flex items-center gap-1 text-muted-foreground">
               <Star className="h-4 w-4" />
               <span className="text-sm">{quiz.questions?.length || 10}Q</span>
             </div>
           </div>
-
-          {/* Tags Section */}
+          {}
           {quiz.tags && quiz.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-6">
               {quiz.tags.slice(0, 3).map(tag => (
@@ -172,8 +161,7 @@ const GlassQuizCard = ({
               ))}
             </div>
           )}
-
-          {/* Action Section */}
+          {}
           <div className="mt-auto">
             {isPremiumAndLocked ? (
               <button
@@ -198,8 +186,7 @@ const GlassQuizCard = ({
             )}
           </div>
         </div>
-
-        {/* Locked Overlay */}
+        {}
         {isPremiumAndLocked && (
           <div className="absolute inset-0 bg-gradient-to-br from-black/20 to-black/40 backdrop-blur-[1px] pointer-events-none" />
         )}
@@ -207,7 +194,6 @@ const GlassQuizCard = ({
     </motion.div>
   );
 };
-
 const QuizzesList: React.FC = () => {
   const navigate = ReactRouterDOM.useNavigate();
   const [filter, setFilter] = useState<string>('All');
@@ -218,13 +204,10 @@ const QuizzesList: React.FC = () => {
   const focusCoins = useUserStore(state => state.focusCoins);
   const spendCoins = useUserStore(state => state.spendCoins);
   const unlockQuiz = useUserStore(state => state.unlockQuiz);
-
   const allTags = ['All', ...Array.from(new Set(allQuizzes.flatMap((q) => q.tags || [])))];
-
   const filteredQuizzes = filter === 'All'
     ? allQuizzes
     : allQuizzes.filter((q) => q.tags?.includes(filter));
-
   const handleUnlock = (quizId: string) => {
     if (focusCoins >= PREMIUM_QUIZ_COST) {
       if (spendCoins(PREMIUM_QUIZ_COST)) {
@@ -235,16 +218,13 @@ const QuizzesList: React.FC = () => {
       // Better error notification
     }
   };
-
   const handleTakeQuiz = (quizId: string) => {
     navigate(`/quiz/${quizId}`);
   };
-
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
-      {/* Animated Background Elements */}
+      {}
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl" />
-
       <div className="absolute inset-0 overflow-hidden dark">
         <ElegantShape
           delay={0.2}
@@ -279,18 +259,17 @@ const QuizzesList: React.FC = () => {
           className="right-[15%] top-[75%]"
         />
       </div>
-
-      {/* Main Content */}
+      {}
       <div className="relative z-10 p-6">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
+          {}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="mb-8"
           >
-            {/* Badge */}
+            {}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -302,8 +281,7 @@ const QuizzesList: React.FC = () => {
                 Knowledge Hub • {allQuizzes.length} Quizzes Available
               </span>
             </motion.div>
-
-            {/* Title */}
+            {}
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -312,7 +290,6 @@ const QuizzesList: React.FC = () => {
             >
               Quiz Collection
             </motion.h1>
-
             <motion.p
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
@@ -322,8 +299,7 @@ const QuizzesList: React.FC = () => {
               Challenge yourself with our curated collection of quizzes. Test your knowledge, earn rewards, and unlock your potential.
             </motion.p>
           </motion.div>
-
-          {/* Filter Tags */}
+          {}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -350,8 +326,7 @@ const QuizzesList: React.FC = () => {
               ))}
             </div>
           </motion.div>
-
-          {/* Quiz Grid */}
+          {}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -362,7 +337,6 @@ const QuizzesList: React.FC = () => {
               {filteredQuizzes.map((quiz: Quiz, index) => {
                 const isUnlocked = subscriptionTier !== 'free' || unlockedQuizIds.includes(quiz.id);
                 const isPremiumAndLocked = quiz.isPremium && !isUnlocked;
-
                 return (
                   <React.Fragment key={quiz.id}>
                     <GlassQuizCard
@@ -379,8 +353,7 @@ const QuizzesList: React.FC = () => {
               })}
             </AnimatePresence>
           </motion.div>
-
-          {/* Empty State */}
+          {}
           {filteredQuizzes.length === 0 && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -396,11 +369,9 @@ const QuizzesList: React.FC = () => {
           )}
         </div>
       </div>
-
-      {/* Vignette Effect */}
+      {}
       <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/80 pointer-events-none" />
     </div>
   );
 };
-
 export default QuizzesList;

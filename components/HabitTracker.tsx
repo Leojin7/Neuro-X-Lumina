@@ -5,16 +5,12 @@ import Button from './Button';
 import { useUserStore } from '../stores/useUserStore';
 import { Flame, Target, Plus, Check, RotateCcw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-
 const toYYYYMMDD = (date: Date) => date.toISOString().slice(0, 10);
-
 const HabitTracker = () => {
     const { habits, addHabit, toggleHabit } = useUserStore();
     const [newHabitName, setNewHabitName] = useState('');
     const [showAddForm, setShowAddForm] = useState(false);
-
     const todayStr = toYYYYMMDD(new Date());
-
     const handleAddHabit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!newHabitName.trim()) return;
@@ -22,7 +18,6 @@ const HabitTracker = () => {
         setNewHabitName('');
         setShowAddForm(false);
     };
-
     return (
         <Card>
             <div className="flex justify-between items-center mb-4">
@@ -32,7 +27,6 @@ const HabitTracker = () => {
                     {showAddForm ? 'Cancel' : 'New Habit'}
                 </Button>
             </div>
-            
             <AnimatePresence>
             {showAddForm && (
                 <motion.form 
@@ -54,7 +48,6 @@ const HabitTracker = () => {
                 </motion.form>
             )}
             </AnimatePresence>
-            
             <div className="space-y-3">
                 {habits.length > 0 ? habits.map(habit => {
                     const isDoneToday = habit.lastCompleted === todayStr;
@@ -90,5 +83,4 @@ const HabitTracker = () => {
         </Card>
     );
 };
-
 export default HabitTracker;

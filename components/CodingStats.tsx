@@ -5,15 +5,12 @@ import Card from './Card';
 import Button from './Button';
 import { Code2, Flame, Star, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
-
 const CodingStats = () => {
     const { codingXP, codingStreak, lastCodingDate } = useUserStore();
     const navigate = ReactRouterDOM.useNavigate();
-
     const today = new Date().toISOString().slice(0, 10);
     const hasStreak = codingStreak > 0;
     const isActiveToday = lastCodingDate === today;
-
     return (
         <Card>
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -36,12 +33,11 @@ const CodingStats = () => {
                         <p className="text-xs flex items-center gap-1"><Flame size={12} className={hasStreak && isActiveToday ? 'text-orange-400' : ''} /> Streak</p>
                     </motion.div>
                 </div>
-                 <Button onClick={() => navigate('/arena')} className="group">
+                 <Button onClick={() => navigate('/coding-arena')} className="group">
                     Enter Arena <ArrowRight size={16} className="ml-2 transition-transform group-hover:translate-x-1" />
                 </Button>
             </div>
         </Card>
     );
 };
-
 export default CodingStats;

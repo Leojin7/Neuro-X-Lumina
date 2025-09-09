@@ -3,16 +3,13 @@ import React from 'react';
 import { useThemeStore } from '../stores/useThemeStore';
 import { Sun, Moon, Monitor } from 'lucide-react';
 import { motion } from 'framer-motion';
-
 const ThemeToggle: React.FC = () => {
     const { theme, setTheme } = useThemeStore();
-    
     const options: { name: 'light' | 'dark' | 'system', icon: React.ReactNode }[] = [
         { name: 'light', icon: <Sun size={16} /> },
         { name: 'dark', icon: <Moon size={16} /> },
         { name: 'system', icon: <Monitor size={16} /> },
     ];
-
     return (
         <div className="bg-muted/50 p-1 rounded-xl border border-border flex items-center justify-center gap-1">
             {options.map(option => (
@@ -38,5 +35,4 @@ const ThemeToggle: React.FC = () => {
         </div>
     );
 };
-
 export default ThemeToggle;

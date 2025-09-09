@@ -6,40 +6,30 @@ import Button from './Button';
 import { Sunrise, Sunset, Send, CheckCircle, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getSupportiveReply } from '../services/geminiService';
-
 const toYYYYMMDD = (date: Date) => date.toISOString().slice(0, 10);
-
 const DailyCheckin = () => {
   const { dailyCheckins, addOrUpdateCheckin } = useUserStore();
   const todayStr = toYYYYMMDD(new Date());
   const todayCheckin = dailyCheckins.find(c => c.date === todayStr);
-
   const [mode, setMode] = useState<'hidden' | 'morning' | 'evening' | 'done'>('hidden');
-  
   // Morning state
   const [intention, setIntention] = useState('');
   const [morningMood, setMorningMood] = useState<Mood | null>(null);
-
   // Evening state
   const [reflection, setReflection] = useState('');
   const [eveningMood, setEveningMood] = useState<Mood | null>(null);
-
   const [isLoading, setIsLoading] = useState(false);
   const [aiReply, setAiReply] = useState('');
-
   useEffect(() => {
     const hour = new Date().getHours();
-    
     if (todayCheckin?.reflection) {
       setMode('done');
       return;
     }
-
     if (hour >= 16) {
       setMode('evening');
       return;
     }
-
     if (hour >= 5 && hour < 12) {
       if (!todayCheckin?.intention) {
         setMode('morning');
@@ -48,11 +38,8 @@ const DailyCheckin = () => {
       }
       return;
     }
-
     setMode('hidden');
-
   }, [todayCheckin]);
-
   const moodOptions: { mood: Mood; label: string; icon: string; }[] = [
     { mood: 'awful', label: 'Awful', icon: '😞' },
     { mood: 'bad', label: 'Bad', icon: '😕' },
@@ -60,7 +47,6 @@ const DailyCheckin = () => {
     { mood: 'good', label: 'Good', icon: '😊' },
     { mood: 'great', label: 'Great', icon: '😄' },
   ];
-
   const handleMorningSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!intention || !morningMood) return;
@@ -74,7 +60,6 @@ const DailyCheckin = () => {
         setAiReply('');
     }, 4000);
   };
-
   const handleEveningSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!reflection || !eveningMood) return;
@@ -85,11 +70,9 @@ const DailyCheckin = () => {
     setIsLoading(false);
     setTimeout(() => setMode('done'), 4000);
   };
-  
   if (mode === 'hidden' || (mode === 'done' && !aiReply)) {
     return null;
   }
-  
   const renderForm = () => {
       if (aiReply) {
         return (
@@ -166,7 +149,6 @@ const DailyCheckin = () => {
             </div>
       );
   }
-
   return (
     <AnimatePresence>
       <motion.div
@@ -182,5 +164,4 @@ const DailyCheckin = () => {
     </AnimatePresence>
   );
 };
-
 export default DailyCheckin;

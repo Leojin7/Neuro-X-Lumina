@@ -27,9 +27,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import CircularProgress from '../components/CircularProgress';
 import SubscriptionGate from '../components/SubscriptionGate';
 import toast from 'react-hot-toast';
-
 const QUIZ_COMPLETION_REWARD = 15;
-
 // Elegant Shape Component for Background
 const ElegantShape = ({
   className,
@@ -73,7 +71,6 @@ const ElegantShape = ({
     </motion.div>
   </motion.div>
 );
-
 // Glass Card Wrapper
 const GlassCard = ({ 
   children, 
@@ -93,16 +90,13 @@ const GlassCard = ({
     {children}
   </motion.div>
 );
-
 const QuizView = () => {
   const { quizId } = ReactRouterDOM.useParams<{ quizId: string }>();
   const navigate = ReactRouterDOM.useNavigate();
-  
   const getQuizById = useQuizStore(state => state.getQuizById);
   // Select each field separately to keep stable references and avoid new object creation per render
   const addCompletedQuiz = useUserStore(state => state.addCompletedQuiz);
   const addCoins = useUserStore(state => state.addCoins);
-
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -112,14 +106,12 @@ const QuizView = () => {
   const [explanations, setExplanations] = useState<Record<string, string>>({});
   const [loadingQuestionId, setLoadingQuestionId] = useState<string | null>(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
-
   useEffect(() => {
     if (quizId) {
       const foundQuiz = getQuizById(quizId) || null;
       setQuiz(foundQuiz);
     }
   }, [quizId]);
-
   // Cleanup speech synthesis on component unmount
   useEffect(() => {
     return () => {
@@ -128,11 +120,9 @@ const QuizView = () => {
       }
     };
   }, [isSpeaking]);
-
   const handleSelectAnswer = (option: string) => {
     setSelectedAnswer(option);
   };
-  
   const handleGetExplanation = async (question: Question, incorrectAnswer: string) => {
     setLoadingQuestionId(question.id);
     setExplanations(prev => ({ ...prev, [question.id]: '' }));
@@ -146,17 +136,14 @@ const QuizView = () => {
       setLoadingQuestionId(null);
     }
   };
-
   const handleNextQuestion = () => {
     if (selectedAnswer) {
       // Stop speech if it's playing
       window.speechSynthesis.cancel();
       setIsSpeaking(false);
-      
       const currentAnswers = { ...answers, [quiz!.questions[currentQuestionIndex].id]: selectedAnswer };
       setAnswers(currentAnswers);
       setSelectedAnswer(null);
-
       if (currentQuestionIndex < quiz!.questions.length - 1) {
         setCurrentQuestionIndex(prev => prev + 1);
       } else {
@@ -164,7 +151,6 @@ const QuizView = () => {
       }
     }
   };
-
   const handleSubmit = (finalAnswers: Record<string, string>) => {
     let correctCount = 0;
     quiz?.questions.forEach(q => {
@@ -172,11 +158,9 @@ const QuizView = () => {
         correctCount++;
       }
     });
-
     const finalScore = (correctCount / quiz!.questions.length) * 100;
     setScore(finalScore);
     setShowResults(true);
-
     if (quiz) {
       addCompletedQuiz({
         quizId: quiz.id,
@@ -188,7 +172,6 @@ const QuizView = () => {
       addCoins(QUIZ_COMPLETION_REWARD);
     }
   };
-
   const handleSpeak = (text: string) => {
     if (isSpeaking) {
         window.speechSynthesis.cancel();
@@ -204,7 +187,6 @@ const QuizView = () => {
         setIsSpeaking(true);
     }
   };
-  
   if (!quiz) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -215,7 +197,6 @@ const QuizView = () => {
       </div>
     );
   }
-
   if (showResults) {
     const correctAnswers = Math.round(score/100 * quiz.questions.length);
     const totalQuestions = quiz.questions.length;
@@ -225,12 +206,10 @@ const QuizView = () => {
       if (score >= 50) return 'from-yellow-400 to-orange-500';
       return 'from-red-400 to-pink-500';
     };
-
     return (
       <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
-        {/* Animated Background Elements */}
+        {}
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl" />
-        
         <div className="absolute inset-0 overflow-hidden dark">
           <ElegantShape
             delay={0.2}
@@ -257,8 +236,7 @@ const QuizView = () => {
             className="left-[5%] bottom-[20%]"
           />
         </div>
-
-        {/* Main Content */}
+        {}
         <div className="relative z-10 p-6 min-h-screen flex items-center justify-center">
           <div className="max-w-4xl mx-auto w-full">
             <GlassCard delay={0.3} className="p-8">
@@ -268,7 +246,7 @@ const QuizView = () => {
                 transition={{ type: 'spring', stiffness: 260, damping: 20 }}
                 className="text-center"
               >
-                {/* Badge */}
+                {}
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -280,13 +258,11 @@ const QuizView = () => {
                     Quiz Complete
                   </span>
                 </motion.div>
-
                 <h2 className="text-4xl md:text-5xl font-bold mb-2 text-foreground">
                     Excellent Work!
                 </h2>
                 <p className="text-muted-foreground mb-8 text-lg">{quiz.title}</p>
-                
-                {/* Score Circle */}
+                {}
                 <div className="my-12 flex justify-center relative">
                   <div className="relative">
                     <CircularProgress progress={score} size={220} strokeWidth={8} />
@@ -298,7 +274,6 @@ const QuizView = () => {
                     </div>
                   </div>
                 </div>
-
                 <div className="flex items-center justify-center gap-8 mb-8">
                   <div className="text-center">
                     <p className="text-3xl font-bold text-green-400">{correctAnswers}</p>
@@ -310,7 +285,6 @@ const QuizView = () => {
                     <p className="text-muted-foreground text-sm">Total</p>
                   </div>
                 </div>
-
                 <motion.div 
                   className="inline-flex items-center justify-center gap-3 bg-yellow-500/10 border border-yellow-400/20 text-yellow-300 font-semibold px-6 py-3 rounded-xl mb-8"
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -321,8 +295,7 @@ const QuizView = () => {
                   You earned {QUIZ_COMPLETION_REWARD} FocusCoins!
                 </motion.div>
               </motion.div>
-
-              {/* Answer Review */}
+              {}
               <motion.div 
                 className="text-left space-y-6 my-12"
                 initial="hidden"
@@ -339,7 +312,6 @@ const QuizView = () => {
                     Review Your Answers
                   </h3>
                 </div>
-
                 {quiz.questions.map((q, index) => {
                   const userAnswer = answers[q.id];
                   const isCorrect = userAnswer === q.correctAnswer;
@@ -353,7 +325,6 @@ const QuizView = () => {
                         <span className="text-primary mr-2">Q{index + 1}.</span>
                         {q.text}
                       </p>
-                      
                       <div className={`flex items-center text-sm p-3 rounded-xl border ${
                         isCorrect 
                           ? 'bg-green-500/10 text-green-400 border-green-500/20' 
@@ -371,7 +342,6 @@ const QuizView = () => {
                           )}
                         </div>
                       </div>
-
                       {!isCorrect && (
                         <div className="mt-4">
                           <button
@@ -386,7 +356,6 @@ const QuizView = () => {
                             )}
                             Why was I wrong?
                           </button>
-                          
                           <AnimatePresence>
                             {explanations[q.id] && (
                               <motion.div 
@@ -407,7 +376,6 @@ const QuizView = () => {
                   );
                 })}
               </motion.div>
-              
               <div className="text-center">
                 <button
                   onClick={() => navigate('/quizzes')}
@@ -419,21 +387,17 @@ const QuizView = () => {
             </GlassCard>
           </div>
         </div>
-
-        {/* Vignette Effect */}
+        {}
         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/80 pointer-events-none" />
       </div>
     );
   }
-
   const currentQuestion = quiz.questions[currentQuestionIndex];
   const progress = ((currentQuestionIndex + 1) / quiz.questions.length) * 100;
-
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
-      {/* Animated Background Elements */}
+      {}
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl" />
-      
       <div className="absolute inset-0 overflow-hidden dark">
         <ElegantShape
           delay={0.2}
@@ -460,8 +424,7 @@ const QuizView = () => {
           className="left-[3%] bottom-[15%]"
         />
       </div>
-
-      {/* Header */}
+      {}
       <div className="relative z-10 p-6">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -469,7 +432,7 @@ const QuizView = () => {
           transition={{ duration: 0.6 }}
           className="max-w-4xl mx-auto"
         >
-          {/* Badge */}
+          {}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -481,8 +444,7 @@ const QuizView = () => {
               Quiz Challenge • Question {currentQuestionIndex + 1} of {quiz.questions.length}
             </span>
           </motion.div>
-
-          {/* Title */}
+          {}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -493,12 +455,11 @@ const QuizView = () => {
           </motion.h1>
         </motion.div>
       </div>
-
-      {/* Main Content */}
+      {}
       <div className="relative z-10 px-6 pb-6">
         <div className="max-w-4xl mx-auto">
           <GlassCard delay={0.4} className="p-8">
-            {/* Progress Section */}
+            {}
             <div className="mb-8">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
@@ -514,7 +475,6 @@ const QuizView = () => {
                   </span>
                 </div>
               </div>
-              
               <div className="w-full bg-muted/50 rounded-full h-3 overflow-hidden">
                 <motion.div 
                   className="bg-primary h-3 rounded-full shadow-lg" 
@@ -524,8 +484,7 @@ const QuizView = () => {
                 />
               </div>
             </div>
-
-            {/* Question Section */}
+            {}
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentQuestion.id}
@@ -547,14 +506,12 @@ const QuizView = () => {
                       {isSpeaking ? 'Stop' : 'Read Aloud'}
                   </Button>
                 </div>
-                
                 <h3 className="text-2xl md:text-3xl font-semibold text-foreground leading-relaxed mb-8">
                   {currentQuestion.text}
                 </h3>
               </motion.div>
             </AnimatePresence>
-            
-            {/* Options Section */}
+            {}
             <div className="space-y-4 mb-10">
               {currentQuestion.options.map((option, index) => (
                 <motion.button 
@@ -587,14 +544,12 @@ const QuizView = () => {
                     </div>
                     <span className="text-foreground font-medium text-lg">{option}</span>
                   </div>
-                  
-                  {/* Hover gradient overlay */}
+                  {}
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-violet-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
                 </motion.button>
               ))}
             </div>
-            
-            {/* Navigation */}
+            {}
             <div className="flex justify-end">
               <motion.button
                 onClick={handleNextQuestion}
@@ -610,11 +565,9 @@ const QuizView = () => {
           </GlassCard>
         </div>
       </div>
-
-      {/* Vignette Effect */}
+      {}
       <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/80 pointer-events-none" />
     </div>
   );
 };
-
 export default QuizView;

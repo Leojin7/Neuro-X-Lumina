@@ -2,20 +2,16 @@ import React, { MouseEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Wind, BrainCircuit, Sun, Flower2 } from 'lucide-react';
 import * as ReactRouterDOM from 'react-router-dom';
-
 interface UnstuckModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
 const UnstuckModal = ({ isOpen, onClose }: UnstuckModalProps) => {
   const navigate = ReactRouterDOM.useNavigate();
-
   const handleAction = (path: string, state?: any) => {
     navigate(path, { state });
     onClose();
   };
-
   const actions = [
     {
       icon: <Wind className="text-blue-400" size={28} />,
@@ -42,7 +38,6 @@ const UnstuckModal = ({ isOpen, onClose }: UnstuckModalProps) => {
       action: () => handleAction('/focus'),
     }
   ];
-
   return (
     <AnimatePresence>
       {isOpen && (
@@ -64,10 +59,8 @@ const UnstuckModal = ({ isOpen, onClose }: UnstuckModalProps) => {
             <button onClick={onClose} className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors z-20" aria-label="Close">
               <X size={24} />
             </button>
-            
             <h2 className="text-3xl font-bold text-foreground mb-2">Feeling Stuck?</h2>
             <p className="text-muted-foreground mb-8">Take a small step forward. Choose an action below.</p>
-
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {actions.map((item, index) => (
                 <motion.button
@@ -92,5 +85,4 @@ const UnstuckModal = ({ isOpen, onClose }: UnstuckModalProps) => {
     </AnimatePresence>
   );
 };
-
 export default UnstuckModal;

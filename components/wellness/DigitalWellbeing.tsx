@@ -3,14 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, Sparkles, Loader2, CheckCircle } from 'lucide-react';
 import Button from '../Button';
 import { generateFocusPlan } from '../../services/geminiService';
-
 const DigitalWellbeing = () => {
     const [goal, setGoal] = useState('');
     const [duration, setDuration] = useState(60); // Default 60 minutes
     const [isLoading, setIsLoading] = useState(false);
     const [plan, setPlan] = useState<string | null>(null);
     const [isShieldActive, setIsShieldActive] = useState(false);
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!goal.trim()) return;
@@ -27,7 +25,6 @@ const DigitalWellbeing = () => {
             setIsLoading(false);
         }
     };
-    
     // Simple markdown-to-HTML parser for plan display
     const PlanDisplay = ({ content }: { content: string }) => {
         const lines = content.split('\n').map((line, i) => {
@@ -38,8 +35,6 @@ const DigitalWellbeing = () => {
         });
         return <div className="prose prose-invert prose-p:text-muted-foreground">{lines}</div>;
     };
-
-
     return (
         <div className="max-w-4xl mx-auto space-y-8">
             <div className="text-center">
@@ -53,7 +48,6 @@ const DigitalWellbeing = () => {
                     Create an intelligent focus environment. Tell the AI your goal, and it will generate a shield plan to minimize distractions and maximize productivity.
                 </p>
             </div>
-
             <form onSubmit={handleSubmit} className="space-y-6 bg-white/5 p-6 rounded-2xl border border-white/10">
                 <div>
                     <label htmlFor="focus-goal" className="block text-sm font-medium text-white mb-2">What is your primary goal for this session?</label>
@@ -84,7 +78,6 @@ const DigitalWellbeing = () => {
                     Generate Focus Plan
                 </Button>
             </form>
-
             <AnimatePresence>
                 {plan && (
                     <motion.div
@@ -118,5 +111,4 @@ const DigitalWellbeing = () => {
         </div>
     );
 };
-
 export default DigitalWellbeing;

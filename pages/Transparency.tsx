@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Eye, Database, Shield, BarChart, FileText, Delete, Circle } from 'lucide-react';
-
 const GlassCard = ({ children, className = "", delay = 0, title, icon }: { children: React.ReactNode; className?: string; delay?: number; title?: string; icon?: React.ReactNode }) => (
     <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -18,19 +17,17 @@ const GlassCard = ({ children, className = "", delay = 0, title, icon }: { child
         <div className="p-6">{children}</div>
     </motion.div>
 );
-
 const InfoBlock = ({ title, children }: { title: string; children: React.ReactNode; }) => (
     <div>
         <h4 className="font-semibold text-lg text-foreground mb-2">{title}</h4>
         <div className="text-muted-foreground text-sm space-y-2">{children}</div>
     </div>
 );
-
 const Transparency: React.FC = () => {
     return (
         <div className="min-h-screen bg-background text-foreground relative overflow-hidden p-6">
             <div className="max-w-5xl mx-auto space-y-8">
-                {/* Header */}
+                {}
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -52,34 +49,30 @@ const Transparency: React.FC = () => {
                         We believe in building AI that is transparent, fair, and accountable. Here’s how we handle your data and ensure our AI models are responsible.
                     </p>
                 </motion.div>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Data Collection & Usage */}
+                    {}
                     <GlassCard delay={0.3} title="Data Collection & Usage" icon={<Database className="text-primary" />}>
                         <InfoBlock title="What We Collect">
                             <p><strong>Interaction Data:</strong> Quiz scores, focus session durations, and feature usage to personalize your learning path.</p>
                             <p><strong>Content Data:</strong> Topics you generate quizzes on and goals you set to tailor AI suggestions.</p>
-                            <p><strong>Anonymized Analytics:</strong> General usage patterns to improve Lumina for everyone. We do not track personal information for analytics.</p>
+                            <p><strong>Anonymized Analytics:</strong> General usage patterns to improve NeuroLearn for everyone. We do not track personal information for analytics.</p>
                         </InfoBlock>
                     </GlassCard>
-
-                    {/* AI Fairness */}
+                    {}
                     <GlassCard delay={0.4} title="AI Fairness & Bias" icon={<Shield className="text-green-400" />}>
                         <InfoBlock title="Our Commitment">
                             <p>We are committed to mitigating bias in our AI systems. Our models are regularly audited to prevent unfair outcomes based on demographics or background.</p>
                             <p><strong>Fairness Score (Simulated):</strong> <span className="font-bold text-green-400">98.5%</span> - based on internal testing against benchmark datasets for equitable performance.</p>
                         </InfoBlock>
                     </GlassCard>
-
-                    {/* Explainability (XAI) */}
+                    {}
                     <GlassCard delay={0.5} title="Explainable AI (XAI)" icon={<BarChart className="text-yellow-400" />}>
                         <InfoBlock title="Why This Recommendation?">
                             <p>We believe you should understand why our AI makes certain decisions. You'll find "Why?" tooltips on AI-generated content, like your daily study plan, explaining the reasoning.</p>
                             <p>For example: "This quiz was recommended because you scored lower on a related topic yesterday, offering a chance to reinforce your knowledge."</p>
                         </InfoBlock>
                     </GlassCard>
-
-                    {/* Data Control */}
+                    {}
                     <GlassCard delay={0.6} title="Your Data, Your Control" icon={<Delete className="text-red-400" />}>
                         <InfoBlock title="Data Management">
                             <p>You have the right to manage your data. While full data export and deletion are in development, you can manage your learning history in the app.</p>
@@ -91,5 +84,4 @@ const Transparency: React.FC = () => {
         </div>
     );
 };
-
 export default Transparency;

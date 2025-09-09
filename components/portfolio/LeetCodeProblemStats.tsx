@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import type { LeetCodeStats } from '../../types';
 import Card from '../Card';
 import { Code } from 'lucide-react';
-
 const AnimatedNumber = ({ value }: { value: number }) => (
     <motion.span
         key={value}
@@ -14,7 +13,6 @@ const AnimatedNumber = ({ value }: { value: number }) => (
         {value}
     </motion.span>
 );
-
 const CircularStat = ({ value, total, label, colorClass, delay }: { value: number; total: number; label: string; colorClass: string, delay: number }) => {
     const radius = 42;
     const strokeWidth = 10;
@@ -23,7 +21,6 @@ const CircularStat = ({ value, total, label, colorClass, delay }: { value: numbe
     const circumference = normalizedRadius * 2 * Math.PI;
     const progress = total > 0 ? value / total : 0;
     const strokeDashoffset = circumference - progress * circumference;
-
     return (
         <motion.div 
             className="flex flex-col items-center gap-2"
@@ -67,7 +64,6 @@ const CircularStat = ({ value, total, label, colorClass, delay }: { value: numbe
         </motion.div>
     );
 };
-
 const LeetCodeProblemStats: React.FC<{ stats: LeetCodeStats }> = ({ stats }) => {
     const { 
         solved = 0, 
@@ -78,9 +74,7 @@ const LeetCodeProblemStats: React.FC<{ stats: LeetCodeStats }> = ({ stats }) => 
         totalMedium = 0, 
         totalHard = 0 
     } = stats;
-    
     const hasData = solved > 0 && totalEasy > 0;
-
     return (
         <Card title="LeetCode Problem Stats" className="h-full flex flex-col justify-between">
             {hasData ? (
@@ -123,5 +117,4 @@ const LeetCodeProblemStats: React.FC<{ stats: LeetCodeStats }> = ({ stats }) => 
         </Card>
     );
 };
-
 export default LeetCodeProblemStats;

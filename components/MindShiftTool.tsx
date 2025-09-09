@@ -17,14 +17,11 @@ import { getMindShiftGuidance } from '../services/geminiService';
 import SubscriptionGate from './SubscriptionGate';
 import * as ReactRouterDOM from 'react-router-dom';
 import type { MoodLevel } from '../types';
-
 type ShiftState = 'idle' | 'challenging' | 'reframing' | 'complete';
-
 interface Message {
     role: 'user' | 'ai';
     text: string;
 }
-
 const MoodSelector = ({ 
   value, 
   onChange, 
@@ -41,7 +38,6 @@ const MoodSelector = ({
     { level: 4 as MoodLevel, emoji: '🙂', label: 'Good', color: 'text-green-400' },
     { level: 5 as MoodLevel, emoji: '😊', label: 'Great', color: 'text-green-500' },
   ];
-
   return (
     <div className="space-y-3">
       <p className="text-white/90 font-medium">{label}</p>
@@ -64,7 +60,6 @@ const MoodSelector = ({
     </div>
   );
 };
-
 const MindShiftTool = () => {
     const { addMindShiftEntry } = useUserStore();
     const navigate = ReactRouterDOM.useNavigate();
@@ -76,7 +71,6 @@ const MindShiftTool = () => {
     const [moodBefore, setMoodBefore] = useState<MoodLevel | null>(null);
     const [moodAfter, setMoodAfter] = useState<MoodLevel | null>(null);
     const [category, setCategory] = useState<string>('');
-
     const thoughtCategories = [
       { id: 'self-doubt', label: 'Self-Doubt', icon: '🤔' },
       { id: 'anxiety', label: 'Anxiety', icon: '😰' },
@@ -85,7 +79,6 @@ const MindShiftTool = () => {
       { id: 'failure', label: 'Fear of Failure', icon: '💭' },
       { id: 'rejection', label: 'Fear of Rejection', icon: '💔' },
     ];
-
     const startShift = (e: React.FormEvent) => {
         e.preventDefault();
         if (!thought.trim() || !moodBefore) return;
@@ -93,7 +86,6 @@ const MindShiftTool = () => {
         fetchGuidance('challenge');
         setState('challenging');
     };
-
     const fetchGuidance = async (step: 'challenge' | 'reframe') => {
         setIsLoading(true);
         try {
@@ -111,12 +103,10 @@ const MindShiftTool = () => {
             setIsLoading(false);
         }
     };
-    
     const handleReframe = () => {
         setState('reframing');
         fetchGuidance('reframe');
     };
-
     const handleComplete = () => {
         if (moodAfter && moodBefore) {
             addMindShiftEntry({ 
@@ -129,7 +119,6 @@ const MindShiftTool = () => {
         }
         reset();
     };
-
     const reset = () => {
         setThought('');
         setMessages([]);
@@ -140,7 +129,6 @@ const MindShiftTool = () => {
         setMoodAfter(null);
         setCategory('');
     };
-
     return (
         <div className="max-w-4xl mx-auto">
             <AnimatePresence mode="wait">
@@ -153,7 +141,7 @@ const MindShiftTool = () => {
                 >
                     {state === 'idle' && (
                         <div className="space-y-8">
-                            {/* Header */}
+                            {}
                             <div className="text-center">
                                 <div className="flex items-center justify-center gap-3 mb-6">
                                     <div className="p-3 rounded-full bg-blue-500/20">
@@ -168,9 +156,8 @@ const MindShiftTool = () => {
                                     Let's work together to reframe your thoughts and improve your mental wellbeing.
                                 </p>
                             </div>
-
                             <form onSubmit={startShift} className="space-y-8">
-                                {/* Thought Categories */}
+                                {}
                                 <div className="space-y-4">
                                     <h3 className="text-lg font-semibold text-white">What type of thought is bothering you?</h3>
                                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -191,8 +178,7 @@ const MindShiftTool = () => {
                                         ))}
                                     </div>
                                 </div>
-
-                                {/* Thought Input */}
+                                {}
                                 <div className="space-y-4">
                                     <h3 className="text-lg font-semibold text-white">Write down the specific thought</h3>
                                     <textarea
@@ -203,14 +189,12 @@ const MindShiftTool = () => {
                                         required
                                     />
                                 </div>
-
-                                {/* Mood Before */}
+                                {}
                                 <MoodSelector 
                                     value={moodBefore} 
                                     onChange={setMoodBefore} 
                                     label="How are you feeling right now?"
                                 />
-
                                 <div className="text-center">
                                     <Button 
                                         type="submit" 
@@ -225,10 +209,9 @@ const MindShiftTool = () => {
                             </form>
                         </div>
                     )}
-
                     {state !== 'idle' && (
                         <div className="space-y-6">
-                            {/* Conversation */}
+                            {}
                             <div className="space-y-4 bg-white/[0.02] backdrop-blur-sm p-6 rounded-2xl border border-white/10 min-h-[300px] max-h-[500px] overflow-y-auto">
                                 {messages.map((msg, index) => (
                                     <motion.div 
@@ -256,7 +239,6 @@ const MindShiftTool = () => {
                                         </div>
                                     </motion.div>
                                 ))}
-                                
                                 {isLoading && (
                                     <motion.div 
                                         initial={{ opacity: 0, y: 20 }}
@@ -272,14 +254,12 @@ const MindShiftTool = () => {
                                     </motion.div>
                                 )}
                             </div>
-
-                            {/* Actions */}
+                            {}
                             <div className="flex justify-between items-center">
                                 <Button variant="ghost" onClick={reset} className="text-white/70 hover:text-white">
                                     <RefreshCw size={16} className="mr-2"/> 
                                     Start Over
                                 </Button>
-                                
                                 {state === 'challenging' && !isLoading && (
                                     <Button 
                                         onClick={handleReframe}
@@ -289,7 +269,6 @@ const MindShiftTool = () => {
                                         Find New Perspective
                                     </Button>
                                 )}
-                                
                                 {state === 'complete' && (
                                     <div className="space-y-4">
                                         <MoodSelector 
@@ -315,5 +294,4 @@ const MindShiftTool = () => {
         </div>
     );
 };
-
 export default MindShiftTool;

@@ -2,7 +2,6 @@ import React from 'react';
 import Card from '../components/Card';
 import { Trophy, Award, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
-
 const MOCK_LEADERBOARD = [
   { rank: 1, name: 'Alex', score: 9250, avatar: `https://i.pravatar.cc/40?u=alex` },
   { rank: 2, name: 'Samantha', score: 8800, avatar: `https://i.pravatar.cc/40?u=samantha` },
@@ -11,7 +10,6 @@ const MOCK_LEADERBOARD = [
   { rank: 5, name: 'Taylor', score: 7200, avatar: `https://i.pravatar.cc/40?u=taylor` },
   { rank: 6, name: 'Morgan', score: 6850, avatar: `https://i.pravatar.cc/40?u=morgan` },
 ];
-
 const Leaderboard: React.FC = () => {
   return (
     <div className="animate-fade-in-up space-y-8">
@@ -19,7 +17,6 @@ const Leaderboard: React.FC = () => {
         <h1 className="text-4xl font-bold text-foreground">Leaderboard</h1>
         <p className="text-muted-foreground mt-1">See how you stack up against the top learners.</p>
       </header>
-      
       <Card>
         <div className="flow-root">
           <table className="min-w-full divide-y divide-border">
@@ -67,5 +64,4 @@ const Leaderboard: React.FC = () => {
     </div>
   );
 };
-
 export default Leaderboard;

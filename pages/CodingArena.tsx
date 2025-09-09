@@ -4,7 +4,6 @@ import { Toaster, toast } from 'react-hot-toast';
 import { useUserStore } from '../stores/useUserStore';
 import type { Language, CodingProblem, SubmissionResult as SubmissionResultType, TestCase } from '../types';
 import { CODING_PROBLEMS } from '../constants/codingProblems';
-
 import Card from '../components/Card';
 import Button from '../components/Button';
 import CodeEditor from '../components/CodeEditor';
@@ -28,9 +27,7 @@ import {
   Brain,
   Timer
 } from 'lucide-react';
-
 const toYYYYMMDD = (date: Date) => date.toISOString().slice(0, 10);
-
 // Elegant Shape Component for Background
 const ElegantShape = ({
   className,
@@ -74,7 +71,6 @@ const ElegantShape = ({
     </motion.div>
   </motion.div>
 );
-
 // Glass Card Wrapper
 const GlassCard = ({ 
   children, 
@@ -94,7 +90,6 @@ const GlassCard = ({
     {children}
   </motion.div>
 );
-
 const CodingArena: React.FC = () => {
     const [problem, setProblem] = useState<CodingProblem | null>(null);
     const [language, setLanguage] = useState<Language>('javascript');
@@ -106,33 +101,26 @@ const CodingArena: React.FC = () => {
     const addCodingSubmission = useUserStore(state => state.addCodingSubmission);
     const lastCodingDate = useUserStore(state => state.lastCodingDate);
     const [showStreakPopup, setShowStreakPopup] = useState(false);
-    
     // Timer state
     const [timeLeft, setTimeLeft] = useState(30 * 60); // 30 minutes
     const [isTimerActive, setIsTimerActive] = useState(false);
     const timerRef = useRef<number | null>(null);
     const [timeUntilNextProblem, setTimeUntilNextProblem] = useState('');
-
     useEffect(() => {
         const getProblemForToday = () => {
             const now = new Date();
             const todayAt9AM = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0, 0);
-            
             // If it's before 9 AM today, we are still on "yesterday's" problem
             const referenceDate = now < todayAt9AM ? new Date(now.getTime() - 24 * 60 * 60 * 1000) : now;
-
             const startOfYear = new Date(referenceDate.getFullYear(), 0, 0);
             const diff = referenceDate.getTime() - startOfYear.getTime();
             const oneDay = 1000 * 60 * 60 * 24;
             const dayOfYear = Math.floor(diff / oneDay);
-            
             const problemIndex = dayOfYear % CODING_PROBLEMS.length;
             setProblem(CODING_PROBLEMS[problemIndex]);
         };
-        
         getProblemForToday();
         const problemCheckInterval = setInterval(getProblemForToday, 60000); // Check every minute
-        
         const countdownInterval = setInterval(() => {
             const now = new Date();
             let next9AM = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0, 0);
@@ -145,19 +133,16 @@ const CodingArena: React.FC = () => {
             const seconds = Math.floor((diff / 1000) % 60);
             setTimeUntilNextProblem(`${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`);
         }, 1000);
-
         return () => {
             clearInterval(problemCheckInterval);
             clearInterval(countdownInterval);
         };
     }, []);
-    
     useEffect(() => {
         if (problem) {
             setCode(problem.starterCode[language] || '');
         }
     }, [language, problem]);
-
     // Timer logic
     useEffect(() => {
         if (isTimerActive && timeLeft > 0) {
@@ -174,7 +159,6 @@ const CodingArena: React.FC = () => {
             if (timerRef.current) clearInterval(timerRef.current);
         };
     }, [isTimerActive, timeLeft]);
-    
     const toggleTimer = () => setIsTimerActive(prev => !prev);
     const resetTimer = () => {
         setIsTimerActive(false);
@@ -185,15 +169,12 @@ const CodingArena: React.FC = () => {
         const secs = (seconds % 60).toString().padStart(2, '0');
         return `${mins}:${secs}`;
     };
-    
     const handleCodeChange = (value: string | undefined) => {
         setCode(value || '');
     };
-
     const executeCode = (userCode: string, testCasesToRun: TestCase[]): SubmissionResultType => {
         let passedCount = 0;
         const details: SubmissionResultType['details'] = [];
-        
         if (language !== 'javascript') {
             // Enhanced mock for non-JS languages
             const checkSolution = (id: string, code: string): boolean => {
@@ -219,11 +200,9 @@ const CodingArena: React.FC = () => {
                     // Sanitize inputs for function constructor
                     const args = problem!.functionSignature.match(/\(([^)]+)\)/)?.[1].split(',').map(arg => arg.trim()) || [];
                     const func = new Function(...args, `${userCode}\nreturn ${funcName}(...arguments);`);
-                    
                     // Deep copy inputs to prevent modification
                     const inputs = JSON.parse(JSON.stringify(testCase.input));
                     const output = func(...inputs);
-
                     // Deep compare output with expected
                     const passed = JSON.stringify(output) === JSON.stringify(testCase.expected);
                     if (passed) passedCount++;
@@ -233,12 +212,10 @@ const CodingArena: React.FC = () => {
                 }
             }
         }
-
         const overallStatus: SubmissionResultType['status'] =
             passedCount === testCasesToRun.length ? 'Accepted'
             : details.some(d => typeof d.output === 'string' && d.output.includes('Runtime Error')) ? 'Runtime Error'
             : 'Wrong Answer';
-        
         return {
             status: overallStatus,
             passedCount,
@@ -246,33 +223,27 @@ const CodingArena: React.FC = () => {
             details,
         };
     };
-    
     const handleExecution = (mode: 'run' | 'submit') => {
         if (!problem) return;
         setIsExecuting(true);
         setExecutionMode(mode);
         setSubmissionResult(null);
-
         setTimeout(() => {
             const testCasesToRun = mode === 'run' 
                 ? problem.testCases.filter(tc => tc.isPublic)
                 : problem.testCases;
-
             const result = executeCode(code, testCasesToRun);
             setSubmissionResult(result);
             setIsExecuting(false);
-            
             if(mode === 'submit') {
                 if (result.status === 'Accepted') {
                     const todayStr = toYYYYMMDD(new Date());
                     const isFirstSolveOfDay = lastCodingDate !== todayStr;
-
                     addCodingSubmission({
                         problemId: problem.id,
                         status: 'Accepted',
                         language: language,
                     });
-
                     if (isFirstSolveOfDay) {
                         setShowStreakPopup(true);
                     } else {
@@ -290,13 +261,11 @@ const CodingArena: React.FC = () => {
             }
         }, 1200);
     };
-
     const languageConfig = {
         javascript: { name: 'JavaScript', icon: '🟨', color: 'from-yellow-500 to-orange-500' },
         cpp: { name: 'C++', icon: '🔵', color: 'from-blue-500 to-cyan-500' },
         c: { name: 'C', icon: '⚪', color: 'from-gray-400 to-gray-600' }
     };
-
     if (!problem) {
         return (
             <div className="flex h-screen w-full items-center justify-center bg-background">
@@ -304,12 +273,10 @@ const CodingArena: React.FC = () => {
             </div>
         );
     }
-
     return (
         <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
-            {/* Animated Background Elements */}
+            {}
             <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl" />
-            
             <div className="absolute inset-0 overflow-hidden dark">
                 <ElegantShape
                     delay={0.2}
@@ -344,8 +311,7 @@ const CodingArena: React.FC = () => {
                     className="right-[18%] top-[75%]"
                 />
             </div>
-
-            {/* Header */}
+            {}
             <div className="relative z-10 p-6">
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
@@ -353,7 +319,7 @@ const CodingArena: React.FC = () => {
                     transition={{ duration: 0.6 }}
                     className="max-w-7xl mx-auto"
                 >
-                    {/* Badge */}
+                    {}
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
@@ -379,8 +345,7 @@ const CodingArena: React.FC = () => {
                             </div>
                         </motion.div>
                     </div>
-
-                    {/* Title */}
+                    {}
                     <motion.h1
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -391,8 +356,7 @@ const CodingArena: React.FC = () => {
                     </motion.h1>
                 </motion.div>
             </div>
-
-            {/* Main Content */}
+            {}
             <div className="relative z-10 px-6 pb-6">
                 <div className="max-w-7xl mx-auto">
                     <Toaster 
@@ -408,9 +372,8 @@ const CodingArena: React.FC = () => {
                             error: { iconTheme: { primary: '#ef4444', secondary: 'hsl(var(--popover))' } },
                         }}
                     />
-
                     <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 h-[calc(100vh-220px)]">
-                        {/* Left Panel: Problem Description */}
+                        {}
                         <div className="lg:col-span-2 flex flex-col gap-6">
                             <GlassCard delay={0.4} className="flex-grow flex flex-col">
                                 <div className="p-6 border-b border-border">
@@ -444,7 +407,6 @@ const CodingArena: React.FC = () => {
                                         </span>
                                     </div>
                                 </div>
-
                                 <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
                                     <div 
                                         className="text-muted-foreground whitespace-pre-line leading-relaxed prose prose-invert prose-p:text-muted-foreground prose-strong:text-foreground prose-code:bg-muted prose-code:text-primary prose-code:px-2 prose-code:py-1 prose-code:rounded" 
@@ -455,7 +417,6 @@ const CodingArena: React.FC = () => {
                                             ) 
                                         }}
                                     />
-                                    
                                     <div className="mt-8">
                                         <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
                                             <Lightbulb className="h-4 w-4 text-yellow-400" />
@@ -474,7 +435,6 @@ const CodingArena: React.FC = () => {
                                     </div>
                                 </div>
                             </GlassCard>
-
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -483,13 +443,12 @@ const CodingArena: React.FC = () => {
                                 <TimeTravelTicket />
                             </motion.div>
                         </div>
-                        
-                        {/* Right Panel: Editor and Results */}
+                        {}
                         <div className="lg:col-span-3 flex flex-col">
                             <GlassCard delay={0.6} className="flex-1 flex flex-col">
-                                {/* Editor Header */}
+                                {}
                                 <div className="flex-shrink-0 p-4 flex items-center justify-between border-b border-border">
-                                    {/* Timer and Language */}
+                                    {}
                                     <div className="flex items-center gap-3">
                                         <div className="flex items-center gap-2 text-foreground font-semibold bg-muted/50 px-3 py-1.5 rounded-lg border border-border">
                                             <Clock size={16} className={isTimerActive ? "text-primary" : ""} />
@@ -502,7 +461,7 @@ const CodingArena: React.FC = () => {
                                             <RotateCcw size={16} />
                                         </Button>
                                         <div className="w-px h-6 bg-border mx-2"></div>
-                                        {/* Language Selector */}
+                                        {}
                                         <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-xl border border-border">
                                             {Object.entries(languageConfig).map(([lang, config]) => (
                                                 <button 
@@ -520,8 +479,7 @@ const CodingArena: React.FC = () => {
                                             ))}
                                         </div>
                                     </div>
-                                    
-                                    {/* Action Buttons */}
+                                    {}
                                     <div className="flex items-center gap-3">
                                         <button 
                                             onClick={() => handleExecution('run')} 
@@ -535,7 +493,6 @@ const CodingArena: React.FC = () => {
                                             )}
                                             Run
                                         </button>
-                                        
                                         <button 
                                             onClick={() => handleExecution('submit')} 
                                             disabled={isExecuting}
@@ -550,12 +507,10 @@ const CodingArena: React.FC = () => {
                                         </button>
                                     </div>
                                 </div>
-                                
-                                {/* Code Editor */}
+                                {}
                                 <div className="flex-1 min-h-0 bg-[#1a1a1a] relative">
                                     <CodeEditor language={language} code={code} onChange={handleCodeChange} />
-                                    
-                                    {/* Loading Overlay */}
+                                    {}
                                     <AnimatePresence>
                                         {isExecuting && (
                                             <motion.div
@@ -584,8 +539,7 @@ const CodingArena: React.FC = () => {
                                         )}
                                     </AnimatePresence>
                                 </div>
-                                
-                                {/* Results Panel */}
+                                {}
                                 <div className="flex-shrink-0 h-2/5 border-t border-border bg-background">
                                     <SubmissionResult 
                                         result={submissionResult} 
@@ -598,13 +552,10 @@ const CodingArena: React.FC = () => {
                     </div>
                 </div>
             </div>
-
             <StreakPopup isOpen={showStreakPopup} onClose={() => setShowStreakPopup(false)} />
-
-            {/* Vignette Effect */}
+            {}
             <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/80 pointer-events-none" />
         </div>
     );
 };
-
 export default CodingArena;

@@ -1,5 +1,5 @@
 {
-  "name": "lumina-2.0-–-cognitive-productivity-os",
+  "name": "neurolearn",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -28,12 +28,13 @@
     "react-dom": "^18.3.1",
     "react-hot-toast": "^2.4.1",
     "react-router-dom": "^6.25.0",
+    "reactflow": "^11.11.4",
     "recharts": "^2.12.7",
     "tailwind-merge": "^2.2.1",
     "zustand": "^5.0.8"
   },
   "devDependencies": {
-    "@types/node": "^22.17.2",
+    "@types/node": "^22.18.0",
     "@vitejs/plugin-react": "^5.0.1",
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.6",

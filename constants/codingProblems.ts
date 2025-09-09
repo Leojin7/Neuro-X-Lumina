@@ -1,5 +1,4 @@
 import type { CodingProblem } from '../types';
-
 export const CODING_PROBLEMS: CodingProblem[] = [
   // Problem 1: Two Sum
   {
@@ -8,15 +7,13 @@ export const CODING_PROBLEMS: CodingProblem[] = [
     difficulty: 'Easy',
     topic: 'Arrays & Hashing',
     description: `Given an array of integers \`nums\` and an integer \`target\`, return indices of the two numbers such that they add up to \`target\`.
-
 You may assume that each input would have **exactly one solution**, and you may not use the same element twice.
-
 You can return the answer in any order.`,
     functionSignature: 'twoSum(nums, target)',
     starterCode: {
       javascript: 'function twoSum(nums, target) {\n  // Write your code here\n}',
       cpp: '#include <vector>\n#include <unordered_map>\n\nstd::vector<int> twoSum(std::vector<int>& nums, int target) {\n    // Write your code here\n    return {};\n}',
-      c: '#include <stdio.h>\n#include <stdlib.h>\n\n/**\n * Note: The returned array must be malloced, assume caller calls free().\n */\nint* twoSum(int* nums, int numsSize, int target, int* returnSize){\n    // Write your code here\n    *returnSize = 2;\n    int* result = (int*)malloc(2 * sizeof(int));\n    return result;\n}',
+      c: '#include <stdio.h>\n#include <stdlib.h>\n\n\nint* twoSum(int* nums, int numsSize, int target, int* returnSize){\n    // Write your code here\n    *returnSize = 2;\n    int* result = (int*)malloc(2 * sizeof(int));\n    return result;\n}',
       python: '',
       java: ''
     },
@@ -34,7 +31,6 @@ You can return the answer in any order.`,
     difficulty: 'Easy',
     topic: 'Stack',
     description: `Given a string \`s\` containing just the characters \`(\`, \`)\`, \`{\`, \`}\`, \`[\` and \`]\`, determine if the input string is valid.
-
 An input string is valid if:
 1.  Open brackets must be closed by the same type of brackets.
 2.  Open brackets must be closed in the correct order.
@@ -62,11 +58,8 @@ An input string is valid if:
       difficulty: 'Easy',
       topic: 'Linked List',
       description: `You are given the heads of two sorted linked lists \`list1\` and \`list2\`.
-
 Merge the two lists into one **sorted** list. The list should be made by splicing together the nodes of the first two lists.
-
 Return the head of the merged linked list.
-
 A ListNode definition is provided for you in JavaScript:
 \`\`\`
 function ListNode(val, next) {
@@ -76,7 +69,7 @@ function ListNode(val, next) {
 \`\`\``,
       functionSignature: 'mergeTwoLists(list1, list2)',
       starterCode: {
-        javascript: '/**\n * Definition for singly-linked list.\n * function ListNode(val, next) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.next = (next===undefined ? null : next)\n * }\n */\nfunction mergeTwoLists(list1, list2) {\n  // Write your code here\n}',
+        javascript: '\nfunction mergeTwoLists(list1, list2) {\n  // Write your code here\n}',
         cpp: '// Definition for singly-linked list.\n// struct ListNode {\n//     int val;\n//     ListNode *next;\n//     ListNode() : val(0), next(nullptr) {}\n//     ListNode(int x) : val(x), next(nullptr) {}\n//     ListNode(int x, ListNode *next) : val(x), next(next) {}\n// };\n\nListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {\n    // Write your code here\n    return nullptr;\n}',
         c: '// Definition for singly-linked list.\n// struct ListNode {\n//     int val;\n//     struct ListNode *next;\n// };\n\nstruct ListNode* mergeTwoLists(struct ListNode* list1, struct ListNode* list2){\n    // Write your code here\n    return NULL;\n}',
         python: '',
@@ -155,7 +148,7 @@ function ListNode(val, next) {
       description: 'Given the `root` of a binary tree, invert the tree, and return its root.\n\nA TreeNode definition is provided for you.',
       functionSignature: 'invertTree(root)',
       starterCode: {
-          javascript: '/**\n * Definition for a binary tree node.\n * function TreeNode(val, left, right) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.left = (left===undefined ? null : left)\n *     this.right = (right===undefined ? null : right)\n * }\n */\nfunction invertTree(root) {\n  // Write your code here\n};',
+          javascript: '\nfunction invertTree(root) {\n  // Write your code here\n};',
           cpp: '// Definition for a binary tree node.\n// struct TreeNode {\n//     int val;\n//     TreeNode *left;\n//     TreeNode *right;\n// };\n\nTreeNode* invertTree(TreeNode* root) {\n    // Write your code here\n    return root;\n}',
           c: '// Definition for a binary tree node.\n// struct TreeNode {\n//     int val;\n//     struct TreeNode *left;\n//     struct TreeNode *right;\n// };\n\nstruct TreeNode* invertTree(struct TreeNode* root){\n    // Write your code here\n    return root;\n}',
           python: '',
@@ -193,7 +186,7 @@ function ListNode(val, next) {
       description: 'Given the `head` of a singly linked list, reverse the list, and return the reversed list.',
       functionSignature: 'reverseList(head)',
       starterCode: {
-          javascript: '/**\n * Definition for singly-linked list.\n * function ListNode(val, next) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.next = (next===undefined ? null : next)\n * }\n */\nfunction reverseList(head) {\n  // Write your code here\n};',
+          javascript: '\nfunction reverseList(head) {\n  // Write your code here\n};',
           cpp: '// Definition for singly-linked list.\n// struct ListNode {\n//     int val;\n//     ListNode *next;\n// };\n\nListNode* reverseList(ListNode* head) {\n    // Write your code here\n    return head;\n}',
           c: '// Definition for singly-linked list.\n// struct ListNode {\n//     int val;\n//     struct ListNode *next;\n// };\n\nstruct ListNode* reverseList(struct ListNode* head){\n    // Write your code here\n    return head;\n}',
           python: '',

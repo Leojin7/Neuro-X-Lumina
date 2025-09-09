@@ -5,7 +5,6 @@ import type { FocusStory } from '../types';
 import { motion } from 'framer-motion';
 import { Sun, Coins, Sparkles, BrainCircuit, Zap } from 'lucide-react';
 import Card from './Card';
-
 const MiniStoryCard = ({ story }: { story: FocusStory }) => {
   const { currentUser } = useUserStore();
   const userAvatar = currentUser?.photoURL || `https://api.dicebear.com/8.x/bottts-neutral/svg?seed=${currentUser?.uid}`;
@@ -36,10 +35,8 @@ const MiniStoryCard = ({ story }: { story: FocusStory }) => {
     </motion.div>
   );
 };
-
 const StoryCarousel = () => {
   const { focusStories } = useUserStore();
-
   if (focusStories.length === 0) {
     return (
         <Card>
@@ -51,7 +48,6 @@ const StoryCarousel = () => {
         </Card>
     );
   }
-
   return (
     <div>
         <h3 className="text-xl font-bold text-foreground mb-4">Recent Stories</h3>
@@ -63,5 +59,4 @@ const StoryCarousel = () => {
     </div>
   );
 };
-
 export default StoryCarousel;

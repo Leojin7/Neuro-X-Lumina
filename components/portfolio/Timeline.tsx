@@ -3,14 +3,12 @@ import { motion } from 'framer-motion';
 import type { TimelineEvent } from '../../types';
 import Card from '../Card';
 import { Briefcase, Milestone, BookOpen, GitBranch } from 'lucide-react';
-
 const icons = {
     Job: <Briefcase className="w-5 h-5" />,
     Milestone: <Milestone className="w-5 h-5" />,
     Learn: <BookOpen className="w-5 h-5" />,
     Project: <GitBranch className="w-5 h-5" />,
 };
-
 const TimelineItem = ({ event, isLast }: { event: TimelineEvent, isLast: boolean }) => {
     return (
         <motion.div
@@ -36,11 +34,9 @@ const TimelineItem = ({ event, isLast }: { event: TimelineEvent, isLast: boolean
         </motion.div>
     );
 };
-
 interface TimelineProps {
     events: TimelineEvent[];
 }
-
 const Timeline: React.FC<TimelineProps> = ({ events }) => {
     return (
         <Card title="Career Timeline" className="h-full">
@@ -57,5 +53,4 @@ const Timeline: React.FC<TimelineProps> = ({ events }) => {
         </Card>
     );
 };
-
 export default Timeline;

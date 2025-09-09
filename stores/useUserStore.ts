@@ -3,22 +3,17 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import type { QuizResult, SubscriptionTier, RecentlyDeletedQuiz, CurrentUser, DailyMission, FocusStory, DailyCheckin, GratitudeEntry, MindShiftEntry, Mood, CodingSubmission, Language, Habit, SleepEntry, Note, CognitiveStateAnalysis } from '../types';
 import { User, logOut, updateUserProfile as fbUpdateUserProfile, auth } from '../firebaseAuth';
 import { generateStudyPlan } from '../services/geminiService';
-
 const toYYYYMMDD = (date: Date) => date.toISOString().slice(0, 10);
-
 const isYesterday = (dateStr: string) => {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     return toYYYYMMDD(yesterday) === dateStr;
 };
-
 const TICKET_COST = 100;
-
 interface UserProfileUpdate {
     displayName?: string;
     photoURL?: string;
 }
-
 interface UserState {
   currentUser: CurrentUser | null;
   focusCoins: number;
@@ -44,8 +39,6 @@ interface UserState {
   lastCodingDate: string | null;
   timeTravelTickets: number;
   codingSubmissions: CodingSubmission[];
-
-  
   setCurrentUser: (user: CurrentUser | null) => void;
   checkAuthStatus: () => void;
   logoutUser: () => Promise<void>;
@@ -80,9 +73,7 @@ interface UserState {
   buyFocusCoins: (amount: number) => void;
   buyTimeTravelTicket: () => boolean;
 }
-
 const STORE_KEY = 'lumina-user-store';
-
 const initialState = {
     currentUser: null,
     focusCoins: 100,
@@ -113,17 +104,14 @@ const initialState = {
     timeTravelTickets: 1,
     codingSubmissions: [],
 }
-
 export const useUserStore = create<UserState>()(
   persist(
     (set, get) => ({
       ...initialState,
-      
       setCurrentUser: (user) => {
         console.log('Setting current user:', user);
         set({ currentUser: user });
       },
-      
       checkAuthStatus: () => {
         const authUser = auth.currentUser;
         console.log('Auth status check - Firebase user:', authUser);
@@ -139,7 +127,6 @@ export const useUserStore = create<UserState>()(
           get().setCurrentUser(null);
         }
       },
-
       logoutUser: async () => {
           // *** THE FIX IS HERE ***
           // We only call the Firebase sign-out function.
@@ -148,11 +135,9 @@ export const useUserStore = create<UserState>()(
           // This prevents a race condition and ensures a clean, predictable state update.
           await logOut();
       },
-
       clearUser: () => {
         set(initialState);
       },
-
       updateUserProfile: async (updates: UserProfileUpdate) => {
           const user = get().currentUser;
           if (!user) throw new Error("User not logged in");
@@ -167,7 +152,6 @@ export const useUserStore = create<UserState>()(
             get().setCurrentUser(currentUser);
           }
       },
-      
       addCompletedQuiz: (result) => {
         set((state) => {
           const otherQuizzes = state.completedQuizzes.filter(
@@ -176,7 +160,6 @@ export const useUserStore = create<UserState>()(
           return { completedQuizzes: [...otherQuizzes, result] };
         });
       },
-
       removeCompletedQuiz: (quizId, completedAt) => {
         const quizToRemove = get().completedQuizzes.find(q => q.quizId === quizId && q.completedAt === completedAt);
         if (quizToRemove) {
@@ -187,7 +170,6 @@ export const useUserStore = create<UserState>()(
             }));
         }
       },
-
       undoRemove: (quizId, completedAt) => {
           const quizToRestore = get().recentlyDeleted.find(q => q.quizId === quizId && q.completedAt === completedAt);
           if (quizToRestore) {
@@ -198,7 +180,6 @@ export const useUserStore = create<UserState>()(
               }));
           }
       },
-      
       cleanupRecentlyDeleted: () => {
           const now = Date.now();
           const twoDaysInMs = 48 * 60 * 60 * 1000;
@@ -206,9 +187,7 @@ export const useUserStore = create<UserState>()(
               recentlyDeleted: state.recentlyDeleted.filter(q => (now - q.deletedAt) < twoDaysInMs)
           }));
       },
-
       addCoins: (amount: number) => set((state) => ({ focusCoins: state.focusCoins + amount })),
-      
       spendCoins: (amount: number) => {
         if (get().focusCoins >= amount) {
           set((state) => ({ focusCoins: state.focusCoins - amount }));
@@ -216,21 +195,17 @@ export const useUserStore = create<UserState>()(
         }
         return false;
       },
-      
       upgradeSubscription: (tier) => set({ subscriptionTier: tier }),
       cancelSubscription: () => set({ subscriptionTier: 'free' }),
-      
       unlockQuiz: (quizId: string) => {
           if(!get().unlockedQuizIds.includes(quizId)) {
               set(state => ({ unlockedQuizIds: [...state.unlockedQuizIds, quizId] }));
           }
       },
-
       generateAndSetStudyPlan: async () => {
           set({ isPlanGenerating: true });
           try {
               const { completedQuizzes, focusStories } = get();
-              
               const getScoreFromCognitiveState = (result: CognitiveStateAnalysis | null): number => {
                 if (!result) return 50; // Default score if no analysis
                 switch (result.cognitive_state) {
@@ -242,14 +217,12 @@ export const useUserStore = create<UserState>()(
                     default: return 50;
                 }
               };
-
               const focusHistoryForPlan = focusStories.map(s => ({ 
                   id: s.id, 
                   date: s.date, 
                   duration: s.duration, 
                   score: getScoreFromCognitiveState(s.cognitiveStateResult) 
               }));
-
               const planData = await generateStudyPlan(completedQuizzes, focusHistoryForPlan);
               const planWithStatus: DailyMission[] = planData.map(mission => ({
                   ...mission,
@@ -261,7 +234,6 @@ export const useUserStore = create<UserState>()(
               set({ isPlanGenerating: false });
           }
       },
-
       updateMissionStatus: (day, status) => {
           set(state => {
               if (!state.studyPlan) return {};
@@ -274,7 +246,6 @@ export const useUserStore = create<UserState>()(
               return { studyPlan: updatedPlan };
           });
       },
-      
       addFocusStory: (story) => {
         set(state => {
           const newStory: FocusStory = {
@@ -283,10 +254,8 @@ export const useUserStore = create<UserState>()(
             date: new Date().toISOString(),
           };
           const updatedStories = [newStory, ...state.focusStories].slice(0, 10);
-          
           const todayStr = toYYYYMMDD(new Date());
           let newStreak = state.focusStreak;
-
           if (state.lastFocusSessionDate !== todayStr) {
               if (state.lastFocusSessionDate && isYesterday(state.lastFocusSessionDate)) {
                 newStreak += 1;
@@ -294,7 +263,6 @@ export const useUserStore = create<UserState>()(
                 newStreak = 1;
               }
           }
-          
           return { 
             focusStories: updatedStories,
             focusStreak: newStreak,
@@ -302,7 +270,6 @@ export const useUserStore = create<UserState>()(
           };
         });
       },
-
       // Wellness Actions
       addOrUpdateCheckin: (checkinData) => {
         set(state => {
@@ -310,7 +277,6 @@ export const useUserStore = create<UserState>()(
           const existingCheckinIndex = state.dailyCheckins.findIndex(c => c.date === todayStr);
           let newCheckins = [...state.dailyCheckins];
           let shouldReward = false;
-
           if (existingCheckinIndex > -1) {
             newCheckins[existingCheckinIndex] = { ...newCheckins[existingCheckinIndex], ...checkinData };
           } else {
@@ -375,7 +341,6 @@ export const useUserStore = create<UserState>()(
                       if (h.lastCompleted === todayStr) {
                           return { ...h, streak: h.streak - 1, lastCompleted: null };
                       }
-                      
                       // If not completed today, toggle it
                       let newStreak = h.streak;
                       if (h.lastCompleted && isYesterday(h.lastCompleted)) {
@@ -395,15 +360,12 @@ export const useUserStore = create<UserState>()(
         set(state => {
             const todayStr = toYYYYMMDD(new Date());
             const newEntry: SleepEntry = { ...entry, date: todayStr };
-            
             const otherEntries = state.sleepEntries.filter(e => e.date !== todayStr);
-            
             return {
                 sleepEntries: [...otherEntries, newEntry]
             }
         });
       },
-
       // Notes Actions
       addNote: () => set(state => {
           const newNote: Note = {
@@ -423,7 +385,6 @@ export const useUserStore = create<UserState>()(
       deleteNote: (id: string) => set(state => ({
           notes: state.notes.filter(note => note.id !== id)
       })),
-      
       // Coding Arena Actions
       addCodingSubmission: (submission: Omit<CodingSubmission, 'submittedAt'>) => {
         set((state) => {
@@ -431,17 +392,14 @@ export const useUserStore = create<UserState>()(
             ...submission,
             submittedAt: new Date().toISOString(),
           };
-
           let newXp = state.codingXP;
           let newStreak = state.codingStreak;
           let newCoins = state.focusCoins;
           let newLastCodingDate = state.lastCodingDate;
           const todayStr = toYYYYMMDD(new Date());
-
           if(submission.status === 'Accepted') {
             newXp += 25;
             newCoins += 20; 
-            
             if (state.lastCodingDate !== todayStr) {
                 if (state.lastCodingDate && isYesterday(state.lastCodingDate)) {
                     newStreak += 1;
@@ -451,7 +409,6 @@ export const useUserStore = create<UserState>()(
                 newLastCodingDate = todayStr;
             }
           }
-
           return { 
             codingSubmissions: [...state.codingSubmissions, fullSubmission],
             codingXP: newXp,
@@ -461,13 +418,11 @@ export const useUserStore = create<UserState>()(
           };
         });
       },
-
       useTimeTravelTicket: () => {
         const state = get();
         if (state.timeTravelTickets > 0) {
             const yesterday = new Date();
             yesterday.setDate(yesterday.getDate() - 1);
-            
             set({
                 timeTravelTickets: state.timeTravelTickets - 1,
                 // By setting last coding date to yesterday, the next successful submission will continue the streak.
@@ -478,11 +433,9 @@ export const useUserStore = create<UserState>()(
         }
         return false;
       },
-      
       buyFocusCoins: (amount: number) => {
           set(state => ({ focusCoins: state.focusCoins + amount }));
       },
-
       buyTimeTravelTicket: () => {
           const state = get();
           if (state.focusCoins >= TICKET_COST) {
@@ -494,7 +447,6 @@ export const useUserStore = create<UserState>()(
           }
           return false;
       }
-
     }),
     {
       name: 'lumina-user-store',

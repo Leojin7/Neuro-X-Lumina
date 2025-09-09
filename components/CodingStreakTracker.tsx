@@ -2,14 +2,11 @@ import React from 'react';
 import { useUserStore } from '../stores/useUserStore';
 import { Flame } from 'lucide-react';
 import { motion } from 'framer-motion';
-
 const CodingStreakTracker = () => {
     const { codingStreak, lastCodingDate } = useUserStore();
-    
     const today = new Date().toISOString().slice(0, 10);
     const isActiveToday = lastCodingDate === today;
     const hasStreak = codingStreak > 0;
-
     return (
         <motion.div 
             key={codingStreak} // Re-animate on change
@@ -34,5 +31,4 @@ const CodingStreakTracker = () => {
         </motion.div>
     );
 };
-
 export default CodingStreakTracker;

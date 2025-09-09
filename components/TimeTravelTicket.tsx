@@ -4,15 +4,12 @@ import { Ticket, Rewind, Loader2 } from 'lucide-react';
 import { useUserStore } from '../stores/useUserStore';
 import toast from 'react-hot-toast';
 import Button from './Button';
-
 const TimeTravelTicket: React.FC = () => {
     const { timeTravelTickets, useTimeTravelTicket, codingStreak, lastCodingDate } = useUserStore();
     const [isLoading, setIsLoading] = useState(false);
-
     const today = new Date().toISOString().slice(0, 10);
     const yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toISOString().slice(0, 10);
     const isStreakBroken = codingStreak > 0 && lastCodingDate !== today && lastCodingDate !== yesterday;
-
     const handleUseTicket = () => {
         setIsLoading(true);
         if (window.confirm("Are you sure you want to use a Time Travel Ticket? This will mend your streak, allowing you to continue it with today's solution.")) {
@@ -26,7 +23,6 @@ const TimeTravelTicket: React.FC = () => {
         // This is a simulation, in a real app you might have more complex logic
         setTimeout(() => setIsLoading(false), 500);
     }
-    
     return (
         <div className="bg-muted/20 p-3 rounded-2xl border border-border flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -38,12 +34,10 @@ const TimeTravelTicket: React.FC = () => {
                     <p className="text-xs text-muted-foreground">Mend a broken streak</p>
                 </div>
             </div>
-            
             <div className="text-center">
                  <p className="font-bold text-2xl text-foreground">{timeTravelTickets}</p>
                  <p className="text-xs text-muted-foreground -mt-1">available</p>
             </div>
-            
             {isStreakBroken && (
                  <Button 
                     variant="outline" 
@@ -59,5 +53,4 @@ const TimeTravelTicket: React.FC = () => {
         </div>
     );
 };
-
 export default TimeTravelTicket;

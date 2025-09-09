@@ -4,7 +4,6 @@ import type { StudySquad, SquadMember, CurrentUser } from '../types';
 import { useUserStore } from './useUserStore';
 import { encrypt } from '../services/encryptionService';
 import { FirebaseSquadService } from '../services/firebaseDatabase';
-
 interface SquadState {
   squads: StudySquad[];
   activeSubscriptions: Record<string, () => void>;
@@ -25,7 +24,6 @@ interface SquadState {
   decrementTimer: (squadId: string) => void;
   deleteSquad: (squadId: string) => Promise<void>;
 }
-
 const MOCK_SQUADS: StudySquad[] = [
   {
     id: 'squad-1', name: 'Late Night Study Crew', topic: 'Calculus II', hostId: 'mock-user-1',
@@ -43,21 +41,16 @@ const MOCK_SQUADS: StudySquad[] = [
     isPrivate: false, createdAt: new Date().toISOString(), joinCode: 'REACTUX'
   },
 ];
-
 export const useSquadStore = create<SquadState>()(
   persist(
     (set, get) => ({
       squads: [],
       activeSubscriptions: {},
-      
       getSquadById: (squadId) => get().squads.find(s => s.id === squadId),
-
       createSquad: async (name, topic) => {
         const currentUser = useUserStore.getState().currentUser;
         if (!currentUser) return null;
-
         const joinCode = Math.random().toString(36).substring(2, 8).toUpperCase();
-
         const newSquad: StudySquad = {
           id: `squad-${Date.now()}`,
           name,
@@ -70,7 +63,6 @@ export const useSquadStore = create<SquadState>()(
           createdAt: new Date().toISOString(),
           joinCode,
         };
-        
         try {
           await FirebaseSquadService.createSquad(newSquad);
           // Update local state immediately after successful creation
@@ -81,25 +73,20 @@ export const useSquadStore = create<SquadState>()(
           return null;
         }
       },
-      
       joinSquad: async (squadId) => {
         const currentUser = useUserStore.getState().currentUser;
         if (!currentUser) return false;
-
         const squad = get().getSquadById(squadId);
         if (!squad) {
           console.warn(`Squad ${squadId} not found in local state`);
           return false;
         }
-
         if (squad.members.some(m => m.uid === currentUser.uid)) return true; // Already in squad
-
         const newMember: SquadMember = {
             uid: currentUser.uid, 
             displayName: currentUser.displayName || 'User', 
             photoURL: currentUser.photoURL || `https://i.pravatar.cc/40?u=${currentUser.uid}`
         };
-
         try {
           await FirebaseSquadService.joinSquad(squadId, newMember);
           console.log(`Successfully joined squad ${squadId}`);
@@ -109,7 +96,6 @@ export const useSquadStore = create<SquadState>()(
           return false;
         }
       },
-      
       joinSquadByCode: async (code) => {
         const squad = get().squads.find(s => s.joinCode === code.toUpperCase());
         if (!squad) {
@@ -118,11 +104,9 @@ export const useSquadStore = create<SquadState>()(
         const success = await get().joinSquad(squad.id);
         return success ? squad : null;
       },
-
       leaveSquad: async (squadId) => {
         const currentUser = useUserStore.getState().currentUser;
         if (!currentUser) return;
-        
         try {
           await FirebaseSquadService.leaveSquad(squadId, currentUser.uid);
           get().unsubscribeFromSquad(squadId);
@@ -136,24 +120,20 @@ export const useSquadStore = create<SquadState>()(
           console.error('Failed to leave squad:', error);
         }
       },
-      
       sendMessage: async (squadId, content) => {
         const currentUser = useUserStore.getState().currentUser;
         if (!currentUser) return;
-
         const author: SquadMember = {
             uid: currentUser.uid, 
             displayName: currentUser.displayName || 'User', 
             photoURL: currentUser.photoURL || `https://i.pravatar.cc/40?u=${currentUser.uid}`
         };
-
         const newMessage = {
             id: `msg-${Date.now()}`,
             author,
             content: encrypt(content),
             timestamp: new Date().toISOString(),
         };
-
         try {
           await FirebaseSquadService.sendMessage(squadId, newMessage);
           console.log(`Message sent to squad ${squadId}`);
@@ -161,7 +141,6 @@ export const useSquadStore = create<SquadState>()(
           console.error('Failed to send message:', error);
         }
       },
-
       postAIMessage: async (squadId, content) => {
           const aiAuthor: SquadMember = {
               uid: 'lumina-ai-observer',
@@ -175,14 +154,12 @@ export const useSquadStore = create<SquadState>()(
               timestamp: new Date().toISOString(),
               isAIMessage: true,
           };
-          
           try {
             await FirebaseSquadService.sendMessage(squadId, aiMessage);
           } catch (error) {
             console.error('Failed to send AI message:', error);
           }
       },
-
       subscribeToSquad: (squadId: string) => {
         const unsubscribe = FirebaseSquadService.subscribeToSquad(squadId, (squad) => {
           set(state => ({
@@ -191,11 +168,9 @@ export const useSquadStore = create<SquadState>()(
               : state.squads.filter(s => s.id !== squadId)
           }));
         });
-        
         const subscriptions = get().activeSubscriptions;
         set({ activeSubscriptions: { ...subscriptions, [squadId]: unsubscribe } });
       },
-
       unsubscribeFromSquad: (squadId: string) => {
         const subscriptions = get().activeSubscriptions;
         const unsubscribe = subscriptions[squadId];
@@ -205,16 +180,13 @@ export const useSquadStore = create<SquadState>()(
           set({ activeSubscriptions: rest });
         }
       },
-
       subscribeToAllSquads: () => {
         const unsubscribe = FirebaseSquadService.subscribeToAllSquads((squads) => {
           set({ squads });
         });
-        
         const subscriptions = get().activeSubscriptions;
         set({ activeSubscriptions: { ...subscriptions, 'all-squads': unsubscribe } });
       },
-
       unsubscribeFromAllSquads: () => {
         const subscriptions = get().activeSubscriptions;
         const unsubscribe = subscriptions['all-squads'];
@@ -224,58 +196,46 @@ export const useSquadStore = create<SquadState>()(
           set({ activeSubscriptions: rest });
         }
       },
-
       // Timer controls
       toggleTimer: async (squadId: string) => {
         const currentUser = useUserStore.getState().currentUser;
         const squad = get().getSquadById(squadId);
         if (!currentUser || !squad || squad.hostId !== currentUser.uid) return; // Only host can control timer
-
         const newTimerState = { ...squad.timerState, isActive: !squad.timerState.isActive };
-        
         try {
           await FirebaseSquadService.updateTimer(squadId, newTimerState);
         } catch (error) {
           console.error('Failed to toggle timer:', error);
         }
       },
-
       resetTimer: async (squadId: string) => {
         const currentUser = useUserStore.getState().currentUser;
         const squad = get().getSquadById(squadId);
         if (!currentUser || !squad || squad.hostId !== currentUser.uid) return; // Only host can control timer
-
         const newTimerState = { ...squad.timerState, timeLeft: 25 * 60, isActive: false };
-        
         try {
           await FirebaseSquadService.updateTimer(squadId, newTimerState);
         } catch (error) {
           console.error('Failed to reset timer:', error);
         }
       },
-
       decrementTimer: (squadId: string) => {
         const squad = get().getSquadById(squadId);
         if (!squad || squad.timerState.timeLeft <= 0) return;
-        
         const newTimeLeft = squad.timerState.timeLeft - 1;
         const newIsActive = newTimeLeft > 0 ? squad.timerState.isActive : false;
         const newTimerState = { ...squad.timerState, timeLeft: newTimeLeft, isActive: newIsActive };
-        
         // Update Firebase (fire and forget for performance)
         FirebaseSquadService.updateTimer(squadId, newTimerState).catch(console.error);
       },
-      
       deleteSquad: async (squadId: string) => {
         const currentUser = useUserStore.getState().currentUser;
         if (!currentUser) return;
-        
         const squad = get().getSquadById(squadId);
         if (!squad || squad.hostId !== currentUser.uid) {
           console.warn('Only the host can delete the squad');
           return;
         }
-        
         try {
           await FirebaseSquadService.deleteSquad(squadId);
           get().unsubscribeFromSquad(squadId);

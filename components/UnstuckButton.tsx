@@ -3,10 +3,8 @@ import React, { useState } from 'react';
 import Button from './Button';
 import { Sparkles } from 'lucide-react';
 import UnstuckModal from './UnstuckModal';
-
 const UnstuckButton: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   return (
     <>
       <Button
@@ -22,5 +20,4 @@ const UnstuckButton: React.FC = () => {
     </>
   );
 };
-
 export default UnstuckButton;

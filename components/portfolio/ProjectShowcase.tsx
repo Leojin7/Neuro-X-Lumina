@@ -3,11 +3,9 @@ import { motion } from 'framer-motion';
 import type { PortfolioProject } from '../../types';
 import Card from '../Card';
 import { ExternalLink, Github } from 'lucide-react';
-
 interface ProjectShowcaseProps {
     projects: PortfolioProject[];
 }
-
 const ProjectCard = ({ project, index }: { project: PortfolioProject, index: number }) => {
     return (
         <motion.div
@@ -49,7 +47,6 @@ const ProjectCard = ({ project, index }: { project: PortfolioProject, index: num
         </motion.div>
     )
 }
-
 const ProjectShowcase: React.FC<ProjectShowcaseProps> = ({ projects }) => {
     return (
         <Card title="Featured Projects" className="h-full">
@@ -67,5 +64,4 @@ const ProjectShowcase: React.FC<ProjectShowcaseProps> = ({ projects }) => {
         </Card>
     );
 };
-
 export default ProjectShowcase;

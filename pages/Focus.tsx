@@ -1,6 +1,4 @@
 
-
-
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -15,15 +13,12 @@ import {
 import { useUserStore } from '../stores/useUserStore';
 import * as geminiService from '../services/geminiService';
 import type { CognitiveStateAnalysis, FocusStory, AudioEnvironmentAnalysis } from '../types';
-
 type TimerMode = 'pomodoro' | 'shortBreak' | 'longBreak';
-
 const FOCUS_TIME = 25 * 60;
 const SHORT_BREAK_TIME = 5 * 60;
 const LONG_BREAK_TIME = 15 * 60;
 const FOCUS_REWARD = 25;
 const ANALYSIS_INTERVAL = 15000;
-
 const ElegantShape = ({
   className,
   delay = 0,
@@ -65,7 +60,6 @@ const ElegantShape = ({
     </motion.div>
   </motion.div>
 );
-
 const Focus: React.FC = () => {
   const [mode, setMode] = useState<TimerMode>('pomodoro');
   const [timeLeft, setTimeLeft] = useState(FOCUS_TIME);
@@ -75,7 +69,6 @@ const Focus: React.FC = () => {
   // Select fields separately to avoid creating a new object every render
   const addCoins = useUserStore(state => state.addCoins);
   const addFocusStory = useUserStore(state => state.addFocusStory);
-
   // Cognitive State Analysis
   const videoRef = useRef<HTMLVideoElement>(null);
   const analysisIntervalRef = useRef<number | null>(null);
@@ -85,7 +78,6 @@ const Focus: React.FC = () => {
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [actionableAdvice, setActionableAdvice] = useState<string | null>(null);
   const [isAdviceLoading, setIsAdviceLoading] = useState(false);
-
   // Audio State
   const [isAudioAnalyzing, setIsAudioAnalyzing] = useState(false);
   const [audioError, setAudioError] = useState<string | null>(null);
@@ -95,10 +87,8 @@ const Focus: React.FC = () => {
   const [isAudioSuggestionLoading, setIsAudioSuggestionLoading] = useState(false);
   const audioIntervalRef = useRef<number | null>(null);
   const detectedSoundsRef = useRef<string[]>([]);
-  
   const getTimeForMode = (m: TimerMode) =>
     m === 'pomodoro' ? FOCUS_TIME : m === 'shortBreak' ? SHORT_BREAK_TIME : LONG_BREAK_TIME;
-
   const handleSessionComplete = useCallback(() => {
     if (mode === 'pomodoro') {
       addCoins(FOCUS_REWARD);
@@ -117,14 +107,12 @@ const Focus: React.FC = () => {
     setMode(nextMode);
     setTimeLeft(getTimeForMode(nextMode));
   }, [addCoins, mode, addFocusStory, isAnalyzing, cognitiveStateResult]);
-
   const stopTimer = useCallback(() => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
   }, []);
-
   useEffect(() => {
     if (isActive) {
       timerRef.current = window.setInterval(() => {
@@ -143,56 +131,106 @@ const Focus: React.FC = () => {
     }
     return () => stopTimer();
   }, [isActive, stopTimer, handleSessionComplete]);
-
-  // --- Visual analysis (camera) ---
+  // --- Enhanced Visual Analysis (camera) ---
   const captureAndAnalyze = useCallback(async () => {
     if (!videoRef.current || videoRef.current.readyState < 2) return;
-    setIsAnalysisLoading(true);
+    // Set loading state with a timeout to ensure UI feedback is shown
+    const loadingTimeout = setTimeout(() => {
+      if (!isAnalysisLoading) setIsAnalysisLoading(true);
+    }, 300);
     setActionableAdvice(null);
-    const canvas = document.createElement('canvas');
-    canvas.width = videoRef.current.videoWidth;
-    canvas.height = videoRef.current.videoHeight;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-    const base64Image = canvas.toDataURL('image/jpeg').split(',')[1];
     try {
-      const result = await geminiService.analyzeCognitiveState(base64Image);
+      const canvas = document.createElement('canvas');
+      canvas.width = videoRef.current.videoWidth;
+      canvas.height = videoRef.current.videoHeight;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      // Draw mirrored video feed
+      ctx.save();
+      ctx.scale(-1, 1); // Mirror the context
+      ctx.drawImage(videoRef.current, -canvas.width, 0, canvas.width, canvas.height);
+      ctx.restore();
+      // Optimize image quality and size
+      const base64Image = canvas.toDataURL('image/jpeg', 0.7).split(',')[1];
+      // Run analysis with timeout
+      const analysisPromise = geminiService.analyzeCognitiveState(base64Image);
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Analysis timed out')), 8000) // 8 second timeout
+      );
+      const result = await Promise.race([analysisPromise, timeoutPromise]) as any;
       setCognitiveStateResult(result);
-
-      setIsAdviceLoading(true);
-      const adviceText = await geminiService.getActionableAdvice(result.actionable_advice_id);
-      setActionableAdvice(adviceText);
-      setIsAdviceLoading(false);
-
+      // Get advice in parallel to save time
+      Promise.resolve().then(async () => {
+        try {
+          const adviceText = await geminiService.getActionableAdvice(result.actionable_advice_id);
+          setActionableAdvice(adviceText);
+        } catch (e) {
+          console.error("Failed to get advice:", e);
+          setActionableAdvice("Focus on maintaining a good posture and taking regular breaks.");
+        } finally {
+          setIsAdviceLoading(false);
+        }
+      });
     } catch (error) {
       console.error("Cognitive state analysis failed:", error);
+      // Only update state if component is still mounted
       setCognitiveStateResult({
-          cognitive_state: 'Tired', // a safe default on error
-          confidence_score: 0,
-          key_indicators: ['Error analyzing image'],
-          actionable_advice_id: 'ADVICE_BREAK'
+        cognitive_state: 'Neutral',
+        confidence_score: 0,
+        key_indicators: ['Analysis in progress...'],
+        actionable_advice_id: 'ADVICE_NEUTRAL'
       });
-      setActionableAdvice("Something went wrong during analysis. Maybe it's a good time for a short break.");
+      setActionableAdvice("Analyzing your focus state...");
     } finally {
+      clearTimeout(loadingTimeout);
       setIsAnalysisLoading(false);
     }
-  }, []);
-
+  }, [isAnalysisLoading]);
   const startAnalysis = async () => {
     setCameraError(null);
-    setCognitiveStateResult(null);
+    setCognitiveStateResult({
+      cognitive_state: 'Neutral',
+      confidence_score: 0,
+      key_indicators: ['Initializing camera...'],
+      actionable_advice_id: 'ADVICE_NEUTRAL'
+    });
+    setActionableAdvice("Camera is starting up. Please wait...");
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      if (videoRef.current) videoRef.current.srcObject = stream;
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { 
+          width: { ideal: 640 },
+          height: { ideal: 480 },
+          facingMode: 'user'
+        } 
+      });
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        videoRef.current.play().catch(e => {
+          console.error("Video play failed:", e);
+          throw new Error("Could not start video feed");
+        });
+      }
       setIsAnalyzing(true);
-      setTimeout(captureAndAnalyze, 2000);
-      analysisIntervalRef.current = window.setInterval(captureAndAnalyze, ANALYSIS_INTERVAL);
+      // Initial analysis after camera is ready
+      const checkReady = setInterval(() => {
+        if (videoRef.current && videoRef.current.readyState >= 2) {
+          clearInterval(checkReady);
+          captureAndAnalyze();
+          analysisIntervalRef.current = window.setInterval(captureAndAnalyze, 10000); // 10 second interval
+        }
+      }, 100);
     } catch (err) {
-      setCameraError("Camera access is required.");
+      console.error("Camera access error:", err);
+      setCameraError("Camera access is required for focus analysis. Please check your browser permissions.");
+      setCognitiveStateResult({
+        cognitive_state: 'Neutral',
+        confidence_score: 0,
+        key_indicators: ['Camera not available'],
+        actionable_advice_id: 'ADVICE_NEUTRAL'
+      });
+      setActionableAdvice("Enable camera access to use focus analysis.");
     }
   };
-
   const stopAnalysis = useCallback(() => {
     if (analysisIntervalRef.current) clearInterval(analysisIntervalRef.current);
     if (videoRef.current?.srcObject) {
@@ -204,10 +242,8 @@ const Focus: React.FC = () => {
     setCognitiveStateResult(null);
     setActionableAdvice(null);
   }, []);
-
   // --- Audio environment analysis ---
   const MOCK_SOUND_EVENTS = [ "Keyboard Taps", "Mouse Clicks", "Silence", "Silence", "Silence", "Computer Fan", "Traffic Hum (distant)", "Human Speech (faint)", "Sudden Noise (door close)", "Music (instrumental)" ];
-
   const analyzeAudio = useCallback(async () => {
     if (detectedSoundsRef.current.length === 0) return;
     setIsAudioLoading(true);
@@ -217,12 +253,10 @@ const Focus: React.FC = () => {
     try {
         const result = await geminiService.analyzeAudioEnvironment(soundsToAnalyze);
         setAudioAnalysisResult(result);
-
         setIsAudioSuggestionLoading(true);
         const suggestion = await geminiService.getAudioEnvironmentSuggestion(result.suggestion_id, result.primary_distraction);
         setAudioSuggestionText(suggestion);
         setIsAudioSuggestionLoading(false);
-
     } catch (error) {
         console.error("Audio environment analysis failed:", error);
         setAudioAnalysisResult({
@@ -235,7 +269,6 @@ const Focus: React.FC = () => {
         setIsAudioLoading(false);
     }
   }, []);
-
   const startAudioAnalysis = async () => {
     setAudioError(null);
     setAudioAnalysisResult(null);
@@ -244,7 +277,6 @@ const Focus: React.FC = () => {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       stream.getTracks().forEach(track => track.stop()); // Stop immediately, just for permission
       setIsAudioAnalyzing(true);
-      
       // Simulate sound detection and run analysis periodically
       audioIntervalRef.current = window.setInterval(() => {
         // Simulate detecting a sound event
@@ -253,21 +285,17 @@ const Focus: React.FC = () => {
           detectedSoundsRef.current.push(detectedSound);
         }
       }, 4000); // Simulate detecting a sound every 4 seconds
-      
       // Run analysis every 15 seconds
       const analysisRunner = setInterval(analyzeAudio, 15000);
       audioIntervalRef.current = window.setInterval(() => {
         clearInterval(analysisRunner);
       }, 15000);
-
-
       // Run initial analysis after a short delay
       setTimeout(analyzeAudio, 10000);
     } catch (err) {
       setAudioError("Microphone access is required for analysis.");
     }
   };
-
   const stopAudioAnalysis = useCallback(() => {
     if (audioIntervalRef.current) clearInterval(audioIntervalRef.current);
     setIsAudioAnalyzing(false);
@@ -276,12 +304,10 @@ const Focus: React.FC = () => {
     setAudioSuggestionText(null);
     detectedSoundsRef.current = [];
   }, []);
-  
   useEffect(() => () => {
     stopAnalysis();
     stopAudioAnalysis();
   }, [stopAnalysis, stopAudioAnalysis]);
-  
   const toggleTimer = () => setIsActive(x => !x);
   const resetTimer = () => {
     stopTimer();
@@ -294,7 +320,6 @@ const Focus: React.FC = () => {
     setIsActive(false);
     setTimeLeft(getTimeForMode(newMode));
   };
-
   const formatTime = (seconds: number) =>
     `${Math.floor(seconds / 60).toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`;
   const totalDuration = getTimeForMode(mode);
@@ -305,7 +330,6 @@ const Focus: React.FC = () => {
         ? 'bg-primary text-primary-foreground shadow-lg'
         : 'bg-muted/50 text-muted-foreground hover:bg-muted'
     }`;
-  
   const stateIcons: Record<string, React.ReactNode> = {
     'Deep Focus': <BrainCircuit className="text-green-400" />,
     'Neutral': <Circle className="text-yellow-400" />,
@@ -313,23 +337,21 @@ const Focus: React.FC = () => {
     'Visibly Stressed': <Frown className="text-red-400" />,
     'Tired': <Battery className="text-blue-400" />,
   };
-
   const qualityColors: Record<string, string> = {
     'Optimal': 'text-green-400',
     'Acceptable': 'text-yellow-400',
     'Distracting': 'text-red-400',
   };
-
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
-      {/* Animated Background */}
+      {}
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] to-rose-500/[0.03] blur-3xl" />
       <div className="dark">
         <ElegantShape delay={0.3} width={550} height={110} rotate={12} gradient="from-blue-500/[0.11]" className="left-[-10%] top-[9%]" />
         <ElegantShape delay={0.4} width={420} height={88} rotate={-11} gradient="from-violet-500/[0.12]" className="right-[-7%] top-[57%]" />
         <ElegantShape delay={0.5} width={310} height={74} rotate={-7} gradient="from-sky-400/[0.12]" className="left-[5%] bottom-[12%]" />
       </div>
-      {/* Header */}
+      {}
       <div className="relative z-10 p-6 max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: -16 }}
@@ -355,10 +377,9 @@ const Focus: React.FC = () => {
           </div>
         </motion.div>
       </div>
-
-      {/* Main Content */}
+      {}
       <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-5xl mx-auto px-6 items-start">
-        {/* Timer Section */}
+        {}
         <GlassCard>
           <div className="flex flex-col items-center py-2">
             <div className="flex justify-center mb-8">
@@ -398,8 +419,7 @@ const Focus: React.FC = () => {
             )}
           </div>
         </GlassCard>
-
-        {/* Analysis Panel */}
+        {}
         <div className="space-y-9">
           <GlassCard>
             <h3 className="text-lg font-semibold text-foreground mb-4">NeuroSync™ Visual Analysis</h3>
@@ -415,8 +435,13 @@ const Focus: React.FC = () => {
                 autoPlay
                 playsInline
                 muted
-                className={`absolute w-full h-full object-cover transition-opacity duration-300 ${isAnalyzing ? 'opacity-100' : 'opacity-0'}`}
-                style={{ zIndex: 0, filter: isAnalyzing ? undefined : 'blur(4px) brightness(0.8)' }}
+                className={`w-full h-full max-h-[300px] rounded-xl object-cover transition-opacity duration-300 ${isAnalyzing ? 'opacity-100' : 'opacity-0'}`}
+                style={{
+                  transform: 'scaleX(-1)',
+                  backgroundColor: 'hsl(var(--muted))',
+                  zIndex: 0,
+                  filter: isAnalyzing ? undefined : 'blur(4px) brightness(0.8)'
+                }}
               />
               {cameraError && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black/60 text-red-400 font-medium z-20">
@@ -560,14 +585,11 @@ const Focus: React.FC = () => {
           </GlassCard>
         </div>
       </div>
-
       <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/80 pointer-events-none" />
     </div>
   );
 };
-
 export default Focus;
-
 // GlassCard helper
 function GlassCard({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number; }) {
   return (

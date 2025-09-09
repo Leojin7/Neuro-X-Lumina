@@ -5,19 +5,15 @@ import Button from './Button';
 import { Coins, Ticket, Gem, Package, Shield, Palette } from 'lucide-react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
-import { cn } from './lib/utils'; // Assuming you have a cn utility
-
+import { cn } from './lib/utils';
 const TICKET_COST = 100;
-
 const StoreTab = () => {
     const { focusCoins, timeTravelTickets, buyFocusCoins, buyTimeTravelTicket } = useUserStore();
-
     const coinPackages = [
         { amount: 100, icon: <Package size={40} />, price: 'Simulated', tag: null },
         { amount: 500, icon: <Coins size={48} />, price: '₹199.00', tag: 'Best Value' },
         { amount: 1000, icon: <Gem size={40} />, price: 'Simulated', tag: null },
     ];
-
     const redeemableItems = [
         {
             id: 'time-travel-ticket',
@@ -47,12 +43,10 @@ const StoreTab = () => {
             owned: 0, // Placeholder
         },
     ];
-
     const handleBuyCoins = (amount: number) => {
         buyFocusCoins(amount);
         toast.success(`Added ${amount.toLocaleString()} FocusCoins to your wallet!`);
     };
-
     const handleBuyItem = (purchaseFunction: () => boolean, cost: number, itemName: string) => {
         if (window.confirm(`Are you sure you want to buy 1 ${itemName} for ${cost} FocusCoins?`)) {
             const success = purchaseFunction();
@@ -63,7 +57,6 @@ const StoreTab = () => {
             }
         }
     };
-    
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -71,12 +64,10 @@ const StoreTab = () => {
             transition: { staggerChildren: 0.1, delayChildren: 0.1 }
         }
     };
-
     const itemVariants = {
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0 }
     };
-
     return (
         <motion.div 
             className="space-y-12"
@@ -85,7 +76,7 @@ const StoreTab = () => {
             animate="visible"
             variants={containerVariants}
         >
-            {/* Purchase Coins Section */}
+            {}
             <motion.div variants={itemVariants}>
                 <Card>
                     <div className="mb-6">
@@ -97,7 +88,6 @@ const StoreTab = () => {
                             Need a boost? Acquire FocusCoins to redeem for powerful items and custom themes.
                         </p>
                     </div>
-                    
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {coinPackages.map((pkg, i) => (
                             <motion.div
@@ -129,7 +119,6 @@ const StoreTab = () => {
                             </motion.div>
                         ))}
                     </div>
-
                     <div className="mt-8 p-4 bg-muted/30 rounded-lg text-center">
                         <p className="text-sm text-muted-foreground">Secure simulated payments by</p>
                         <div className="flex justify-center items-center gap-6 mt-2 filter grayscale brightness-200 contrast-125 opacity-60">
@@ -140,8 +129,7 @@ const StoreTab = () => {
                     </div>
                 </Card>
             </motion.div>
-
-            {/* Redeem Items Section */}
+            {}
             <motion.div variants={itemVariants}>
                 <Card>
                      <div className="mb-6">
@@ -153,7 +141,6 @@ const StoreTab = () => {
                             Use your hard-earned FocusCoins to purchase powerful items and boosts for your learning journey.
                         </p>
                     </div>
-
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {redeemableItems.map(item => (
                              <motion.div
@@ -184,6 +171,4 @@ const StoreTab = () => {
         </motion.div>
     );
 }
-
 export default StoreTab;
-

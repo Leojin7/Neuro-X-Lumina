@@ -3,15 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Flame, X } from 'lucide-react';
 import Button from './Button';
 import { useUserStore } from '../stores/useUserStore';
-
 interface StreakPopupProps {
     isOpen: boolean;
     onClose: () => void;
 }
-
 const StreakPopup: React.FC<StreakPopupProps> = ({ isOpen, onClose }) => {
     const codingStreak = useUserStore(state => state.codingStreak);
-
     return (
         <AnimatePresence>
             {isOpen && (
@@ -36,14 +33,12 @@ const StreakPopup: React.FC<StreakPopupProps> = ({ isOpen, onClose }) => {
                         <button onClick={onClose} className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors z-20" aria-label="Close">
                             <X size={24} />
                         </button>
-                        
-                        {/* Fiery background effect */}
+                        {}
                         <motion.div
                             className="absolute -top-1/4 -left-1/4 w-[150%] h-[150%] bg-gradient-to-tr from-orange-500/20 via-red-500/10 to-transparent rounded-full"
                             animate={{ rotate: 360 }}
                             transition={{ repeat: Infinity, duration: 15, ease: 'linear' }}
                         />
-
                         <motion.div
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
@@ -60,15 +55,12 @@ const StreakPopup: React.FC<StreakPopupProps> = ({ isOpen, onClose }) => {
                                 <Flame className="w-24 h-24 text-orange-400 mx-auto" fill="currentColor" />
                             </motion.div>
                         </motion.div>
-
                         <div className="relative z-10">
                             <h2 className="text-5xl font-extrabold text-foreground mt-4">{codingStreak}</h2>
                             <p className="text-2xl font-semibold text-orange-400 -mt-1">{codingStreak === 1 ? 'Day Streak!' : 'Day Streak!'}</p>
-                            
                             <p className="text-muted-foreground mt-4">
                                 Awesome job! You've extended your daily coding streak. Keep the flame alive!
                             </p>
-
                             <Button onClick={onClose} className="mt-8 w-full" variant="secondary">
                                 Continue
                             </Button>
@@ -79,5 +71,4 @@ const StreakPopup: React.FC<StreakPopupProps> = ({ isOpen, onClose }) => {
         </AnimatePresence>
     );
 };
-
 export default StreakPopup;

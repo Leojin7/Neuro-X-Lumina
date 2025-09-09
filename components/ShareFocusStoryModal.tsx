@@ -5,21 +5,17 @@ import type { FocusStory } from '../types';
 import FocusStoryCard from './FocusStoryCard';
 import Button from './Button';
 import html2canvas from 'html2canvas';
-
 interface ShareFocusStoryModalProps {
   story: FocusStory;
   onClose: () => void;
 }
-
 const ShareFocusStoryModal = ({ story, onClose }: ShareFocusStoryModalProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
   const [copied, setCopied] = useState(false);
-
   const handleDownload = async () => {
     if (!cardRef.current) return;
     setIsDownloading(true);
-
     try {
         const canvas = await html2canvas(cardRef.current, {
             backgroundColor: null, // transparent background
@@ -37,12 +33,11 @@ const ShareFocusStoryModal = ({ story, onClose }: ShareFocusStoryModalProps) => 
         setIsDownloading(false);
     }
   };
-  
   const handleShare = () => {
-      const shareText = `I just completed a ${story.duration}-minute focus session on Lumina and earned ${story.coinsEarned} FocusCoins! #Lumina #Focus #Productivity`;
+      const shareText = `I just completed a ${story.duration}-minute focus session on NeuroLearn and earned ${story.coinsEarned} FocusCoins! #NeuroLearn #Focus #Productivity`;
       if(navigator.share) {
           navigator.share({
-              title: 'My Lumina Focus Story',
+              title: 'My NeuroLearn Focus Story',
               text: shareText,
               url: window.location.href,
           }).catch(err => console.log('Share failed:', err));
@@ -53,7 +48,6 @@ const ShareFocusStoryModal = ({ story, onClose }: ShareFocusStoryModalProps) => 
           setTimeout(() => setCopied(false), 2000);
       }
   }
-
   return (
     <motion.div
         initial={{ opacity: 0 }}
@@ -73,9 +67,7 @@ const ShareFocusStoryModal = ({ story, onClose }: ShareFocusStoryModalProps) => 
         <button onClick={onClose} className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors z-20" aria-label="Close">
             <X size={24} />
         </button>
-        
         <FocusStoryCard story={story} cardRef={cardRef} />
-        
         <div className="w-full md:w-64 text-center md:text-left">
             <h2 className="text-2xl font-bold text-foreground mb-2">Focus Complete!</h2>
             <p className="text-muted-foreground mb-6">Great work! Share your achievement with your friends.</p>
@@ -95,5 +87,4 @@ const ShareFocusStoryModal = ({ story, onClose }: ShareFocusStoryModalProps) => 
     </motion.div>
   );
 };
-
 export default ShareFocusStoryModal;

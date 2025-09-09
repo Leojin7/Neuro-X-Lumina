@@ -1,5 +1,4 @@
 
-
 declare global {
   interface Window {
     firebaseConfig: {
@@ -14,16 +13,13 @@ declare global {
     webkitSpeechRecognition: any;
   }
 }
-
 import type React from 'react';
-
 export interface Question {
   id: string;
   text: string;
   options: string[];
   correctAnswer: string;
 }
-
 export interface Quiz {
   id:string;
   title: string;
@@ -33,7 +29,6 @@ export interface Quiz {
   tags: string[];
   isPremium?: boolean;
 }
-
 export interface Badge {
   id: string;
   name: string;
@@ -41,14 +36,12 @@ export interface Badge {
   icon: 'Zap' | 'BrainCircuit' | 'Target';
   achieved: boolean;
 }
-
 export interface FocusSession {
   id: string;
   date: string;
   duration: number; // in minutes
   score: number; // 0-100
 }
-
 export interface QuizResult {
   quizId: string;
   title: string;
@@ -56,24 +49,20 @@ export interface QuizResult {
   score: number; // 0-100
   completedAt: string; // ISO string
 }
-
 export interface RecentlyDeletedQuiz extends QuizResult {
     deletedAt: number; // timestamp
 }
-
 export interface CognitiveStateAnalysis {
   cognitive_state: "Deep Focus" | "Neutral" | "Slightly Distracted" | "Visibly Stressed" | "Tired";
   confidence_score: number;
   key_indicators: string[];
   actionable_advice_id: string;
 }
-
 export interface AudioEnvironmentAnalysis {
   environment_quality: "Optimal" | "Acceptable" | "Distracting";
   primary_distraction: string;
   suggestion_id: "SUGGEST_SOUNDSCAPE" | "SUGGEST_HEADPHONES" | "SUGGEST_NOTHING";
 }
-
 export interface FocusStory {
     id: string;
     date: string; // ISO string
@@ -83,9 +72,7 @@ export interface FocusStory {
     flowState: number; // 0-100%
     cognitiveLoad: 'low' | 'medium' | 'high';
 }
-
 export type SubscriptionTier = 'free' | 'pro' | 'elite';
-
 export interface CurrentUser {
     uid: string;
     displayName: string | null;
@@ -93,7 +80,6 @@ export interface CurrentUser {
     photoURL: string | null;
     creationTime?: string;
 }
-
 export interface DailyMission {
   day: number;
   title: string;
@@ -103,24 +89,19 @@ export interface DailyMission {
   status: 'pending' | 'completed';
   reasoning?: string;
 }
-
 export type Mood = 'awful' | 'bad' | 'ok' | 'good' | 'great';
-
 export interface DailyCheckin {
   date: string; // YYYY-MM-DD
   mood: Mood;
   intention?: string;
   reflection?: string;
 }
-
 export interface GratitudeEntry {
   id: string;
   date: string; // ISO string
   text: string;
 }
-
 export type MoodLevel = 1 | 2 | 3 | 4 | 5;
-
 export interface MindShiftEntry {
   id: string;
   date: string; // ISO string
@@ -130,7 +111,6 @@ export interface MindShiftEntry {
   moodBefore: MoodLevel;
   moodAfter: MoodLevel;
 }
-
 export interface Habit {
   id: string;
   name: string;
@@ -139,13 +119,11 @@ export interface Habit {
   lastCompleted: string | null; // YYYY-MM-DD
   createdAt: string;
 }
-
 export interface SleepEntry {
   date: string; // YYYY-MM-DD
   duration: number; // in hours
   quality: number; // 1-100
 }
-
 export interface Note {
   id: string;
   content: string;
@@ -153,16 +131,13 @@ export interface Note {
   createdAt: string; // ISO string
   updatedAt: string; // ISO string
 }
-
 // Types for Coding Arena
 export type Language = 'javascript' | 'python' | 'java' | 'cpp' | 'c';
-
 export interface TestCase {
     input: any[];
     expected: any;
     isPublic: boolean;
 }
-
 export interface CodingProblem {
     id: string;
     title: string;
@@ -173,34 +148,29 @@ export interface CodingProblem {
     starterCode: Partial<Record<Language, string>>;
     testCases: TestCase[];
 }
-
 export interface SubmissionResultDetail {
     testCase: TestCase;
     passed: boolean;
     output: any;
 }
-
 export interface SubmissionResult {
     status: 'Accepted' | 'Wrong Answer' | 'Time Limit Exceeded' | 'Runtime Error' | 'Running...';
     passedCount: number;
     totalCount: number;
     details: SubmissionResultDetail[];
 }
-
 export interface CodingSubmission {
     problemId: string;
     submittedAt: string; // ISO string
     status: 'Accepted' | 'Wrong Answer'; // Simplified for history
     language: Language;
 }
-
 // Types for Study Squads
 export interface SquadMember {
   uid: string;
   displayName: string;
   photoURL: string;
 }
-
 export interface SquadMessage {
   id: string;
   author: SquadMember;
@@ -208,7 +178,6 @@ export interface SquadMessage {
   timestamp: string;
   isAIMessage?: boolean;
 }
-
 export interface ChatMessage {
   id: string;
   role: 'user' | 'ai';
@@ -219,13 +188,11 @@ export interface ChatMessage {
   };
   status?: 'loading' | 'error';
 }
-
 export interface SquadTimerState {
     mode: 'pomodoro' | 'shortBreak' | 'longBreak';
     timeLeft: number;
     isActive: boolean;
 }
-
 export interface StudySquad {
   id: string;
   name:string;
@@ -238,7 +205,6 @@ export interface StudySquad {
   createdAt: string;
   joinCode: string;
 }
-
 export interface Integrations {
     leetcode: {
         username: string;
@@ -248,8 +214,6 @@ export interface Integrations {
         visible: boolean;
     };
 }
-
-
 // Types for Portfolio Module
 export interface PortfolioProject {
     id: string | number;
@@ -260,12 +224,10 @@ export interface PortfolioProject {
     repoUrl?: string;
     liveUrl?: string;
 }
-
 export interface Skill {
     name: string;
     level: number; // 0-100
 }
-
 export interface TimelineEvent {
     id: string;
     date: string;
@@ -273,13 +235,11 @@ export interface TimelineEvent {
     description: string;
     icon: 'Milestone' | 'Project' | 'Learn' | 'Job';
 }
-
 export interface GitHubStats {
     stars: number;
     followers: number;
     repos: number;
 }
-
 export interface LeetCodeStats {
     solved: number;
     easySolved: number;
@@ -290,29 +250,24 @@ export interface LeetCodeStats {
     totalMedium?: number;
     totalHard?: number;
 }
-
 // Types for AI-Generated Resume
 export interface GeneratedExperience {
     title: string;
     date: string;
     bulletPoints: string[];
 }
-
 export interface GeneratedProject {
     title: string;
     techStack: string[];
     bulletPoints: string[];
 }
-
 export interface GeneratedResumeContent {
     summary: string;
     experience: GeneratedExperience[];
     projects: GeneratedProject[];
 }
-
 // Types for Agent Hub
 export type AgentType = 'research' | 'presentation';
-
 export interface Agent {
   id: AgentType;
   name: string;
@@ -321,13 +276,11 @@ export interface Agent {
   color: string;
   accentColor: string;
 }
-
 export interface AgentExecutionResult {
     text?: string;
     sources?: { web: { uri: string; title: string } }[];
     presentation?: { slideTitle: string; bulletPoints: string[] }[];
 }
-
 export interface Task {
   id: string;
   text: string;
@@ -335,14 +288,12 @@ export interface Task {
   result?: AgentExecutionResult;
   assignedAgent?: AgentType;
 }
-
 // Types for NotebookLM
 export interface NotebookSlide {
   title: string;
   points: string[];
   narration: string;
 }
-
 export interface NotebookScript {
   summary: string;
   slides: NotebookSlide[];

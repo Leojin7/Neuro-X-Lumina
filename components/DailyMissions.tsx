@@ -7,26 +7,22 @@ import { Zap, Loader2, BrainCircuit, Target, Sun, CheckCircle, Circle, RefreshCw
 import type { DailyMission } from '../types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuizStore } from '../stores/useQuizStore';
-
+import StudyRoadmap from './StudyRoadmap';
 const DailyMissions = () => {
     const { studyPlan, isPlanGenerating, generateAndSetStudyPlan, updateMissionStatus } = useUserStore();
     const navigate = ReactRouterDOM.useNavigate();
     const [rewardedDay, setRewardedDay] = useState<number | null>(null);
-
     const handleGeneratePlan = () => {
         generateAndSetStudyPlan();
     };
-    
     const handleAction = (mission: DailyMission) => {
         updateMissionStatus(mission.day, 'completed');
-        
         switch(mission.activityType) {
             case 'quiz':
             case 'review':
                 const quizIdWithAdvanced = mission.activityTarget.toLowerCase().replace(/\s+/g, '-');
                 const quizzes = useQuizStore.getState().quizzes;
                 const targetQuiz = quizzes.find(q => q.title.toLowerCase() === mission.activityTarget.toLowerCase()) || quizzes.find(q => q.id.includes(quizIdWithAdvanced))
-                
                 if (targetQuiz) {
                     navigate(`/quiz/${targetQuiz.id}`);
                 } else {
@@ -44,7 +40,6 @@ const DailyMissions = () => {
                 break;
         }
     }
-
     const handleToggleStatus = (mission: DailyMission) => {
         const newStatus = mission.status === 'pending' ? 'completed' : 'pending';
         updateMissionStatus(mission.day, newStatus);
@@ -53,7 +48,6 @@ const DailyMissions = () => {
             setTimeout(() => setRewardedDay(null), 2000);
         }
     };
-
     const MissionIcon = ({ type }: { type: DailyMission['activityType'] }) => {
         switch (type) {
             case 'quiz': return <Target className="h-4 w-4" />;
@@ -63,7 +57,6 @@ const DailyMissions = () => {
             default: return null;
         }
     };
-
     if (isPlanGenerating && !studyPlan) {
         return (
             <Card title="Generating Your Personalized Plan...">
@@ -81,24 +74,10 @@ const DailyMissions = () => {
             </Card>
         );
     }
-
     if (!studyPlan) {
-        return (
-            <Card>
-                <div className="text-center p-6">
-                    <Zap className="mx-auto h-12 w-12 text-primary" />
-                    <h3 className="mt-4 text-xl font-bold text-foreground">Your AI-Powered Study Roadmap</h3>
-                    <p className="mt-2 text-muted-foreground">Get a personalized 7-day plan to boost your learning and focus.</p>
-                    <Button size="lg" className="mt-6" onClick={handleGeneratePlan} disabled={isPlanGenerating}>
-                        {isPlanGenerating ? <Loader2 className="animate-spin" /> : 'Generate My Plan'}
-                    </Button>
-                </div>
-            </Card>
-        );
+        return <StudyRoadmap />;
     }
-    
     const todayMission = studyPlan.find(m => m.status === 'pending') || studyPlan[studyPlan.length - 1];
-
     return (
         <Card>
             <div className="flex justify-between items-center mb-4">
@@ -162,5 +141,4 @@ const DailyMissions = () => {
         </Card>
     );
 };
-
 export default DailyMissions;

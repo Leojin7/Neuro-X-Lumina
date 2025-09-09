@@ -2,12 +2,9 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Phone, Wind, ArrowLeft } from 'lucide-react';
 import Button from '../Button';
-
 type HubState = 'initial' | 'crisis' | 'overwhelmed';
-
 const SupportHub = () => {
     const [state, setState] = useState<HubState>('initial');
-
     const GroundingExercise = () => (
         <div className="space-y-4 text-left">
              <h3 className="text-2xl font-bold text-white">5-4-3-2-1 Grounding Exercise</h3>
@@ -21,7 +18,6 @@ const SupportHub = () => {
              </ul>
         </div>
     );
-    
     const CrisisResources = () => (
         <div className="space-y-4 text-left">
              <h3 className="text-2xl font-bold text-red-400">Immediate Help Resources</h3>
@@ -36,10 +32,9 @@ const SupportHub = () => {
                     <p className="text-lg text-white/90 font-semibold">Text HOME to 741741</p>
                 </div>
              </div>
-             <p className="text-sm text-white/60 pt-4 border-t border-white/10">Lumina is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider.</p>
+             <p className="text-sm text-white/60 pt-4 border-t border-white/10">NeuroLearn is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider.</p>
         </div>
     );
-
     return (
         <div className="max-w-4xl mx-auto">
             <div className="bg-white/5 p-8 rounded-2xl border border-white/10">
@@ -71,7 +66,6 @@ const SupportHub = () => {
                                 </div>
                             </div>
                         )}
-                        
                         {state !== 'initial' && (
                              <div>
                                 <Button onClick={() => setState('initial')} variant="ghost" className="mb-6">
@@ -81,12 +75,10 @@ const SupportHub = () => {
                                 {state === 'overwhelmed' && <GroundingExercise />}
                             </div>
                         )}
-
                     </motion.div>
                 </AnimatePresence>
             </div>
         </div>
     );
 };
-
 export default SupportHub;

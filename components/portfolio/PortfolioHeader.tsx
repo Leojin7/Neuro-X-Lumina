@@ -6,19 +6,16 @@ import { Github, Linkedin, Twitter, Edit, RefreshCw, Loader2, Code } from 'lucid
 import Button from '../Button';
 import PlanBadge from '../PlanBadge';
 import { useUserStore } from '../../stores/useUserStore';
-
 interface PortfolioHeaderProps {
     user: CurrentUser;
     onEdit: () => void;
     onSync: () => void;
     isSyncing: boolean;
 }
-
 const PortfolioHeader: React.FC<PortfolioHeaderProps> = ({ user, onEdit, onSync, isSyncing }) => {
     const { professionalTitle, bio, socialLinks, integrations } = usePortfolioStore();
     const { subscriptionTier } = useUserStore();
     const userAvatar = user.photoURL || `https://i.pravatar.cc/128?u=${user.uid}`;
-
     return (
         <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-8 bg-card/80 p-6 rounded-3xl border border-border backdrop-blur-lg">
             <motion.div
@@ -64,5 +61,4 @@ const PortfolioHeader: React.FC<PortfolioHeaderProps> = ({ user, onEdit, onSync,
         </div>
     );
 };
-
 export default PortfolioHeader;

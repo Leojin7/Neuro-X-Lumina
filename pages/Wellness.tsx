@@ -14,7 +14,6 @@ import {
   Zap
 } from 'lucide-react';
 import * as ReactRouterDOM from 'react-router-dom';
-
 // Component imports
 import MindShiftTool from '../components/MindShiftTool';
 import GratitudeGrove from '../components/GratitudeGrove';
@@ -23,9 +22,7 @@ import SleepWellness from '../components/wellness/SleepWellness';
 import Mindfulness from '../components/wellness/Mindfulness';
 import WellnessAnalytics from '../components/wellness/WellnessAnalytics';
 import SupportHub from '../components/wellness/SupportHub';
-
 type WellnessTab = 'mindshift' | 'gratitude' | 'digital' | 'sleep' | 'mindfulness' | 'analytics' | 'crisis';
-
 // Elegant Shape Component for Background
 const ElegantShape = ({
   className,
@@ -69,7 +66,6 @@ const ElegantShape = ({
     </motion.div>
   </motion.div>
 );
-
 // Glass Card Wrapper
 const GlassCard = ({ 
   children, 
@@ -89,17 +85,14 @@ const GlassCard = ({
     {children}
   </motion.div>
 );
-
 const Wellness: React.FC = () => {
   const location = ReactRouterDOM.useLocation();
   const [activeTab, setActiveTab] = useState<WellnessTab>('mindshift');
-
   useEffect(() => {
     if (location.state?.initialTab) {
       setActiveTab(location.state.initialTab);
     }
   }, [location.state]);
-
   const tabs: { id: WellnessTab; label: string; icon: React.ReactNode; color: string; description: string }[] = [
     { 
       id: 'mindshift', 
@@ -151,14 +144,11 @@ const Wellness: React.FC = () => {
       description: 'Emergency resources & guided help'
     },
   ];
-
   const currentTab = tabs.find(tab => tab.id === activeTab);
-
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
-      {/* Animated Background Elements */}
+      {}
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl" />
-      
       <div className="absolute inset-0 overflow-hidden dark">
         <ElegantShape
           delay={0.2}
@@ -193,18 +183,17 @@ const Wellness: React.FC = () => {
           className="right-[15%] top-[75%]"
         />
       </div>
-
-      {/* Main Content */}
+      {}
       <div className="relative z-10 p-6">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
+          {}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="mb-8"
           >
-            {/* Badge */}
+            {}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -216,8 +205,7 @@ const Wellness: React.FC = () => {
                 Digital Wellness Platform
               </span>
             </motion.div>
-
-            {/* Title */}
+            {}
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -226,7 +214,6 @@ const Wellness: React.FC = () => {
             >
               Wellness Companion
             </motion.h1>
-
             <motion.p
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
@@ -237,8 +224,7 @@ const Wellness: React.FC = () => {
               and access professional support - all designed to cultivate a healthier, more resilient you.
             </motion.p>
           </motion.div>
-
-          {/* Tab Navigation */}
+          {}
           <GlassCard delay={0.4} className="mb-8">
             <div className="p-6">
               <div className="flex flex-wrap gap-3 mb-6">
@@ -264,8 +250,7 @@ const Wellness: React.FC = () => {
                   </motion.button>
                 ))}
               </div>
-
-              {/* Current Tab Description */}
+              {}
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeTab}
@@ -288,8 +273,7 @@ const Wellness: React.FC = () => {
               </AnimatePresence>
             </div>
           </GlassCard>
-
-          {/* Tab Content */}
+          {}
           <GlassCard delay={0.6} className="p-8">
             <AnimatePresence mode="wait">
               <motion.div
@@ -311,11 +295,9 @@ const Wellness: React.FC = () => {
           </GlassCard>
         </div>
       </div>
-
-      {/* Vignette Effect */}
+      {}
       <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/80 pointer-events-none" />
     </div>
   );
 };
-
 export default Wellness;

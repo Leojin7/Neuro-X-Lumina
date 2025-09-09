@@ -4,7 +4,6 @@ import { Lightbulb, BookOpen, Presentation, Circle, Wand2, Loader2, Link as Link
 import type { Task, Agent, AgentType } from '../types';
 import * as gemini from '../services/geminiService';
 import Button from '../components/Button';
-
 // AGENT DEFINITIONS
 const AGENTS: Agent[] = [
     {
@@ -24,7 +23,6 @@ const AGENTS: Agent[] = [
         accentColor: 'border-purple-500/50',
     },
 ];
-
 const ElegantShape = ({ className, delay = 0, width = 400, height = 100, rotate = 0, gradient = "from-white/[0.08]" }: { className?: string; delay?: number; width?: number; height?: number; rotate?: number; gradient?: string; }) => (
     <motion.div initial={{ opacity: 0, y: -150, rotate: rotate - 15 }} animate={{ opacity: 1, y: 0, rotate }} transition={{ duration: 2.4, delay, ease: [0.23, 0.86, 0.39, 0.96], opacity: { duration: 1.2 } }} className={`absolute ${className}`}>
         <motion.div animate={{ y: [0, 15, 0] }} transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }} style={{ width, height }} className="relative">
@@ -32,7 +30,6 @@ const ElegantShape = ({ className, delay = 0, width = 400, height = 100, rotate 
         </motion.div>
     </motion.div>
 );
-
 const TaskCard = ({ task, isDragging }: { task: Task; isDragging: boolean }) => {
     const getBorderColor = () => {
         switch (task.status) {
@@ -42,7 +39,6 @@ const TaskCard = ({ task, isDragging }: { task: Task; isDragging: boolean }) => 
             default: return 'border-white/20';
         }
     };
-
     const ResultDisplay = () => {
         if (!task.result) return null;
         if (task.assignedAgent === 'research') {
@@ -78,7 +74,6 @@ const TaskCard = ({ task, isDragging }: { task: Task; isDragging: boolean }) => 
         }
         return null;
     }
-
     return (
         <motion.div
             layout
@@ -99,22 +94,18 @@ const TaskCard = ({ task, isDragging }: { task: Task; isDragging: boolean }) => 
         </motion.div>
     );
 };
-
 const Agents: React.FC = () => {
     const [goal, setGoal] = useState('');
     const [tasks, setTasks] = useState<Task[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [draggingTask, setDraggingTask] = useState<string | null>(null);
-
     const agentColumnRefs = {
         research: useRef<HTMLDivElement>(null),
         presentation: useRef<HTMLDivElement>(null),
     };
-
     const handleGenerateSubtasks = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!goal.trim()) return;
-
         setIsLoading(true);
         setTasks([]);
         try {
@@ -132,11 +123,9 @@ const Agents: React.FC = () => {
             setIsLoading(false);
         }
     };
-
     const runAgentExecution = useCallback(async (taskId: string, agentId: AgentType) => {
         const task = tasks.find(t => t.id === taskId);
         if (!task) return;
-
         try {
             let result;
             if (agentId === 'research') {
@@ -150,7 +139,6 @@ const Agents: React.FC = () => {
             setTasks(current => current.map(t => t.id === taskId ? { ...t, status: 'error', result: { text: "An error occurred." } } : t));
         }
     }, [tasks]);
-
     const assignTask = useCallback((taskId: string, agentId: AgentType) => {
         setTasks(currentTasks => {
             const taskToAssign = currentTasks.find(t => t.id === taskId);
@@ -166,11 +154,9 @@ const Agents: React.FC = () => {
             return currentTasks;
         });
     }, [runAgentExecution]);
-
     const handleDragEnd = (_event: any, info: any, taskId: string) => {
         setDraggingTask(null);
         const point = { x: info.point.x, y: info.point.y };
-
         for (const agent of AGENTS) {
             const zone = agentColumnRefs[agent.id].current?.getBoundingClientRect();
             if (zone && point.x >= zone.left && point.x <= zone.right && point.y >= zone.top && point.y <= zone.bottom) {
@@ -179,12 +165,10 @@ const Agents: React.FC = () => {
             }
         }
     };
-
     const todoTasks = tasks.filter(t => t.status === 'todo');
     const agentTasks = Object.fromEntries(
         AGENTS.map(agent => [agent.id, tasks.filter(t => t.assignedAgent === agent.id)])
     );
-
     return (
         <div className="min-h-screen bg-[#030303] relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl" />
@@ -192,7 +176,6 @@ const Agents: React.FC = () => {
                 <ElegantShape delay={0.2} width={500} height={120} rotate={8} gradient="from-indigo-500/[0.12]" className="left-[-8%] top-[8%]" />
                 <ElegantShape delay={0.4} width={400} height={100} rotate={-12} gradient="from-rose-500/[0.12]" className="right-[-5%] top-[45%]" />
             </div>
-
             <div className="relative z-10 p-6 space-y-8">
                 <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
                     <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.03] border border-white/[0.08] mb-6">
@@ -202,7 +185,6 @@ const Agents: React.FC = () => {
                     <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-200 to-violet-200">Delegate Your Workload</h1>
                     <p className="text-white/70 text-lg max-w-3xl mt-4">Define a high-level goal, and our specialized AI agents will break it down and execute the subtasks for you.</p>
                 </motion.div>
-
                 <motion.form onSubmit={handleGenerateSubtasks} className="flex flex-col sm:flex-row gap-4 items-center bg-white/[0.05] p-6 rounded-2xl border border-white/10" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
                     <Wand2 className="text-primary h-8 w-8 flex-shrink-0" />
                     <input
@@ -216,7 +198,6 @@ const Agents: React.FC = () => {
                         {isLoading ? <Loader2 className="animate-spin" /> : 'Generate Subtasks'}
                     </Button>
                 </motion.form>
-
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
                     <div className="bg-white/[0.02] p-4 rounded-2xl border border-white/20 min-h-[300px]">
                         <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2"><Lightbulb className="text-yellow-400"/>Subtasks</h2>
@@ -275,5 +256,4 @@ const Agents: React.FC = () => {
         </div>
     );
 };
-
 export default Agents;

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Eye, EyeOff, User, Mail, Lock, Loader2, Circle } from 'lucide-react';
-import { signInWithEmail, signUpWithEmail } from '../firebaseAuth';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Eye, EyeOff, Mail, Lock, User, ArrowRight, Sparkles, Brain, Target, Users, Zap, Shield, Circle, Loader2 } from 'lucide-react';
+import Button from '../components/Button';
+import { signUpWithEmail, signInWithEmail } from '../firebaseAuth';
 import { useUserStore } from '../stores/useUserStore';
-
+import * as ReactRouterDOM from 'react-router-dom';
 // Google Icon Component
 const GoogleIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 48 48">
@@ -14,14 +15,12 @@ const GoogleIcon = () => (
     <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571l6.19 5.238C42.022 35.026 44 30.038 44 24c0-2.641-.21-5.236-.611-7.743z" />
   </svg>
 );
-
 // Glass Input Wrapper Component
 const GlassInputWrapper = ({ children }: { children: React.ReactNode }) => (
   <div className="rounded-2xl border border-border bg-foreground/5 backdrop-blur-sm transition-colors focus-within:border-primary/70 focus-within:bg-primary/10">
     {children}
   </div>
 );
-
 // Testimonial Component
 const TestimonialCard = ({ 
   testimonial, 
@@ -44,7 +43,6 @@ const TestimonialCard = ({
     </div>
   </motion.div>
 );
-
 // Elegant Shape Component
 const ElegantShape = ({
   className,
@@ -91,7 +89,6 @@ const ElegantShape = ({
     </motion.div>
   </motion.div>
 );
-
 const Login = () => {
   const navigate = useNavigate();
   const { currentUser } = useUserStore();
@@ -99,20 +96,18 @@ const Login = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
   useEffect(() => {
     if (currentUser) {
       navigate('/dashboard', { replace: true });
     }
   }, [currentUser, navigate]);
-
-  // Lumina testimonials
-  const luminaTestimonials = [
+  // NeuroLearn testimonials
+  const neurolearnTestimonials = [
     {
       avatarSrc: "https://randomuser.me/api/portraits/women/57.jpg",
       name: "Dr. Sarah Chen",
       handle: "@sarahlearns",
-      text: "Lumina transformed my learning experience. The cognitive tracking helps me understand my mind better."
+      text: "NeuroLearn transformed my learning experience. The cognitive tracking helps me understand my mind better."
     },
     {
       avatarSrc: "https://randomuser.me/api/portraits/men/64.jpg",
@@ -127,22 +122,19 @@ const Login = () => {
       text: "Focus sessions with emotional feedback changed how I approach learning. Highly recommended!"
     },
   ];
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
-
     const formData = new FormData(e.currentTarget);
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
     const displayName = formData.get('displayName') as string;
-
     try {
       if (isSignUpMode) {
-        await signUpWithEmail(email, password, displayName);
+        const user = await signUpWithEmail(email, password, displayName);
       } else {
-        await signInWithEmail(email, password);
+        const user = await signInWithEmail(email, password);
       }
       navigate('/dashboard');
     } catch (err: any) {
@@ -170,22 +162,18 @@ const Login = () => {
       setIsLoading(false);
     }
   };
-
   const handleGoogleSignIn = () => {
     console.log("Google sign-in clicked");
     setError("Google sign-in coming soon!");
   };
-
   const handleResetPassword = () => {
     console.log("Reset password clicked");
     setError("Password reset coming soon!");
   };
-
   return (
     <div className="h-[100dvh] flex flex-col md:flex-row w-[100dvw] bg-background text-foreground overflow-hidden">
-      {/* Animated Background Elements */}
+      {}
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl" />
-      
       <div className="absolute inset-0 overflow-hidden dark">
         <ElegantShape
           delay={0.3}
@@ -220,12 +208,11 @@ const Login = () => {
           className="right-[15%] md:right-[20%] top-[12%] md:top-[15%]"
         />
       </div>
-
-      {/* Left Column: Sign-in Form */}
+      {}
       <section className="flex-1 flex items-center justify-center p-8 relative z-10">
         <div className="w-full max-w-md">
           <div className="flex flex-col gap-6">
-            {/* Badge */}
+            {}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -237,8 +224,21 @@ const Login = () => {
                 Adaptive Learning OS
               </span>
             </motion.div>
-
-            {/* Title */}
+            {}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1 }}
+              className="flex items-center justify-center mb-8"
+            >
+              <div className="relative">
+                <Circle className="w-16 h-16 text-primary animate-pulse" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Sparkles className="w-8 h-8 text-primary-foreground" />
+                </div>
+              </div>
+            </motion.div>
+            {}
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -247,16 +247,15 @@ const Login = () => {
             >
               {isSignUpMode ? (
                 <span className="font-light text-foreground tracking-tighter">
-                  Join <span className="text-primary">Lumina</span>
+                  Join <span className="text-primary">NeuroLearn</span>
                 </span>
               ) : (
                 <span className="font-light text-foreground tracking-tighter">
-                  Welcome to <span className="text-primary">Lumina</span>
+                  Welcome to <span className="text-primary">NeuroLearn</span>
                 </span>
               )}
             </motion.h1>
-
-            {/* Description */}
+            {}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -268,8 +267,7 @@ const Login = () => {
                 : "Continue your journey of adaptive learning and enhanced mental wellness"
               }
             </motion.p>
-
-            {/* Form */}
+            {}
             <motion.form
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -291,7 +289,6 @@ const Login = () => {
                   </GlassInputWrapper>
                 </div>
               )}
-
               <div>
                 <label className="text-sm font-medium text-foreground mb-2 block">Email Address</label>
                 <GlassInputWrapper>
@@ -304,7 +301,6 @@ const Login = () => {
                   />
                 </GlassInputWrapper>
               </div>
-
               <div>
                 <label className="text-sm font-medium text-foreground mb-2 block">Password</label>
                 <GlassInputWrapper>
@@ -330,7 +326,6 @@ const Login = () => {
                   </div>
                 </GlassInputWrapper>
               </div>
-
               {error && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
@@ -340,7 +335,6 @@ const Login = () => {
                   {error}
                 </motion.div>
               )}
-
               <div className="flex items-center justify-between text-sm">
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input 
@@ -358,7 +352,6 @@ const Login = () => {
                   Reset password
                 </a>
               </div>
-
               <button 
                 type="submit" 
                 disabled={isLoading}
@@ -374,8 +367,7 @@ const Login = () => {
                 )}
               </button>
             </motion.form>
-
-            {/* Divider */}
+            {}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -385,8 +377,7 @@ const Login = () => {
               <span className="w-full border-t border-border"></span>
               <span className="px-4 text-sm text-muted-foreground bg-background absolute">Or continue with</span>
             </motion.div>
-
-            {/* Google Button */}
+            {}
             <motion.button
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -397,8 +388,7 @@ const Login = () => {
               <GoogleIcon />
               Continue with Google
             </motion.button>
-
-            {/* Toggle Sign Up/In */}
+            {}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -416,8 +406,7 @@ const Login = () => {
           </div>
         </div>
       </section>
-
-      {/* Right Column: Hero Image + Testimonials */}
+      {}
       <section className="hidden md:block flex-1 relative p-4">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -426,23 +415,20 @@ const Login = () => {
           className="absolute inset-4 rounded-3xl bg-cover bg-center"
           style={{ backgroundImage: `url(https://images.unsplash.com/photo-1642615835477-d303d7dc9ee9?w=2160&q=80)` }}
         />
-        
-        {/* Testimonials */}
+        {}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-4 px-8 w-full justify-center">
-          <TestimonialCard testimonial={luminaTestimonials[0]} delay="animate-delay-1000" />
+          <TestimonialCard testimonial={neurolearnTestimonials[0]} delay="animate-delay-1000" />
           <div className="hidden xl:flex">
-            <TestimonialCard testimonial={luminaTestimonials[1]} delay="animate-delay-1200" />
+            <TestimonialCard testimonial={neurolearnTestimonials[1]} delay="animate-delay-1200" />
           </div>
           <div className="hidden 2xl:flex">
-            <TestimonialCard testimonial={luminaTestimonials[2]} delay="animate-delay-1400" />
+            <TestimonialCard testimonial={neurolearnTestimonials[2]} delay="animate-delay-1400" />
           </div>
         </div>
       </section>
-
-      {/* Vignette Effect */}
+      {}
       <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/80 pointer-events-none" />
     </div>
   );
 };
-
 export default Login;

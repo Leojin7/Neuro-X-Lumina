@@ -1,4 +1,4 @@
-# Lumina - AI-Powered Study Platform
+# NeuroLearn - AI-Powered Study Platform
 
 A comprehensive study platform featuring AI-powered quizzes, collaborative squad rooms, focus tracking, and wellness features.
 
@@ -88,11 +88,30 @@ src/
 
 ## 🚀 Deployment
 
-The app is configured for deployment on modern hosting platforms:
+### Vercel Deployment
+
+The app is optimized for Vercel deployment:
+
+1. **Connect your GitHub repository to Vercel**
+2. **Set environment variables in Vercel dashboard:**
+   - `VITE_API_KEY` - Your Gemini API key (required)
+   - `VITE_ENABLE_IMAGE_GEN` - Enable image generation (optional, default: false)
+   - `VITE_ENABLE_SEARCH_TOOL` - Enable search tools (optional, default: false)
+   - `VITE_ENABLE_STREAM` - Enable streaming responses (optional, default: false)
+
+3. **Deploy automatically** - Vercel will build and deploy on every push to main
+
+### Manual Build
 
 ```bash
 npm run build
 ```
+
+### Environment Variables Required for Production
+
+- **`VITE_API_KEY`** (Required): Your Google Gemini API key
+- **Firebase Config**: Already embedded in `index.html`
+- **Feature Flags**: Optional, all default to disabled for stability
 
 ## 🤝 Contributing
 

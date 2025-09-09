@@ -3,7 +3,6 @@ import { create } from 'zustand';
 import { processAssistantRequest, getAssistantStream } from '../services/geminiService';
 import type { ChatMessage } from '../types';
 import toast from 'react-hot-toast';
-
 interface AssistantState {
   isOpen: boolean;
   messages: ChatMessage[];
@@ -11,7 +10,6 @@ interface AssistantState {
   sendMessage: (prompt: string, image?: { mimeType: string, data: string }) => Promise<void>;
   regenerateResponse: () => Promise<void>;
 }
-
 const useAssistantStore = create<AssistantState>((set, get) => ({
   isOpen: false,
   messages: [
@@ -22,7 +20,6 @@ const useAssistantStore = create<AssistantState>((set, get) => ({
     },
   ],
   toggleAssistant: () => set(state => ({ isOpen: !state.isOpen })),
-  
   sendMessage: async (prompt: string, image?: { mimeType: string, data: string }) => {
     const userMessage: ChatMessage = { 
         id: `user-${Date.now()}`, 
@@ -31,15 +28,11 @@ const useAssistantStore = create<AssistantState>((set, get) => ({
         image,
     };
     set(state => ({ messages: [...state.messages, userMessage] }));
-
     const messagesWithNewPrompt = get().messages;
     const loadingMessageId = `ai-${Date.now()}`;
-
     set(state => ({ messages: [...state.messages, { id: loadingMessageId, role: 'ai', content: '', status: 'loading' }] }));
-
     try {
       const response = await processAssistantRequest(messagesWithNewPrompt);
-
       if (response.type === 'stream') {
         let fullResponse = '';
         for await (const chunk of response.data) {
@@ -68,26 +61,20 @@ const useAssistantStore = create<AssistantState>((set, get) => ({
       }));
     }
   },
-
   regenerateResponse: async () => {
     const { messages } = get();
     const lastUserMessageIndex = messages.map(m => m.role).lastIndexOf('user');
     if (lastUserMessageIndex === -1) return;
-
     // The AI message to be regenerated is the one after the last user message.
     const lastAiMessage = messages[lastUserMessageIndex + 1];
     if (lastAiMessage?.image) {
         toast.error("Cannot regenerate an image response. Please try a new prompt.");
         return;
     }
-
     const messagesToResend = messages.slice(0, lastUserMessageIndex + 1);
-
     set({ messages: messagesToResend });
-
     const loadingMessageId = `ai-${Date.now()}`;
     set(state => ({ messages: [...state.messages, { id: loadingMessageId, role: 'ai', content: '', status: 'loading' }] }));
-    
     try {
         const stream = await getAssistantStream(get().messages);
         let fullResponse = '';
@@ -108,5 +95,4 @@ const useAssistantStore = create<AssistantState>((set, get) => ({
     }
   },
 }));
-
 export default useAssistantStore;

@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { cn } from './lib/utils';
-
+import { cn } from '../lib/utils';
 interface CardProps {
   children: React.ReactNode;
   className?: string;
@@ -9,7 +8,6 @@ interface CardProps {
   titleClassName?: string;
   as?: React.ElementType;
 }
-
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ children, className = '', title, titleClassName = '', as: Component = motion.div }, ref) => {
     return (
@@ -33,5 +31,4 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     );
   }
 );
-
 export default Card;

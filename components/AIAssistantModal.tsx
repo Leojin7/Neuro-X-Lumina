@@ -1,12 +1,10 @@
 
-
 import React, { useState, useRef, useEffect, useCallback, MouseEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, User, BrainCircuit, X, Send, Clipboard, RefreshCw, Loader2, Check, Paperclip, Mic, Video, Download } from 'lucide-react';
 import useAssistantStore from '../stores/useAssistantStore';
 import type { ChatMessage } from '../types';
 import toast from 'react-hot-toast';
-
 // Floating Glass FAB
 const FAB = ({ onClick }: { onClick: () => void }) => (
   <motion.button
@@ -16,7 +14,7 @@ const FAB = ({ onClick }: { onClick: () => void }) => (
       ring-4 ring-white/40 hover:ring-white/60`}
     whileHover={{ scale: 1.1, rotate: 5 }}
     whileTap={{ scale: 0.95 }}
-    aria-label="Open Lumina AI Assistant"
+    aria-label="Open NeuroLearn AI Assistant"
     style={{
       boxShadow: "0 12px 50px 0 rgb(88 80 180 / 50%), 0 8px 25px 0 rgb(43 48 75 / 25%)",
       width: '80px',
@@ -41,8 +39,7 @@ const FAB = ({ onClick }: { onClick: () => void }) => (
     >
       <Sparkles size={36} className="text-white drop-shadow-lg" />
     </motion.div>
-
-    {/* Pulsing ring effect */}
+    { }
     <motion.div
       className="absolute inset-0 rounded-full border-2 border-white/30"
       animate={{
@@ -51,8 +48,7 @@ const FAB = ({ onClick }: { onClick: () => void }) => (
       }}
       transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
     />
-
-    {/* Notification dot */}
+    { }
     <div className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
       <motion.div
         animate={{ scale: [1, 1.2, 1] }}
@@ -65,8 +61,7 @@ const FAB = ({ onClick }: { onClick: () => void }) => (
 
 // Core Assistant Modal
 const AIAssistantModal = () => {
-  const isOpen = useAssistantStore(state => state.isOpen);
-  const toggleAssistant = useAssistantStore(state => state.toggleAssistant);
+  const { isOpen, toggleAssistant } = useAssistantStore();
 
   return (
     <>
@@ -88,14 +83,11 @@ const ChatWindow = () => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const recognitionRef = useRef<any>(null);
-
   const isLoading = messages[messages.length - 1]?.status === 'loading';
-
   useEffect(() => {
     if (chatContainerRef.current)
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
   }, [messages]);
-
   // Speech Recognition setup
   useEffect(() => {
     if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
@@ -103,7 +95,6 @@ const ChatWindow = () => {
       recognitionRef.current = new SpeechRecognition();
       recognitionRef.current.continuous = true;
       recognitionRef.current.interimResults = true;
-
       recognitionRef.current.onresult = (event: any) => {
         let interimTranscript = '';
         let finalTranscript = '';
@@ -126,7 +117,6 @@ const ChatWindow = () => {
       };
     }
   }, [input]);
-
   const handleSend = useCallback(() => {
     if ((input.trim() || selectedImage) && !isLoading) {
       sendMessage(input.trim(), selectedImage ? { mimeType: selectedImage.file.type, data: selectedImage.base64 } : undefined);
@@ -134,7 +124,6 @@ const ChatWindow = () => {
       setSelectedImage(null);
     }
   }, [input, isLoading, sendMessage, selectedImage]);
-
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (e.key === 'Enter' && !e.shiftKey) {
@@ -144,7 +133,6 @@ const ChatWindow = () => {
     },
     [handleSend]
   );
-
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -155,7 +143,6 @@ const ChatWindow = () => {
       reader.readAsDataURL(file);
     }
   };
-
   const toggleListening = () => {
     if (isListening) {
       recognitionRef.current?.stop();
@@ -164,7 +151,6 @@ const ChatWindow = () => {
     }
     setIsListening(!isListening);
   };
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -188,19 +174,18 @@ const ChatWindow = () => {
               <BrainCircuit className="text-white" size={29} />
             </motion.div>
             <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-200 to-fuchsia-200 tracking-widest">
-              Lumina Assistant
+              NeuroLearn Assistant
             </h2>
           </div>
           <motion.button whileHover={{ rotate: 90, backgroundColor: "#a8a6f5" }} className="text-muted-foreground hover:text-foreground transition-colors p-2 rounded-full" onClick={toggleAssistant} aria-label="Close the chatbot">
             <X size={26} />
           </motion.button>
         </header>
-
         <div ref={chatContainerRef} className="flex-1 p-6 space-y-6 overflow-y-auto custom-scrollbar">
           {messages.length === 0 && !isLoading && (
             <motion.div initial={{ opacity: 0, scale: 0.93 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.45, type: "spring", stiffness: 120 }} className="flex flex-col items-center justify-center h-full text-muted-foreground text-center">
               <Sparkles size={60} className="text-blue-400/60 mb-5 animate-pulse" />
-              <h2 className="text-2xl font-semibold text-white mb-3 tracking-tight">Start chatting with Lumina AI</h2>
+              <h2 className="text-2xl font-semibold text-white mb-3 tracking-tight">Start chatting with NeuroLearn AI</h2>
               <p className="text-base text-gray-200/80 font-medium">Ask for study plans, productivity tips, explanations, or emotional health guidance.</p>
             </motion.div>
           )}
@@ -215,7 +200,6 @@ const ChatWindow = () => {
             </div>
           ))}
         </div>
-
         <footer className="p-5 border-t border-white/10 flex-shrink-0 bg-[#211f38]/40">
           <div className="bg-gradient-to-r from-white/10 via-white/10 to-violet-900/10 rounded-2xl border border-white/15 shadow focus-within:ring-2 ring-primary transition p-2">
             <AnimatePresence>
@@ -265,8 +249,7 @@ const ChatWindow = () => {
     </motion.div>
   );
 };
-
-// Chat message with AI shimmer/copy
+// Chat message 
 const ChatMessageItem = ({
   message,
   onRegenerate,
@@ -280,7 +263,6 @@ const ChatMessageItem = ({
 }) => {
   const isAI = message.role === "ai";
   const [justCopied, setJustCopied] = useState(false);
-
   const handleCopy = () => {
     navigator.clipboard.writeText(message.content);
     setCopiedMsgId(message.id);
@@ -290,7 +272,6 @@ const ChatMessageItem = ({
       setCopiedMsgId(null);
     }, 1300);
   };
-
   const handleDownloadImage = () => {
     if (!message.image) return;
     const link = document.createElement('a');
@@ -301,7 +282,6 @@ const ChatMessageItem = ({
     document.body.removeChild(link);
     toast.success('Image download started!');
   };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 21 }}
@@ -382,5 +362,4 @@ const ChatMessageItem = ({
     </motion.div>
   );
 };
-
 export default AIAssistantModal;

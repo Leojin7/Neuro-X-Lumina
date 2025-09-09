@@ -18,7 +18,6 @@ import CodingStats from '../components/CodingStats';
 import { motion, AnimatePresence } from 'framer-motion';
 import HabitTracker from '../components/HabitTracker';
 import NotesTaker from '../components/NotesTaker';
-
 // Elegant Shape Component for Background
 const ElegantShape = ({
   className,
@@ -62,7 +61,6 @@ const ElegantShape = ({
     </motion.div>
   </motion.div>
 );
-
 // Glass Card Wrapper Component
 const GlassCard = ({ 
   children, 
@@ -94,27 +92,22 @@ const GlassCard = ({
     {children}
   </motion.div>
 );
-
 // Glass Input Wrapper
 const GlassInputWrapper = ({ children }: { children: React.ReactNode }) => (
   <div className="rounded-2xl border border-border bg-input/50 backdrop-blur-sm transition-colors focus-within:border-primary/70 focus-within:bg-primary/10">
     {children}
   </div>
 );
-
 const Dashboard: React.FC = () => {
   const navigate = ReactRouterDOM.useNavigate();
   const location = ReactRouterDOM.useLocation();
-
   const { currentUser, focusStories } = useUserStore();
   const addQuiz = useQuizStore(state => state.addQuiz);
-
   const [topic, setTopic] = useState('');
   const [difficulty, setDifficulty] = useState<'Easy' | 'Medium' | 'Hard'>('Medium');
   const [numQuestions, setNumQuestions] = useState<number>(5);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
   useEffect(() => {
     if (location.state?.topic) {
       setTopic(location.state.topic);
@@ -122,9 +115,7 @@ const Dashboard: React.FC = () => {
       if(topicInput) topicInput.focus();
     }
   }, [location.state]);
-  
   const userName = currentUser?.displayName || 'Learner';
-
   const focusData = [...focusStories]
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     .slice(-7)
@@ -132,18 +123,15 @@ const Dashboard: React.FC = () => {
       name: new Date(session.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
       duration: session.duration,
     }));
-  
   const currentDate = new Date().toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
     day: 'numeric',
   });
-
   const handleGenerateQuiz = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!topic.trim() || isGenerating) return;
-
     setIsGenerating(true);
     setError(null);
     try {
@@ -157,15 +145,12 @@ const Dashboard: React.FC = () => {
       setIsGenerating(false);
     }
   };
-
   const difficultyOptions: ('Easy' | 'Medium' | 'Hard')[] = ['Easy', 'Medium', 'Hard'];
   const numQuestionsOptions: number[] = [5, 10, 15];
-
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
-      {/* Animated Background Elements */}
+      {}
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl" />
-      
       <div className="absolute inset-0 overflow-hidden dark">
         <ElegantShape
           delay={0.3}
@@ -200,10 +185,9 @@ const Dashboard: React.FC = () => {
           className="right-[20%] top-[5%]"
         />
       </div>
-
-      {/* Main Content */}
+      {}
       <div className="relative z-10 p-6 space-y-8">
-        {/* Header */}
+        {}
         <motion.header
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -211,7 +195,7 @@ const Dashboard: React.FC = () => {
           className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
         >
           <div>
-            {/* Badge */}
+            {}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -223,7 +207,6 @@ const Dashboard: React.FC = () => {
                 {currentDate}
               </span>
             </motion.div>
-
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -233,7 +216,6 @@ const Dashboard: React.FC = () => {
               Welcome back, {userName}!
             </motion.h1>
           </div>
-
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -245,8 +227,7 @@ const Dashboard: React.FC = () => {
             <FocusCoinWallet />
           </motion.div>
         </motion.header>
-        
-        {/* Daily Check-in */}
+        {}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -254,12 +235,11 @@ const Dashboard: React.FC = () => {
         >
           <DailyCheckin />
         </motion.div>
-        
-        {/* Main Grid */}
+        {}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-          {/* Left Column */}
+          {}
           <div className="lg:col-span-3 space-y-8">
-            {/* Daily Missions */}
+            {}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -269,8 +249,7 @@ const Dashboard: React.FC = () => {
                 <DailyMissions />
               </SubscriptionGate>
             </motion.div>
-
-            {/* Coding Stats */}
+            {}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -278,8 +257,7 @@ const Dashboard: React.FC = () => {
             >
               <CodingStats />
             </motion.div>
-
-            {/* Habit Tracker */}
+            {}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -287,8 +265,7 @@ const Dashboard: React.FC = () => {
             >
               <HabitTracker />
             </motion.div>
-
-            {/* Focus Trends */}
+            {}
             <GlassCard 
               title="Focus Trends" 
               icon={<TrendingUp size={20} />}
@@ -355,10 +332,9 @@ const Dashboard: React.FC = () => {
               </div>
             </GlassCard>
           </div>
-
-          {/* Right Column */}
+          {}
           <div className="lg:col-span-2 space-y-8">
-            {/* AI-Powered Learning */}
+            {}
             <GlassCard 
               title="AI-Powered Learning" 
               icon={<Brain size={20} />}
@@ -381,11 +357,9 @@ const Dashboard: React.FC = () => {
                   </motion.div>
                 )}
               </AnimatePresence>
-
               <p className="text-muted-foreground mb-6 text-sm leading-relaxed">
                 Unleash your potential. Generate a custom quiz on any topic to test your knowledge and accelerate your learning journey.
               </p>
-              
               <form onSubmit={handleGenerateQuiz} className="space-y-6">
                 <div>
                   <label htmlFor="quiz-topic" className="block text-sm font-medium text-foreground mb-3">
@@ -405,14 +379,13 @@ const Dashboard: React.FC = () => {
                     />
                   </GlassInputWrapper>
                 </div>
-
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-3">
                     <Sparkles size={16} className="inline mr-2" />
                     Customize
                   </label>
                   <div className="grid grid-cols-2 gap-4">
-                    {/* Difficulty Selector */}
+                    {}
                     <div>
                       <div className="flex bg-muted/50 p-1 rounded-xl border border-border">
                         {difficultyOptions.map(d => (
@@ -432,7 +405,7 @@ const Dashboard: React.FC = () => {
                         ))}
                       </div>
                     </div>
-                    {/* Number of Questions Selector */}
+                    {}
                     <div>
                       <div className="flex bg-muted/50 p-1 rounded-xl border border-border">
                         {numQuestionsOptions.map(n => (
@@ -454,7 +427,6 @@ const Dashboard: React.FC = () => {
                     </div>
                   </div>
                 </div>
-
                 <div>
                   <button
                     type="submit"
@@ -466,7 +438,6 @@ const Dashboard: React.FC = () => {
                   </button>
                 </div>
               </form>
-
               <AnimatePresence>
                 {error && (
                   <motion.div
@@ -481,8 +452,7 @@ const Dashboard: React.FC = () => {
                 )}
               </AnimatePresence>
             </GlassCard>
-          
-            {/* Mood Tracker */}
+            {}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -492,8 +462,7 @@ const Dashboard: React.FC = () => {
             </motion.div>
           </div>
         </div>
-
-        {/* Notes Taker */}
+        {}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -502,11 +471,9 @@ const Dashboard: React.FC = () => {
           <NotesTaker />
         </motion.div>
       </div>
-
-      {/* Vignette Effect */}
+      {}
       <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/80 pointer-events-none" />
     </div>
   );
 };
-
 export default Dashboard;

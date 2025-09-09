@@ -3,14 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Github, Star, GitCommit, GitPullRequest, Code, Trophy, Users, BookCopy } from 'lucide-react';
 import { useUserStore } from '../../stores/useUserStore';
 import type { GitHubStats, LeetCodeStats } from '../../types';
-
 interface StatsGridProps {
     githubStats: GitHubStats;
     leetcodeStats: LeetCodeStats;
     githubVisible: boolean;
     leetcodeVisible: boolean;
 }
-
 const StatCard = ({ icon, label, value, unit, colorClass }: { icon: React.ReactNode, label: string, value: number, unit?: string, colorClass: string }) => (
     <motion.div
         className="bg-card/60 p-4 rounded-2xl border border-border flex items-center gap-4 backdrop-blur-sm"
@@ -33,15 +31,13 @@ const StatCard = ({ icon, label, value, unit, colorClass }: { icon: React.ReactN
         </div>
     </motion.div>
 );
-
 const StatsGrid: React.FC<StatsGridProps> = ({ githubStats, leetcodeStats, githubVisible, leetcodeVisible }) => {
     const { codingXP } = useUserStore();
-
     return (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             <AnimatePresence>
-                <div key="lumina-xp">
-                    <StatCard icon={<Star size={24} />} label="Lumina XP" value={codingXP} colorClass="bg-primary/20 text-primary" />
+                <div key="neurolearn-xp">
+                    <StatCard icon={<Star size={24} />} label="NeuroLearn XP" value={codingXP} colorClass="bg-primary/20 text-primary" />
                 </div>
                 {githubVisible && (
                     <React.Fragment key="github-block">
@@ -67,7 +63,6 @@ const StatsGrid: React.FC<StatsGridProps> = ({ githubStats, leetcodeStats, githu
         </div>
     );
 };
-
 // Sub-component for animating numbers
 const AnimatedNumber = ({ value }: { value: number }) => {
     return (
@@ -82,6 +77,4 @@ const AnimatedNumber = ({ value }: { value: number }) => {
         </motion.span>
     );
 };
-
-
 export default StatsGrid;

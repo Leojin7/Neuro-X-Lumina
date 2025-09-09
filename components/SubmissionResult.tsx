@@ -3,16 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Check, X, Clock, AlertTriangle, ChevronDown } from 'lucide-react';
 import type { SubmissionResult as SubmissionResultType } from '../types';
 import Confetti from 'react-confetti';
-
 interface SubmissionResultProps {
   result: SubmissionResultType | null;
   isExecuting: boolean;
   executionMode: 'run' | 'submit' | null;
 }
-
 const SubmissionResult = ({ result, isExecuting, executionMode }: SubmissionResultProps) => {
   const [activeTab, setActiveTab] = useState('results');
-  
   const getStatusColor = (status: SubmissionResultType['status']) => {
     switch(status) {
         case 'Accepted': return 'text-success';
@@ -23,7 +20,6 @@ const SubmissionResult = ({ result, isExecuting, executionMode }: SubmissionResu
         default: return 'text-muted-foreground';
     }
   }
-
   const getStatusIcon = (status: SubmissionResultType['status']) => {
     switch(status) {
         case 'Accepted': return <Check size={24} />;
@@ -34,9 +30,7 @@ const SubmissionResult = ({ result, isExecuting, executionMode }: SubmissionResu
         default: return null;
     }
   }
-
   const isSuccess = result?.status === 'Accepted' && executionMode === 'submit';
-
   return (
     <div className="bg-background h-full flex flex-col">
       {isSuccess && <Confetti recycle={false} numberOfPieces={200} gravity={0.1} />}
@@ -50,7 +44,6 @@ const SubmissionResult = ({ result, isExecuting, executionMode }: SubmissionResu
           </button>
         </nav>
       </div>
-
       <div className="flex-1 p-4 overflow-y-auto custom-scrollbar">
         <AnimatePresence mode="wait">
             <motion.div
@@ -105,5 +98,4 @@ const SubmissionResult = ({ result, isExecuting, executionMode }: SubmissionResu
     </div>
   );
 };
-
 export default SubmissionResult;

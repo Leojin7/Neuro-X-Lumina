@@ -12,16 +12,13 @@ import {
   Star,
   Sun
 } from 'lucide-react';
-
 const GratitudePlant = ({ entryText, index }: { entryText: string; index: number }) => {
     const randomDelay = Math.random() * 0.5;
     const randomDuration = 1 + Math.random();
     const colors = ['#2dd4bf', '#a78bfa', '#f472b6', '#fbbf24', '#60a5fa', '#34d399', '#fb7185'];
     const color = colors[index % colors.length];
-    
     const flowerTypes = [Flower2, Star, Heart, Sun];
     const FlowerIcon = flowerTypes[index % flowerTypes.length];
-
     return (
         <motion.div
             className="absolute bottom-0"
@@ -33,10 +30,9 @@ const GratitudePlant = ({ entryText, index }: { entryText: string; index: number
             animate={{ height: '100%', opacity: 1 }}
             transition={{ delay: 0.2 + randomDelay, duration: randomDuration, type: 'spring' }}
         >
-            {/* Stem */}
+            {}
             <div className="relative w-2 h-full bg-gradient-to-t from-green-600/40 to-green-400/20 rounded-t-full" />
-            
-            {/* Flower */}
+            {}
             <motion.div
                 initial={{ scale: 0, rotate: -180 }}
                 animate={{ scale: 1, rotate: 0 }}
@@ -54,8 +50,7 @@ const GratitudePlant = ({ entryText, index }: { entryText: string; index: number
                     <FlowerIcon size={28} style={{ color }} />
                 </div>
             </motion.div>
-            
-            {/* Leaves */}
+            {}
             <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
@@ -71,7 +66,6 @@ const GratitudePlant = ({ entryText, index }: { entryText: string; index: number
         </motion.div>
     );
 };
-
 const GratitudeStats = ({ entries }: { entries: any[] }) => {
     const today = new Date().toDateString();
     const todayEntries = entries.filter(entry => new Date(entry.date).toDateString() === today).length;
@@ -81,9 +75,7 @@ const GratitudeStats = ({ entries }: { entries: any[] }) => {
         weekAgo.setDate(weekAgo.getDate() - 7);
         return entryDate > weekAgo;
     }).length;
-    
     const streak = calculateStreak(entries);
-
     return (
         <div className="grid grid-cols-3 gap-4 mb-6">
             <div className="text-center p-4 bg-white/5 rounded-xl border border-white/10">
@@ -101,34 +93,26 @@ const GratitudeStats = ({ entries }: { entries: any[] }) => {
         </div>
     );
 };
-
 const calculateStreak = (entries: any[]) => {
     if (entries.length === 0) return 0;
-    
     const sortedDates = [...new Set(entries.map(entry => new Date(entry.date).toDateString()))].sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
-    
     let streak = 0;
     const today = new Date().toDateString();
-    
     for (let i = 0; i < sortedDates.length; i++) {
         const expectedDate = new Date();
         expectedDate.setDate(expectedDate.getDate() - i);
-        
         if (sortedDates[i] === expectedDate.toDateString()) {
             streak++;
         } else {
             break;
         }
     }
-    
     return streak;
 };
-
 const GratitudeGrove = () => {
     const { gratitudeEntries, addGratitudeEntry } = useUserStore();
     const [newEntry, setNewEntry] = useState('');
     const [selectedPrompt, setSelectedPrompt] = useState('');
-
     const gratitudePrompts = [
         "A person who made me smile today",
         "Something beautiful I noticed",
@@ -141,7 +125,6 @@ const GratitudeGrove = () => {
         "A memory that makes me happy",
         "A challenge that made me stronger"
     ];
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!newEntry.trim()) return;
@@ -149,15 +132,13 @@ const GratitudeGrove = () => {
         setNewEntry('');
         setSelectedPrompt('');
     };
-
     const handlePromptSelect = (prompt: string) => {
         setSelectedPrompt(prompt);
         setNewEntry('');
     };
-
     return (
         <div className="space-y-8">
-            {/* Header */}
+            {}
             <div className="text-center">
                 <div className="flex items-center justify-center gap-3 mb-4">
                     <div className="p-3 rounded-full bg-pink-500/20">
@@ -172,27 +153,22 @@ const GratitudeGrove = () => {
                     creating a beautiful visualization of your appreciation journey.
                 </p>
             </div>
-
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Garden Visualization */}
+                {}
                 <div className="space-y-6">
                     <GratitudeStats entries={gratitudeEntries} />
-                    
                     <div className="relative w-full h-80 bg-gradient-to-t from-green-900/20 via-green-800/10 to-blue-900/20 rounded-2xl overflow-hidden border border-white/10">
-                        {/* Sky gradient */}
+                        {}
                         <div className="absolute inset-0 bg-gradient-to-b from-blue-400/10 via-pink-300/5 to-transparent" />
-                        
-                        {/* Ground */}
+                        {}
                         <div className="absolute bottom-0 w-full h-1/4 bg-gradient-to-t from-green-900/30 to-transparent" />
-                        
-                        {/* Plants */}
+                        {}
                         <AnimatePresence>
                             {gratitudeEntries.map((entry, index) => (
                                 <GratitudePlant key={entry.id} entryText={entry.text} index={index} />
                             ))}
                         </AnimatePresence>
-                        
-                        {/* Empty state */}
+                        {}
                         {gratitudeEntries.length === 0 && (
                             <div className="absolute inset-0 flex items-center justify-center">
                                 <div className="text-center">
@@ -201,17 +177,15 @@ const GratitudeGrove = () => {
                                 </div>
                             </div>
                         )}
-                        
-                        {/* Sun/Moon */}
+                        {}
                         <div className="absolute top-4 right-4">
                             <Sun className="h-8 w-8 text-yellow-300/60" />
                         </div>
                     </div>
                 </div>
-
-                {/* Input Section */}
+                {}
                 <div className="space-y-6">
-                    {/* Prompts */}
+                    {}
                     <div className="space-y-4">
                         <h3 className="text-lg font-semibold text-white flex items-center gap-2">
                             <Star className="h-5 w-5 text-yellow-400" />
@@ -233,8 +207,7 @@ const GratitudeGrove = () => {
                             ))}
                         </div>
                     </div>
-
-                    {/* Input Form */}
+                    {}
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="space-y-2">
                             <label className="text-white font-semibold flex items-center gap-2">
@@ -245,7 +218,6 @@ const GratitudeGrove = () => {
                                 <p className="text-sm text-pink-300/80 italic">Prompt: {selectedPrompt}</p>
                             )}
                         </div>
-                        
                         <div className="flex gap-2">
                             <input
                                 type="text"
@@ -264,8 +236,7 @@ const GratitudeGrove = () => {
                             </Button>
                         </div>
                     </form>
-
-                    {/* Recent Entries */}
+                    {}
                     <div className="space-y-4">
                         <h3 className="text-lg font-semibold text-white flex items-center gap-2">
                             <Calendar className="h-5 w-5 text-blue-400" />
@@ -304,5 +275,4 @@ const GratitudeGrove = () => {
         </div>
     );
 };
-
 export default GratitudeGrove;

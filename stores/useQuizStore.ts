@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import type { Quiz } from '../types';
-
 const MOCK_QUIZZES: Quiz[] = [
   {
     id: 'react-basics',
@@ -54,13 +53,11 @@ const MOCK_QUIZZES: Quiz[] = [
     ],
   }
 ];
-
 interface QuizState {
   quizzes: Quiz[];
   addQuiz: (quiz: Quiz) => void;
   getQuizById: (id: string) => Quiz | undefined;
 }
-
 export const useQuizStore = create<QuizState>((set, get) => ({
   quizzes: MOCK_QUIZZES,
   addQuiz: (quiz) => set((state) => ({ quizzes: [quiz, ...state.quizzes] })),

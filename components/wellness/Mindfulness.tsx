@@ -3,28 +3,24 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Play, Pause, Volume2, StopCircle, Loader2 } from 'lucide-react';
 import Button from '../Button';
 import { generateMindfulnessStream } from '../../services/geminiService';
-
 const Mindfulness = () => {
     const [duration, setDuration] = useState(3);
     const [sessionState, setSessionState] = useState<'idle' | 'generating' | 'playing' | 'finished'>('idle');
     const [script, setScript] = useState('');
     const [isSpeaking, setIsSpeaking] = useState(false);
     const scriptContainerRef = useRef<HTMLDivElement>(null);
-
     const stopSession = () => {
         window.speechSynthesis.cancel();
         setIsSpeaking(false);
         setSessionState('idle');
         setScript('');
     };
-    
     useEffect(() => {
         // Cleanup on unmount
         return () => {
             window.speechSynthesis.cancel();
         }
     }, []);
-
     const startSession = async () => {
         setSessionState('generating');
         setScript('');
@@ -45,7 +41,6 @@ const Mindfulness = () => {
             setSessionState('finished');
         }
     };
-    
     const handleSpeak = () => {
         if (isSpeaking) {
             window.speechSynthesis.cancel();
@@ -65,7 +60,6 @@ const Mindfulness = () => {
             setIsSpeaking(true);
         }
     };
-
     return (
         <div className="max-w-4xl mx-auto space-y-8">
             <div className="text-center">
@@ -79,7 +73,6 @@ const Mindfulness = () => {
                     Experience a unique, AI-generated mindfulness session every time. Calm your mind and ground your thoughts with a personalized guide.
                 </p>
             </div>
-
             <AnimatePresence mode="wait">
                 {sessionState === 'idle' ? (
                     <motion.div
@@ -137,5 +130,4 @@ const Mindfulness = () => {
         </div>
     );
 };
-
 export default Mindfulness;

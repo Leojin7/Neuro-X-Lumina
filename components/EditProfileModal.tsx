@@ -6,20 +6,15 @@ import Button from './Button';
 import { Camera, Save, Loader2, CheckCircle, AlertCircle, X, User, Briefcase, FileText, Link, Cog } from 'lucide-react';
 import { uploadProfilePicture } from '../services/firebaseStorage';
 import type { Integrations } from '../types';
-
 interface EditProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
 type Tab = 'general' | 'socials' | 'integrations';
-
 const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onClose }) => {
     const { currentUser, updateUserProfile } = useUserStore();
     const portfolio = usePortfolioStore();
-    
     const [activeTab, setActiveTab] = useState<Tab>('general');
-
     // Form State
     const [displayName, setDisplayName] = useState('');
     const [professionalTitle, setProfessionalTitle] = useState('');
@@ -29,14 +24,11 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onClose }) 
         leetcode: { username: '', visible: true },
         github: { visible: true },
     });
-    
     const [photoFile, setPhotoFile] = useState<File | null>(null);
     const [photoPreview, setPhotoPreview] = useState<string | null>(null);
-    
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
-    
     // Reset state when modal opens
     useEffect(() => {
         if (isOpen && currentUser) {
@@ -52,11 +44,8 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onClose }) 
             setActiveTab('general');
         }
     }, [isOpen, currentUser, portfolio]);
-
     if (!currentUser) return null;
-
     const userAvatar = photoPreview || `https://i.pravatar.cc/128?u=${currentUser.uid}`;
-
     const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -66,37 +55,30 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onClose }) 
             reader.readAsDataURL(file);
         }
     };
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
         setError(null);
         setSuccess(null);
-
         try {
             let newPhotoURL = currentUser.photoURL;
             if (photoFile) {
                 newPhotoURL = await uploadProfilePicture(photoFile, currentUser.uid);
             }
-            
             // Update Firebase Auth and user store
             await updateUserProfile({
                 displayName: displayName,
                 photoURL: newPhotoURL ?? undefined,
             });
-
             // Update portfolio store
             portfolio.setProfileDetails({ professionalTitle, bio, socialLinks });
             portfolio.setIntegrations(integrations);
-
-
             setSuccess("Profile updated successfully!");
             setPhotoFile(null);
             setTimeout(() => {
                 setSuccess(null);
                 onClose();
             }, 1500);
-
         } catch (err) {
             console.error("Profile update failed:", err);
             setError("Failed to update profile. Please try again.");
@@ -104,7 +86,6 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onClose }) 
             setIsLoading(false);
         }
     };
-
     const TabButton = ({ id, label, icon }: {id: Tab, label: string, icon: React.ReactNode}) => (
         <button
             type="button"
@@ -116,7 +97,6 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onClose }) 
             {icon} {label}
         </button>
     );
-
     const renderContent = () => {
         switch (activeTab) {
             case 'general':
@@ -161,7 +141,6 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onClose }) 
             default: return null;
         }
     }
-
     return (
         <AnimatePresence>
             {isOpen && (
@@ -188,7 +167,6 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onClose }) 
                             <h2 className="text-2xl font-bold text-foreground">Edit Portfolio</h2>
                             <button onClick={onClose} className="p-2 text-muted-foreground hover:text-foreground"><X size={24} /></button>
                         </header>
-                         
                         <form onSubmit={handleSubmit}>
                             <div className="p-6">
                                 <div className="flex items-center gap-2 border-b border-border mb-6 -mt-2 pb-4">
@@ -210,7 +188,6 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onClose }) 
                                     </motion.div>
                                 </AnimatePresence>
                             </div>
-                            
                             <footer className="flex justify-end items-center gap-4 p-4 bg-muted/50 border-t border-border rounded-b-2xl">
                                 <AnimatePresence>
                                     {error && <motion.p {...{ initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } } as any} className="text-sm text-destructive flex items-center gap-2"><AlertCircle size={16} />{error}</motion.p>}
@@ -228,14 +205,12 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onClose }) 
         </AnimatePresence>
     );
 };
-
 const InputField = ({ id, label, value, onChange, icon, ...props }: any) => (
     <div className="w-full">
         <label htmlFor={id} className="block text-sm font-medium text-foreground mb-2 flex items-center gap-2">{icon && React.cloneElement(icon, { size: 16 })} {label}</label>
         <input type="text" id={id} value={value} onChange={onChange} className="w-full bg-input rounded-lg px-4 py-2 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring border border-border" {...props} />
     </div>
 );
-
 const ToggleSwitch = ({ id, label, checked, onChange }: any) => (
   <label htmlFor={id} className="flex items-center justify-between p-3 bg-input border border-border rounded-lg cursor-pointer">
     <span className="font-medium text-foreground">{label}</span>
@@ -246,5 +221,4 @@ const ToggleSwitch = ({ id, label, checked, onChange }: any) => (
     </div>
   </label>
 );
-
 export default EditProfileModal;

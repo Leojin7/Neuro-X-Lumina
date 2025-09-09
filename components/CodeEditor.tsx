@@ -2,16 +2,13 @@ import React from 'react';
 import Editor from '@monaco-editor/react';
 import type { Language } from '../types';
 import { Loader2 } from 'lucide-react';
-
 interface CodeEditorProps {
     language: Language;
     code: string;
     onChange: (value: string | undefined) => void;
     readOnly?: boolean;
 }
-
 const CodeEditor: React.FC<CodeEditorProps> = ({ language, code, onChange, readOnly = false }) => {
-    
     return (
         <Editor
             height="100%"
@@ -39,5 +36,4 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ language, code, onChange, readO
         />
     );
 };
-
 export default CodeEditor;

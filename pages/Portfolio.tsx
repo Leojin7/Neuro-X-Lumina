@@ -3,7 +3,6 @@ import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { useUserStore } from '../stores/useUserStore';
 import { usePortfolioStore } from '../stores/usePortfolioStore';
 import { Circle, Github, Code2, Trophy, Calendar, FileText, Sparkles, TrendingUp, Star, GitBranch } from 'lucide-react';
-
 import PortfolioHeader from '../components/portfolio/PortfolioHeader';
 import StatsGrid from '../components/portfolio/StatsGrid';
 import LeetCodeProblemStats from '../components/portfolio/LeetCodeProblemStats';
@@ -12,7 +11,6 @@ import Timeline from '../components/portfolio/Timeline';
 import ResumeGenerator from '../components/portfolio/ResumeGenerator';
 import EditProfileModal from '../components/EditProfileModal';
 import * as externalApiService from '../services/externalApiService';
-
 // Elegant Shape Component for Background
 const ElegantShape = ({
   className,
@@ -56,7 +54,6 @@ const ElegantShape = ({
     </motion.div>
   </motion.div>
 );
-
 // Glass Section Wrapper
 const GlassSection = ({ 
   children, 
@@ -76,7 +73,6 @@ const GlassSection = ({
     {children}
   </motion.div>
 );
-
 const Portfolio = () => {
     const { currentUser } = useUserStore();
     const { 
@@ -88,15 +84,11 @@ const Portfolio = () => {
         isSyncing,
         fetchAndSetStats
     } = usePortfolioStore();
-    
     const [isEditModalOpen, setEditModalOpen] = useState(false);
-
     if (!currentUser) return null;
-
     const handleSync = () => {
         fetchAndSetStats(externalApiService);
     };
-
     const containerVariants: Variants = {
         hidden: { opacity: 0 },
         visible: {
@@ -107,7 +99,6 @@ const Portfolio = () => {
             },
         },
     };
-
     const itemVariants: Variants = {
         hidden: { y: 30, opacity: 0 },
         visible: {
@@ -120,12 +111,10 @@ const Portfolio = () => {
             },
         },
     };
-
     return (
         <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
-            {/* Animated Background Elements */}
+            {}
             <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl" />
-            
             <div className="absolute inset-0 overflow-hidden dark">
                 <ElegantShape
                     delay={0.2}
@@ -168,8 +157,7 @@ const Portfolio = () => {
                     className="left-[25%] top-[15%]"
                 />
             </div>
-
-            {/* Main Content */}
+            {}
             <div className="relative z-10 p-6">
                 <motion.div
                     className="max-w-7xl mx-auto space-y-8"
@@ -177,9 +165,9 @@ const Portfolio = () => {
                     initial="hidden"
                     animate="visible"
                 >
-                    {/* Portfolio Header */}
+                    {}
                     <motion.div variants={itemVariants}>
-                        {/* Badge */}
+                        {}
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
@@ -191,8 +179,7 @@ const Portfolio = () => {
                                 Developer Portfolio
                             </span>
                         </motion.div>
-
-                        {/* Title */}
+                        {}
                         <motion.h1
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -201,7 +188,6 @@ const Portfolio = () => {
                         >
                             Professional Portfolio
                         </motion.h1>
-
                         <motion.p
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -210,7 +196,6 @@ const Portfolio = () => {
                         >
                             Showcasing my journey in software development, achievements, and contributions to the tech community.
                         </motion.p>
-
                         <GlassSection delay={0.4}>
                             <PortfolioHeader
                                 user={currentUser}
@@ -220,8 +205,7 @@ const Portfolio = () => {
                             />
                         </GlassSection>
                     </motion.div>
-                    
-                    {/* Stats Grid */}
+                    {}
                     <AnimatePresence>
                         {(integrations.github.visible || integrations.leetcode.visible) && (
                             <motion.div
@@ -253,8 +237,7 @@ const Portfolio = () => {
                             </motion.div>
                         )}
                     </AnimatePresence>
-
-                    {/* Projects and LeetCode Grid */}
+                    {}
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <AnimatePresence>
                             {integrations.github.visible && (
@@ -283,7 +266,6 @@ const Portfolio = () => {
                                 </motion.div>
                             )}
                         </AnimatePresence>
-                        
                         <motion.div 
                             className={integrations.github.visible ? "lg:col-span-1" : "lg:col-span-3"}
                             variants={itemVariants}
@@ -305,8 +287,7 @@ const Portfolio = () => {
                             </GlassSection>
                         </motion.div>
                     </div>
-
-                    {/* Timeline and Resume Grid */}
+                    {}
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <motion.div 
                             className="lg:col-span-2" 
@@ -327,7 +308,6 @@ const Portfolio = () => {
                                 <Timeline events={timelineEvents} />
                             </GlassSection>
                         </motion.div>
-                        
                         <motion.div variants={itemVariants}>
                             <GlassSection 
                                 delay={0.9}
@@ -345,8 +325,7 @@ const Portfolio = () => {
                             </GlassSection>
                         </motion.div>
                     </div>
-
-                    {/* Achievement Highlights Section */}
+                    {}
                     <motion.div variants={itemVariants}>
                         <GlassSection 
                             delay={1.0}
@@ -364,7 +343,6 @@ const Portfolio = () => {
                                 <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
                                     Highlighting key milestones, certifications, and recognition in my development journey.
                                 </p>
-                                
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     <div className="p-6 rounded-2xl bg-gradient-to-br from-blue-500/10 to-blue-600/5 border border-blue-400/20">
                                         <div className="p-3 rounded-full bg-blue-500/20 w-fit mx-auto mb-4">
@@ -373,7 +351,6 @@ const Portfolio = () => {
                                         <h3 className="font-semibold text-foreground mb-2">Open Source</h3>
                                         <p className="text-sm text-muted-foreground">Contributing to community projects</p>
                                     </div>
-                                    
                                     <div className="p-6 rounded-2xl bg-gradient-to-br from-violet-500/10 to-violet-600/5 border border-violet-400/20">
                                         <div className="p-3 rounded-full bg-violet-500/20 w-fit mx-auto mb-4">
                                             <Star className="h-6 w-6 text-violet-400" />
@@ -381,7 +358,6 @@ const Portfolio = () => {
                                         <h3 className="font-semibold text-foreground mb-2">Recognition</h3>
                                         <p className="text-sm text-muted-foreground">Awards and acknowledgments</p>
                                     </div>
-                                    
                                     <div className="p-6 rounded-2xl bg-gradient-to-br from-green-500/10 to-green-600/5 border border-green-400/20">
                                         <div className="p-3 rounded-full bg-green-500/20 w-fit mx-auto mb-4">
                                             <Sparkles className="h-6 w-6 text-green-400" />
@@ -395,17 +371,14 @@ const Portfolio = () => {
                     </motion.div>
                 </motion.div>
             </div>
-
-            {/* Edit Profile Modal */}
+            {}
             <EditProfileModal
                 isOpen={isEditModalOpen}
                 onClose={() => setEditModalOpen(false)}
             />
-
-            {/* Vignette Effect */}
+            {}
             <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/80 pointer-events-none" />
         </div>
     );
 };
-
 export default Portfolio;
