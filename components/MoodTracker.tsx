@@ -96,3 +96,25 @@ const MoodTracker: React.FC = () => {
                                                     <div className={`w-full h-full rounded ${color} ${isFuture ? 'opacity-20' : ''}`}></div>
                                                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max p-2 bg-popover text-popover-foreground text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 shadow-lg">
                                                         {day.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                                     {checkin && <span className="capitalize">: {checkin.mood}</span>}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex items-center justify-between md:justify-end gap-3 mt-2 text-xs text-muted-foreground flex-wrap">
+                        <span>Less Positive</span>
+                        <div className="flex items-center gap-1">
+                            {moodLegend.map(item => <div key={item.mood} className={`w-4 h-4 rounded ${item.color} ring-1 ring-border`}></div>)}
+                        </div>
+                        <span>More Positive</span>
+                    </div>
+                </div>
+            )}
+        </Card>
+    );
+};
