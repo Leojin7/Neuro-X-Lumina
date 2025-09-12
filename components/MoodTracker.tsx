@@ -57,4 +57,12 @@ const MoodTracker: React.FC = () => {
             ) : (
                 <div className="flex flex-col gap-2">
                     <div className="overflow-x-auto">
-                        { }
+                        { } <div className="flex gap-1 pl-6 mb-1 text-[10px] text-muted-foreground select-none">
+                            {weeks.map((col, idx) => {
+                                const firstDay = col[0];
+                                const prevFirst = idx > 0 ? weeks[idx - 1][0] : null;
+                                const showLabel = idx === 0 || (prevFirst && firstDay.getMonth() !== prevFirst.getMonth());
+                                return (
+                                    <div key={`m-${idx}`} className="w-3 h-3 md:w-3.5 md:h-3.5 flex items-end justify-center">
+                                        {showLabel && (
+                                            <span className="truncate" style={{ width: 
