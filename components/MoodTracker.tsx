@@ -65,4 +65,15 @@ const MoodTracker: React.FC = () => {
                                 return (
                                     <div key={`m-${idx}`} className="w-3 h-3 md:w-3.5 md:h-3.5 flex items-end justify-center">
                                         {showLabel && (
-                                            <span className="truncate" style={{ width: 
+                                            <span className="truncate" style={{ width: '2rem' }}>
+                                                {firstDay.toLocaleString('en-US', { month: 'short' })}
+                                            </span>
+                                        )}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                        <div className="flex gap-1">
+                            { }
+                            <div className="grid grid-rows-7 gap-1.5 text-[10px] text-muted-foreground select-none mr-2 sticky left-0 bg-card/0">
+                                {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d, i) => (
