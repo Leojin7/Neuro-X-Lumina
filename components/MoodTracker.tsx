@@ -48,4 +48,13 @@ const MoodTracker: React.FC = () => {
     };
     return (
         <Card title="Mood Flow">
-            
+             {dailyCheckins.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground py-8">
+                    <BarChart2 size={40} className="mb-4" />
+                    <h3 className="font-semibold text-foreground">Log your mood daily</h3>
+                    <p className="text-sm">Complete the daily check-in to see your trends here.</p>
+                </div>
+            ) : (
+                <div className="flex flex-col gap-2">
+                    <div className="overflow-x-auto">
+                        { }
