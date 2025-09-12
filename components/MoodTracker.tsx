@@ -77,3 +77,22 @@ const MoodTracker: React.FC = () => {
                             { }
                             <div className="grid grid-rows-7 gap-1.5 text-[10px] text-muted-foreground select-none mr-2 sticky left-0 bg-card/0">
                                 {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d, i) => (
+<div key={`lab-${d}`} className="flex items-center justify-end pr-2" style={{ height: '14px' }}>
+                                        {(i === 0 || i === 2 || i === 4) ? d : ''}
+                                    </div>
+                                ))}
+                            </div>
+                            { }
+                            <div className="flex gap-1 w-max">
+                                {weeks.map((col, cIdx) => (
+                                    <div key={`c-${cIdx}`} className="grid grid-rows-7 gap-1.5">
+                                        {col.map((day, rIdx) => {
+                                            const dayKey = getDayKey(day);
+                                            const checkin = checkinsByDate[dayKey];
+                                            const color = checkin ? moodColors[checkin.mood] : 'bg-muted/40';
+                                            const isFuture = day > today;
+                                            return (
+                                                <div key={`d-${cIdx}-${rIdx}`} className="relative group" style={{ width: '14px', height: '14px' }}>
+                                                    <div className={`w-full h-full rounded ${color} ${isFuture ? 'opacity-20' : ''}`}></div>
+                                                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max p-2 bg-popover text-popover-foreground text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 shadow-lg">
+                                                        {day.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
