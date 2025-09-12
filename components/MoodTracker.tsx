@@ -118,3 +118,4 @@ const MoodTracker: React.FC = () => {
         </Card>
     );
 };
+export default MoodTracker;
