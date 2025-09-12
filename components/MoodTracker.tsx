@@ -39,3 +39,13 @@ const MoodTracker: React.FC = () => {
         weeks.push(column);
     }
     const checkinsByDate = Object.fromEntries(dailyCheckins.map(c => [c.date, c]));
+     const getDayKey = (date: Date) => {
+        const y = date.getFullYear();
+        const m = date.getMonth();
+        const d = date.getDate();
+        const utcMidnight = new Date(Date.UTC(y, m, d));
+        return utcMidnight.toISOString().slice(0, 10);
+    };
+    return (
+        <Card title="Mood Flow">
+            
