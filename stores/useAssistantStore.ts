@@ -8,6 +8,7 @@ interface AssistantState {
   messages: ChatMessage[];
   
   toggleAssistant: () => void;
+  
   sendMessage: (prompt: string, image?: { mimeType: string, data: string }) => Promise<void>;
   regenerateResponse: () => Promise<void>;
 }
