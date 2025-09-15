@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 interface AssistantState {
   isOpen: boolean;
   messages: ChatMessage[];
+  
   toggleAssistant: () => void;
   sendMessage: (prompt: string, image?: { mimeType: string, data: string }) => Promise<void>;
   regenerateResponse: () => Promise<void>;
