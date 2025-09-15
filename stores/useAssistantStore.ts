@@ -11,6 +11,7 @@ interface AssistantState {
   
   sendMessage: (prompt: string, image?: { mimeType: string, data: string }) => Promise<void>;
   regenerateResponse: () => Promise<void>;
+  
 }
 const useAssistantStore = create<AssistantState>((set, get) => ({
   isOpen: false,
