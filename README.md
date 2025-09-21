@@ -1,7 +1,6 @@
 # NeuroLearn - AI-Powered Study Platform
 
 A comprehensive study platform featuring AI-powered quizzes, collaborative squad rooms, focus tracking, and wellness features.
-
 ## 🚀 Features
 
 
