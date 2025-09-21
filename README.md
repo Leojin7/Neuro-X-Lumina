@@ -8,7 +8,7 @@ A comprehensive study platform featuring AI-powered quizzes, collaborative squad
 - **AI Quizzes**: Dynamic quiz generation using Gemini AI
 - **Focus Tracking**: Pomodoro timers with progress analytics
 - **Wellness Dashboard**: Digital wellbeing and mindfulness features
-- **Portfolio Showcase**: LeetCode integration and project displays
+- **Portfolio Showcase**: LeetCode integration and project  displays
 - **Coding Arena**: Interactive coding challenges and practice
 
 ## 🛠️ Tech Stack
