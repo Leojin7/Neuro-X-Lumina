@@ -10,6 +10,7 @@ A comprehensive study platform featuring AI-powered quizzes, collaborative squad
 - **Portfolio Showcase**: LeetCode integration and project  displays
 - **Coding Arena**: Interactive coding challenges and practice
 
+
 ## 🛠️ Tech Stack
 
 - **Frontend**: React 18, TypeScript, Tailwind CSS
