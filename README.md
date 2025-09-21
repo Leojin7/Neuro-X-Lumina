@@ -20,6 +20,7 @@ A comprehensive study platform featuring AI-powered quizzes, collaborative squad
 - **Build Tool**: Vite
 - **Animations**: Framer Motion
 
+
 ## 📦 Installation
 
 **Prerequisites:** Node.js 16+
