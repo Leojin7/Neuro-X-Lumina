@@ -3,7 +3,6 @@
 A comprehensive study platform featuring AI-powered quizzes, collaborative squad rooms, focus tracking, and wellness features.
 ## 🚀 Features
 
-
 - **Squad Rooms**: Real-time collaborative study sessions with chat and synchronized timers
 - **AI Quizzes**: Dynamic quiz generation using Gemini AI
 - **Focus Tracking**: Pomodoro timers with progress analytics
