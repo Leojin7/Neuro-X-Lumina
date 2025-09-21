@@ -32,6 +32,7 @@ A comprehensive study platform featuring AI-powered quizzes, collaborative squad
    cd preview
    ```
 
+
 2. **Install dependencies:**
    ```bash
    npm install
