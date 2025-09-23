@@ -6,7 +6,6 @@ import { generateResumeContent } from '../services/geminiService';
 interface PortfolioState {
     professionalTitle: string;
     bio: string;
-    
     socialLinks: {
         github: string;
         linkedin: string;
