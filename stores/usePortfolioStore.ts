@@ -11,6 +11,7 @@ interface PortfolioState {
         linkedin: string;
         twitter: string;
     };
+    
     skills: Skill[];
     projects: PortfolioProject[];
     timelineEvents: TimelineEvent[];
