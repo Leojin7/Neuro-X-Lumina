@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import type { PortfolioProject, TimelineEvent, GitHubStats, LeetCodeStats, Integrations, Skill, GeneratedResumeContent } from '../types';
 import { generateResumeContent } from '../services/geminiService';
+
 interface PortfolioState {
     professionalTitle: string;
     bio: string;
