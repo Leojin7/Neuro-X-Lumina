@@ -18,7 +18,6 @@ import {
   Play,
   Pause,
   RotateCcw,
-  
   Check, 
   Circle, 
   Target, 
