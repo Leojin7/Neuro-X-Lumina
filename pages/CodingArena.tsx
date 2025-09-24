@@ -10,7 +10,6 @@ import CodeEditor from '../components/CodeEditor';
 import SubmissionResult from '../components/SubmissionResult';
 import TimeTravelTicket from '../components/TimeTravelTicket';
 import StreakPopup from '../components/StreakPopup';
-
 import { 
   Lightbulb, 
   Code2, 
