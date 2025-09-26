@@ -145,7 +145,7 @@ body::before {
   }
 }
 
-/* Ensure content visibility over aurora background */
+
 .min-h-screen {
   position: relative;
   z-index: 1;
