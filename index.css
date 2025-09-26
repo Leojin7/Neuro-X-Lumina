@@ -45,7 +45,7 @@
   --shadow-glow: 0 0 24px hsl(213 90% 55% / 0.2);
 }
 
-/* Apply TypoRound to all elements */
+
 * {
   font-family: 'Typo Round', sans-serif;
 }
