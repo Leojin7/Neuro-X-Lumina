@@ -116,7 +116,7 @@ body::before {
   pointer-events: none;
   background-color: hsl(var(--background));
   background-image: var(--aurora-gradient);
-  /* Subtle, cyclical animation for living UI */
+
   animation: auroraMove 36s ease-in-out infinite alternate;
   opacity: 0.3;
   filter: blur(1px) saturate(1.1);
