@@ -151,7 +151,6 @@ body::before {
   z-index: 1;
 }
 
-/* Enhanced glass card visibility */
 .bg-card\/80, .bg-card\/50 {
   background-color: hsl(var(--card) / 0.95) !important;
   backdrop-filter: blur(20px) saturate(1.2) brightness(1.1);
