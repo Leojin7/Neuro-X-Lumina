@@ -87,7 +87,6 @@
 
     --radius: 0.95rem;
 
-    /* World-class Aurora Gradient (animated + multi-stop) */
     --aurora-gradient:
       radial-gradient(at 20% 20%, hsla(213,90%,56%,0.19) 0px, transparent 50%),
       radial-gradient(at 80% 25%, hsla(292,92%,50%,0.12) 0px, transparent 50%),
