@@ -12,6 +12,7 @@ const ResumeGenerator = () => {
     const handleGenerate = async () => {
         setIsGenerating(true);
         try {
+            
             await generateAndSetResume();
             setIsModalOpen(true);
         } catch (error) {
