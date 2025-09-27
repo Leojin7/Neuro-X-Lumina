@@ -6,6 +6,7 @@ import Card from '../Card';
 import ResumeModal from './ResumeModal';
 import { usePortfolioStore } from '../../stores/usePortfolioStore';
 const ResumeGenerator = () => {
+    
     const [isGenerating, setIsGenerating] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const generateAndSetResume = usePortfolioStore(state => state.generateAndSetResume);
