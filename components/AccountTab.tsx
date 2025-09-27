@@ -14,8 +14,7 @@ const AccountTab = () => {
           
                 await logoutUser();
                 toast.success('Signed out successfully!', { id: toastId });
-                // NO LONGER NEEDED: The explicit navigation is removed.
-                // navigate('/welcome', { replace: true });
+      
             } catch (error) {
                 console.error("Sign out failed:", error);
                 toast.error('Sign out failed. Please try again.', { id: toastId });
