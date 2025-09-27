@@ -5,6 +5,7 @@ import { Sparkles, FileText, Loader2 } from 'lucide-react';
 import Card from '../Card';
 import ResumeModal from './ResumeModal';
 import { usePortfolioStore } from '../../stores/usePortfolioStore';
+
 const ResumeGenerator = () => {
     
     const [isGenerating, setIsGenerating] = useState(false);
