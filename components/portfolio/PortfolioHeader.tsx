@@ -12,6 +12,7 @@ interface PortfolioHeaderProps {
     onSync: () => void;
     isSyncing: boolean;
 }
+
 const PortfolioHeader: React.FC<PortfolioHeaderProps> = ({ user, onEdit, onSync, isSyncing }) => {
     const { professionalTitle, bio, socialLinks, integrations } = usePortfolioStore();
     const { subscriptionTier } = useUserStore();
