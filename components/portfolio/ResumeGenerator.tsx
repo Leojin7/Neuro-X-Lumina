@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Button from '../Button';
+
 import { Sparkles, FileText, Loader2 } from 'lucide-react';
 import Card from '../Card';
 import ResumeModal from './ResumeModal';
