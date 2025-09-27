@@ -11,8 +11,7 @@ const AccountTab = () => {
         if (window.confirm('Are you sure you want to sign out?')) {
             const toastId = toast.loading('Signing out...');
             try {
-                // The logoutUser function handles everything.
-                // The ProtectedRoute in App.tsx will automatically handle the redirect.
+          
                 await logoutUser();
                 toast.success('Signed out successfully!', { id: toastId });
                 // NO LONGER NEEDED: The explicit navigation is removed.
