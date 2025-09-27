@@ -9,6 +9,7 @@ import { useUserStore } from '../../stores/useUserStore';
 interface PortfolioHeaderProps {
     user: CurrentUser;
     onEdit: () => void;
+    
     onSync: () => void;
     isSyncing: boolean;
 }
