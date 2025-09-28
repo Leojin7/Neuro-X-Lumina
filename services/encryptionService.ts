@@ -1,5 +1,5 @@
 
-// In a real-world application, this would use robust, end-to-end encryption libraries like libsodium or the Web Crypto API.
+// In a real-world application, this would use robust, end-to-end encryption libraries like
 // This approach demonstrates the architectural separation of encryption logic.
 export const encrypt = (text: string): string => {
     try {
