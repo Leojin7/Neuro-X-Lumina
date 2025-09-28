@@ -1,5 +1,5 @@
 
-// This approach demonstrates the architectural separation of encryption logic.
+
 export const encrypt = (text: string): string => {
     try {
 
