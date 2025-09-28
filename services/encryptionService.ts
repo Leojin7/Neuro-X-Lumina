@@ -2,7 +2,7 @@
 // This approach demonstrates the architectural separation of encryption logic.
 export const encrypt = (text: string): string => {
     try {
-        // btoa doesn't handle UTF-8 characters well, so we need to encode them first.
+
         return btoa(unescape(encodeURIComponent(text)));
     } catch (e) {
         console.error("Encryption failed:", e);
