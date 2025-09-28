@@ -1,5 +1,5 @@
 
-// This is a simple simulation of an encryption service using
+// This is a simple simulation of an encryption
 // In a real-world application, this would use robust, end-to-end encryption libraries like libsodium or the Web Crypto API.
 // This approach demonstrates the architectural separation of encryption logic.
 export const encrypt = (text: string): string => {
