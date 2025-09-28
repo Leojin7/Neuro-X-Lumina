@@ -1,5 +1,4 @@
 
-// In a real-world application, this would use robust
 // This approach demonstrates the architectural separation of encryption logic.
 export const encrypt = (text: string): string => {
     try {
