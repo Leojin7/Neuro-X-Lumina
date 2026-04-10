@@ -21,7 +21,7 @@ interface PortfolioState {
     // Actions
     setProfileDetails: (details: Partial<Pick<PortfolioState, 'professionalTitle' | 'bio' | 'socialLinks'>>) => void;
     setIntegrations: (integrations: Integrations) => void;
-    fetchAndSetStats: (api: { 
+    fetchAndSetStats: (api: {
         fetchGithubData: (username: string) => Promise<{ stats: GitHubStats, projects: PortfolioProject[] } | null>,
         fetchLeetcodeData: (username: string) => Promise<LeetCodeStats | null>
     }) => Promise<void>;
@@ -100,7 +100,7 @@ export const usePortfolioStore = create<PortfolioState>()(
                             promises.push(Promise.resolve(null));
                         }
                     } else {
-                         promises.push(Promise.resolve(null));
+                        promises.push(Promise.resolve(null));
                     }
                     const [leetcodeResult, githubResult] = await Promise.all(promises);
                     set(state => ({
@@ -124,13 +124,13 @@ export const usePortfolioStore = create<PortfolioState>()(
                     set({ generatedResume: resumeContent });
                 } catch (error) {
                     console.error("Failed to generate resume content:", error);
-                    // maybe set an error state
+                    //  error state
                     throw error; // rethrow to be caught in component
                 }
             },
         }),
         {
-            name: 'lumina-portfolio-store',
+            name: 'NeuroLearn-portfolio-store',
             storage: createJSONStorage(() => localStorage),
         }
     )

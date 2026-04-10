@@ -9,7 +9,7 @@ import { useSquadStore } from '../stores/useSquadStore';
 import { Users, Clock, PlusCircle, Key } from 'lucide-react';
 import type { StudySquad } from '../types';
 import { motion } from 'framer-motion';
-// ElegantShape Component (inline, no external import required)
+
 const ElegantShape = ({
   className,
   delay = 0,
@@ -76,7 +76,7 @@ const SquadsList: React.FC = () => {
   }, [squads]);
   useEffect(() => {
     const handler = (e: StorageEvent) => {
-      if (e.key === 'lumina-squad-store') {
+      if (e.key === 'NeuroLearn-squad-store') {
         setVersion(v => v + 1);
       }
     };
@@ -90,7 +90,7 @@ const SquadsList: React.FC = () => {
   };
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
-      {}
+      { }
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl pointer-events-none" />
       <div className="absolute inset-0 overflow-hidden pointer-events-none dark">
         <ElegantShape

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, Sparkles, Loader2, FileText, AudioLines, Video, Map, Play, Pause, Download } from 'lucide-react';
-import MindMap from '../components/MindMap';
+import MindMap from '../components/MindMapEnhanced';
 import * as gemini from '../services/geminiService';
 import type { NotebookScript, NotebookSlide } from '../types';
 import Button from '../components/Button';
@@ -19,13 +19,17 @@ const NotebookLM: React.FC = () => {
     const [sourceText, setSourceText] = useState('');
     const [script, setScript] = useState<NotebookScript | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+
     const [error, setError] = useState<string | null>(null);
+
     const [activeTab, setActiveTab] = useState<StudioTab>('summary');
     const handleAnalyze = async () => {
         if (!sourceText.trim()) {
             setError('Please provide some source text to analyze.');
+
             return;
         }
+
         setIsLoading(true);
         setError(null);
         setScript(null);
@@ -144,17 +148,17 @@ const AudioPlayer = ({ script }: { script: NotebookScript }) => {
         }
     };
     useEffect(() => {
-      // Cleanup when component unmounts or script changes
-      return () => {
-          window.speechSynthesis.cancel();
-      };
+        // Cleanup
+        return () => {
+            window.speechSynthesis.cancel();
+        };
     }, [script]);
     return (
         <div className="space-y-4">
             <h3 className="text-lg font-bold">Audio Overview</h3>
             <div className="flex items-center gap-4">
                 <Button onClick={handleTogglePlay} size="icon" className="w-14 h-14 rounded-full">
-                    {isPlaying ? <Pause size={24}/> : <Play size={24}/>}
+                    {isPlaying ? <Pause size={24} /> : <Play size={24} />}
                 </Button>
                 <div className="text-muted-foreground flex-1">Click play to listen to the AI-narrated summary of your source material.</div>
             </div>
@@ -212,7 +216,7 @@ const VideoPlayer = ({ script }: { script: NotebookScript }) => {
                 const canvas = await html2canvas(slideRef.current, { backgroundColor: '#1a1d2c' });
                 const link = document.createElement('a');
                 link.href = canvas.toDataURL('image/png');
-                link.download = `neurolearn-slide-${currentSlideIndex + 1}.png`;
+                link.download = `NeuroLearn-slide-${currentSlideIndex + 1}.png`;
                 link.click();
                 toast.success("Slide downloaded!", { id: toastId });
             } catch (error) {
@@ -225,7 +229,7 @@ const VideoPlayer = ({ script }: { script: NotebookScript }) => {
         <div className="space-y-4">
             <h3 className="text-lg font-bold">Video Overview</h3>
             <div ref={slideRef} className="aspect-video bg-gradient-to-br from-[#1a1d2c] to-[#11131e] rounded-lg p-8 flex flex-col justify-center items-center text-center shadow-inner">
-                 <AnimatePresence mode="wait">
+                <AnimatePresence mode="wait">
                     <motion.div key={currentSlideIndex} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="w-full">
                         <h4 className="text-3xl font-bold text-primary">{currentSlide.title}</h4>
                         <ul className="mt-6 space-y-3">
@@ -238,7 +242,7 @@ const VideoPlayer = ({ script }: { script: NotebookScript }) => {
                 <Button onClick={handleTogglePlay} size="icon" className="w-12 h-12 rounded-full">
                     {isPlaying ? <Pause /> : <Play />}
                 </Button>
-                 <div className="text-sm text-muted-foreground">Slide {currentSlideIndex + 1} of {script.slides.length}</div>
+                <div className="text-sm text-muted-foreground">Slide {currentSlideIndex + 1} of {script.slides.length}</div>
                 <Button onClick={handleDownloadSlide} variant="ghost" size="icon">
                     <Download />
                 </Button>

@@ -62,9 +62,9 @@ const MindMap: React.FC<MindMapProps> = ({ slides, summary }) => {
     // Add root node (summary)
     initialNodes.push({
       id: 'root',
-      data: { 
+      data: {
         label: summary.length > 100 ? `${summary.substring(0, 100)}...` : summary,
-        isRoot: true 
+        isRoot: true
       },
       position: { x: dimensions.width / 2, y: 50 },
       style: {
@@ -86,9 +86,9 @@ const MindMap: React.FC<MindMapProps> = ({ slides, summary }) => {
       const y = 200 + Math.sin(angle) * radius;
       initialNodes.push({
         id: `slide-${index}`,
-        data: { 
+        data: {
           label: slide.title,
-          isRoot: false 
+          isRoot: false
         },
         position: { x, y },
         style: {
@@ -124,9 +124,9 @@ const MindMap: React.FC<MindMapProps> = ({ slides, summary }) => {
         const pointY = y + 100 + Math.sin(pointAngle) * 80;
         initialNodes.push({
           id: pointId,
-          data: { 
+          data: {
             label: point,
-            isRoot: false 
+            isRoot: false
           },
           position: { x: pointX, y: pointY },
           style: {
@@ -181,7 +181,7 @@ const MindMap: React.FC<MindMapProps> = ({ slides, summary }) => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'neurolearn-mindmap.json';
+      a.download = 'NeuroLearn-mindmap.json';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -199,8 +199,8 @@ const MindMap: React.FC<MindMapProps> = ({ slides, summary }) => {
     }, 100);
   };
   return (
-    <div 
-      ref={reactFlowWrapper} 
+    <div
+      ref={reactFlowWrapper}
       className={`relative bg-gray-50 dark:bg-gray-900 rounded-lg border border-border overflow-hidden transition-all duration-300 ${isFullscreen ? 'fixed inset-0 z-50 m-0' : 'h-[600px]'}`}
     >
       <ReactFlow
@@ -214,7 +214,7 @@ const MindMap: React.FC<MindMapProps> = ({ slides, summary }) => {
         attributionPosition="bottom-left"
         nodeTypes={{
           default: ({ data }) => (
-            <div 
+            <div
               className={`px-4 py-2 rounded-md shadow-sm ${data.isRoot ? 'text-white font-bold' : 'bg-white dark:bg-gray-800'}`}
               style={data.isRoot ? {} : { border: '1px solid #e5e7eb' }}
             >
@@ -227,18 +227,18 @@ const MindMap: React.FC<MindMapProps> = ({ slides, summary }) => {
         <Controls />
         <MiniMap zoomable pannable />
         <Panel position="top-right" className="flex gap-2">
-          <Button 
-            onClick={handleDownload} 
-            variant="outline" 
+          <Button
+            onClick={handleDownload}
+            variant="outline"
             size="sm"
             className="bg-white/80 hover:bg-white dark:bg-gray-800/80 dark:hover:bg-gray-700"
           >
             <Download className="w-4 h-4 mr-2" />
             Export
           </Button>
-          <Button 
-            onClick={toggleFullscreen} 
-            variant="outline" 
+          <Button
+            onClick={toggleFullscreen}
+            variant="outline"
             size="sm"
             className="bg-white/80 hover:bg-white dark:bg-gray-800/80 dark:hover:bg-gray-700"
           >

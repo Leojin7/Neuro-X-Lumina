@@ -12,19 +12,16 @@ export const uploadProfilePicture = (file: File, userId: string): Promise<string
         uploadTask.on(
             'state_changed',
             (snapshot) => {
-                // This callback can be used to display upload progress in the UI.
-                // For example:
-                // const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                // console.log('Upload is ' + progress + '% done');
+
             },
             (error) => {
-                // Handle unsuccessful uploads and reject the promise.
+
                 console.error("Firebase Storage upload error:", error);
                 reject(error);
             },
             () => {
                 // Handle successful uploads on complete.
-                // Get the download URL and resolve the promise.
+
                 uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
                     resolve(downloadURL);
                 }).catch(reject);

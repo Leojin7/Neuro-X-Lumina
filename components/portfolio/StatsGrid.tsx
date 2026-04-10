@@ -36,7 +36,7 @@ const StatsGrid: React.FC<StatsGridProps> = ({ githubStats, leetcodeStats, githu
     return (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             <AnimatePresence>
-                <div key="neurolearn-xp">
+                <div key="NeuroLearn-xp">
                     <StatCard icon={<Star size={24} />} label="NeuroLearn XP" value={codingXP} colorClass="bg-primary/20 text-primary" />
                 </div>
                 {githubVisible && (

@@ -11,12 +11,10 @@ const AccountTab = () => {
         if (window.confirm('Are you sure you want to sign out?')) {
             const toastId = toast.loading('Signing out...');
             try {
-                // The logoutUser function handles everything.
-                // The ProtectedRoute in App.tsx will automatically handle the redirect.
+
                 await logoutUser();
                 toast.success('Signed out successfully!', { id: toastId });
-                // NO LONGER NEEDED: The explicit navigation is removed.
-                // navigate('/welcome', { replace: true });
+
             } catch (error) {
                 console.error("Sign out failed:", error);
                 toast.error('Sign out failed. Please try again.', { id: toastId });
@@ -24,7 +22,7 @@ const AccountTab = () => {
         }
     };
     return (
-        <motion.div 
+        <motion.div
             className="space-y-8"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -38,9 +36,9 @@ const AccountTab = () => {
                             You will be returned to the landing page.
                         </p>
                     </div>
-                    <Button 
-                        variant="destructive" 
-                        onClick={handleSignOut} 
+                    <Button
+                        variant="destructive"
+                        onClick={handleSignOut}
                         className="mt-4 sm:mt-0"
                     >
                         <LogOut size={16} className="mr-2" />

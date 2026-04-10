@@ -276,7 +276,7 @@ const ChatMessageItem = ({
     if (!message.image) return;
     const link = document.createElement('a');
     link.href = `data:${message.image.mimeType};base64,${message.image.data}`;
-    link.download = `lumina-ai-${Date.now()}.png`;
+    link.download = `NeuroLearn-ai-${Date.now()}.png`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

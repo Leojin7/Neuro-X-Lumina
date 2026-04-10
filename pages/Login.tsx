@@ -22,14 +22,14 @@ const GlassInputWrapper = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 // Testimonial Component
-const TestimonialCard = ({ 
-  testimonial, 
-  delay 
-}: { 
-  testimonial: { avatarSrc: string; name: string; handle: string; text: string }, 
-  delay: string 
+const TestimonialCard = ({
+  testimonial,
+  delay
+}: {
+  testimonial: { avatarSrc: string; name: string; handle: string; text: string },
+  delay: string
 }) => (
-  <motion.div 
+  <motion.div
     initial={{ opacity: 0, y: 20, scale: 0.95 }}
     animate={{ opacity: 1, y: 0, scale: 1 }}
     transition={{ duration: 0.7, delay: parseFloat(delay.replace('animate-delay-', '')) / 1000 }}
@@ -102,7 +102,7 @@ const Login = () => {
     }
   }, [currentUser, navigate]);
   // NeuroLearn testimonials
-  const neurolearnTestimonials = [
+  const NeuroLearnTestimonials = [
     {
       avatarSrc: "https://randomuser.me/api/portraits/women/57.jpg",
       name: "Dr. Sarah Chen",
@@ -139,7 +139,7 @@ const Login = () => {
       navigate('/dashboard');
     } catch (err: any) {
       let friendlyMessage = "An unexpected error occurred.";
-      switch(err.code) {
+      switch (err.code) {
         case 'auth/user-not-found':
         case 'auth/wrong-password':
           friendlyMessage = "Invalid email or password. Please try again.";
@@ -172,7 +172,7 @@ const Login = () => {
   };
   return (
     <div className="h-[100dvh] flex flex-col md:flex-row w-[100dvw] bg-background text-foreground overflow-hidden">
-      {}
+      { }
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl" />
       <div className="absolute inset-0 overflow-hidden dark">
         <ElegantShape
@@ -208,11 +208,11 @@ const Login = () => {
           className="right-[15%] md:right-[20%] top-[12%] md:top-[15%]"
         />
       </div>
-      {}
+      { }
       <section className="flex-1 flex items-center justify-center p-8 relative z-10">
         <div className="w-full max-w-md">
           <div className="flex flex-col gap-6">
-            {}
+            { }
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -224,7 +224,7 @@ const Login = () => {
                 Adaptive Learning OS
               </span>
             </motion.div>
-            {}
+            { }
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -238,7 +238,7 @@ const Login = () => {
                 </div>
               </div>
             </motion.div>
-            {}
+            { }
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -247,27 +247,27 @@ const Login = () => {
             >
               {isSignUpMode ? (
                 <span className="font-light text-foreground tracking-tighter">
-                  Join <span className="text-primary">NeuroLearn</span>
+                  Join <span className="text-primary">NeuroLearn</span>, the adaptive learning OS
                 </span>
               ) : (
                 <span className="font-light text-foreground tracking-tighter">
-                  Welcome to <span className="text-primary">NeuroLearn</span>
+                  Welcome to <span className="text-primary">NeuroLearn</span>, the adaptive learning OS
                 </span>
               )}
             </motion.h1>
-            {}
+            { }
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.3 }}
               className="text-muted-foreground"
             >
-              {isSignUpMode 
+              {isSignUpMode
                 ? "Start your journey with adaptive learning and enhanced mental wellness"
                 : "Continue your journey of adaptive learning and enhanced mental wellness"
               }
             </motion.p>
-            {}
+            { }
             <motion.form
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -279,12 +279,12 @@ const Login = () => {
                 <div>
                   <label className="text-sm font-medium text-foreground mb-2 block">Display Name</label>
                   <GlassInputWrapper>
-                    <input 
-                      name="displayName" 
-                      type="text" 
-                      placeholder="Enter your display name" 
-                      className="w-full bg-transparent text-sm p-4 rounded-2xl focus:outline-none text-foreground placeholder-muted-foreground" 
-                      required 
+                    <input
+                      name="displayName"
+                      type="text"
+                      placeholder="Enter your display name"
+                      className="w-full bg-transparent text-sm p-4 rounded-2xl focus:outline-none text-foreground placeholder-muted-foreground"
+                      required
                     />
                   </GlassInputWrapper>
                 </div>
@@ -292,12 +292,12 @@ const Login = () => {
               <div>
                 <label className="text-sm font-medium text-foreground mb-2 block">Email Address</label>
                 <GlassInputWrapper>
-                  <input 
-                    name="email" 
-                    type="email" 
-                    placeholder="Enter your email address" 
-                    className="w-full bg-transparent text-sm p-4 rounded-2xl focus:outline-none text-foreground placeholder-muted-foreground" 
-                    required 
+                  <input
+                    name="email"
+                    type="email"
+                    placeholder="Enter your email address"
+                    className="w-full bg-transparent text-sm p-4 rounded-2xl focus:outline-none text-foreground placeholder-muted-foreground"
+                    required
                   />
                 </GlassInputWrapper>
               </div>
@@ -305,16 +305,16 @@ const Login = () => {
                 <label className="text-sm font-medium text-foreground mb-2 block">Password</label>
                 <GlassInputWrapper>
                   <div className="relative">
-                    <input 
-                      name="password" 
-                      type={showPassword ? 'text' : 'password'} 
-                      placeholder="Enter your password" 
-                      className="w-full bg-transparent text-sm p-4 pr-12 rounded-2xl focus:outline-none text-foreground placeholder-muted-foreground" 
-                      required 
+                    <input
+                      name="password"
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="Enter your password"
+                      className="w-full bg-transparent text-sm p-4 pr-12 rounded-2xl focus:outline-none text-foreground placeholder-muted-foreground"
+                      required
                     />
-                    <button 
-                      type="button" 
-                      onClick={() => setShowPassword(!showPassword)} 
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
                       className="absolute inset-y-0 right-3 flex items-center"
                     >
                       {showPassword ? (
@@ -337,23 +337,23 @@ const Login = () => {
               )}
               <div className="flex items-center justify-between text-sm">
                 <label className="flex items-center gap-3 cursor-pointer">
-                  <input 
-                    type="checkbox" 
-                    name="rememberMe" 
+                  <input
+                    type="checkbox"
+                    name="rememberMe"
                     className="w-4 h-4 rounded border-2 border-border bg-transparent text-primary focus:ring-primary"
                   />
                   <span className="text-muted-foreground">Keep me signed in</span>
                 </label>
-                <a 
-                  href="#" 
-                  onClick={(e) => { e.preventDefault(); handleResetPassword(); }} 
+                <a
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); handleResetPassword(); }}
                   className="hover:underline text-primary transition-colors"
                 >
                   Reset password
                 </a>
               </div>
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 disabled={isLoading}
                 className="w-full rounded-2xl bg-primary py-4 font-medium text-primary-foreground hover:bg-primary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
@@ -367,7 +367,7 @@ const Login = () => {
                 )}
               </button>
             </motion.form>
-            {}
+            { }
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -377,18 +377,18 @@ const Login = () => {
               <span className="w-full border-t border-border"></span>
               <span className="px-4 text-sm text-muted-foreground bg-background absolute">Or continue with</span>
             </motion.div>
-            {}
+            { }
             <motion.button
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.8 }}
-              onClick={handleGoogleSignIn} 
+              onClick={handleGoogleSignIn}
               className="w-full flex items-center justify-center gap-3 border border-border rounded-2xl py-4 hover:bg-muted/50 transition-colors text-foreground"
             >
               <GoogleIcon />
               Continue with Google
             </motion.button>
-            {}
+            { }
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -396,8 +396,8 @@ const Login = () => {
               className="text-center text-sm text-muted-foreground"
             >
               {isSignUpMode ? "Already have an account?" : "New to our platform?"}{' '}
-              <button 
-                onClick={() => { setIsSignUpMode(!isSignUpMode); setError(null); }} 
+              <button
+                onClick={() => { setIsSignUpMode(!isSignUpMode); setError(null); }}
                 className="text-primary hover:underline transition-colors font-medium"
               >
                 {isSignUpMode ? "Sign In" : "Create Account"}
@@ -406,7 +406,7 @@ const Login = () => {
           </div>
         </div>
       </section>
-      {}
+      { }
       <section className="hidden md:block flex-1 relative p-4">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -415,18 +415,18 @@ const Login = () => {
           className="absolute inset-4 rounded-3xl bg-cover bg-center"
           style={{ backgroundImage: `url(https://images.unsplash.com/photo-1642615835477-d303d7dc9ee9?w=2160&q=80)` }}
         />
-        {}
+        { }
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-4 px-8 w-full justify-center">
-          <TestimonialCard testimonial={neurolearnTestimonials[0]} delay="animate-delay-1000" />
+          <TestimonialCard testimonial={NeuroLearnTestimonials[0]} delay="animate-delay-1000" />
           <div className="hidden xl:flex">
-            <TestimonialCard testimonial={neurolearnTestimonials[1]} delay="animate-delay-1200" />
+            <TestimonialCard testimonial={NeuroLearnTestimonials[1]} delay="animate-delay-1200" />
           </div>
           <div className="hidden 2xl:flex">
-            <TestimonialCard testimonial={neurolearnTestimonials[2]} delay="animate-delay-1400" />
+            <TestimonialCard testimonial={NeuroLearnTestimonials[2]} delay="animate-delay-1400" />
           </div>
         </div>
       </section>
-      {}
+      { }
       <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/80 pointer-events-none" />
     </div>
   );

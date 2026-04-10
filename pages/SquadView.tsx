@@ -2,14 +2,14 @@ import React, { useEffect, useState, useRef } from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
 import { useSquadStore } from '../stores/useSquadStore';
 import { useUserStore } from '../stores/useUserStore';
-import { decrypt } from '../services/encryptionService';
+import { decryptMessage } from '../services/cryptoService';
 import Card from '../components/Card';
 import Button from '../components/Button';
 import CircularProgress from '../components/CircularProgress';
 import { LogOut, Send, BrainCircuit, Users, Play, Pause, RotateCcw, Copy, Check, Lock, Trash2 } from 'lucide-react';
 import type { SquadMessage } from '../types';
 import { motion } from 'framer-motion';
-// ElegantShape (inline)
+
 const ElegantShape = ({
   className,
   delay = 0,
@@ -59,7 +59,7 @@ const SquadView: React.FC = () => {
   const [version, setVersion] = useState(0);
   useEffect(() => {
     const handler = (e: StorageEvent) => {
-      if (e.key === 'lumina-squad-store') setVersion(v => v + 1);
+      if (e.key === 'NeuroLearn-squad-store') setVersion(v => v + 1);
     };
     window.addEventListener('storage', handler);
     return () => window.removeEventListener('storage', handler);
@@ -126,13 +126,13 @@ const SquadView: React.FC = () => {
   }, [squadId, postAIMessage, squad?.name, squad?.messages]);
   const handleLeaveSquad = async () => {
     if (squadId) {
-      console.log('Attempting to leave squad:', squadId);
+      console.log('🚪 Attempting to leave squad:', { squadId, squad, currentUser: currentUser?.uid });
       try {
         await leaveSquad(squadId);
-        console.log('Successfully left squad, navigating to squads list');
+        console.log('✅ Successfully left squad, navigating to squads list');
         navigate('/squads');
       } catch (error) {
-        console.error('Error leaving squad:', error);
+        console.error('❌ Error leaving squad:', error);
         alert('Failed to leave squad. Please try again.');
       }
     }
@@ -158,8 +158,14 @@ const SquadView: React.FC = () => {
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (chatInput.trim() && squadId) {
-      await sendMessage(squadId, chatInput.trim());
-      setChatInput('');
+      console.log('📤 Sending message:', { squadId, content: chatInput.trim() });
+      try {
+        await sendMessage(squadId, chatInput.trim());
+        console.log('✅ Message sent successfully');
+        setChatInput('');
+      } catch (error) {
+        console.error('❌ Failed to send message:', error);
+      }
     }
   };
   const handleCopyCode = () => {
@@ -188,7 +194,7 @@ const SquadView: React.FC = () => {
   };
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
-      {}
+      { }
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl pointer-events-none" />
       <div className="absolute inset-0 overflow-hidden pointer-events-none dark">
         <ElegantShape
@@ -217,7 +223,7 @@ const SquadView: React.FC = () => {
         />
       </div>
       <div className="relative z-10 p-6 flex flex-col lg:flex-row gap-8 max-w-7xl mx-auto">
-        {}
+        { }
         <div className="flex-1 flex flex-col gap-8">
           <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
             <div>
@@ -251,11 +257,26 @@ const SquadView: React.FC = () => {
             </div>
             {isHost ? (
               <div className="flex justify-center gap-6 mt-6">
-                <Button onClick={() => toggleTimer(squad.id)} size="lg" className="w-44">
+                <Button
+                  onClick={() => {
+                    console.log('⏯️ Toggling timer for squad:', squad.id);
+                    toggleTimer(squad.id);
+                  }}
+                  size="lg"
+                  className="w-44"
+                >
                   {timerState.isActive ? <Pause className="mr-2" /> : <Play className="mr-2" />}
                   {timerState.isActive ? 'Pause' : 'Start'}
                 </Button>
-                <Button onClick={() => resetTimer(squad.id)} variant="ghost" size="icon" className="bg-muted hover:bg-muted/80 transition rounded-xl">
+                <Button
+                  onClick={() => {
+                    console.log('🔄 Resetting timer for squad:', squad.id);
+                    resetTimer(squad.id);
+                  }}
+                  variant="ghost"
+                  size="icon"
+                  className="bg-muted hover:bg-muted/80 transition rounded-xl"
+                >
                   <RotateCcw />
                 </Button>
               </div>
@@ -264,7 +285,7 @@ const SquadView: React.FC = () => {
             )}
           </Card>
         </div>
-        {}
+        { }
         <div className="w-full max-w-md flex flex-col gap-8 flex-shrink-0">
           <Card className="flex-1 flex flex-col bg-card/80 backdrop-blur-lg border-border rounded-3xl p-6 shadow-xl">
             <h3 className="text-lg font-semibold text-foreground flex items-center gap-2 mb-6">
@@ -288,7 +309,7 @@ const SquadView: React.FC = () => {
             </div>
             <div className="flex-1 overflow-y-auto space-y-4 pr-2 custom-scrollbar">
               {squad.messages.map((msg: SquadMessage) => {
-                const content = msg.isAIMessage ? msg.content : decrypt(msg.content);
+                const content = msg.isAIMessage ? msg.content : decryptMessage(msg.content);
                 const isCurrentUser = msg.author.uid === currentUser?.uid;
                 return (
                   <div
@@ -309,13 +330,12 @@ const SquadView: React.FC = () => {
                         {msg.author.displayName}
                       </p>
                       <div
-                        className={`p-3 rounded-lg break-words ${
-                          msg.isAIMessage
-                            ? "bg-primary/10 text-primary-foreground/80 italic border border-primary/20"
-                            : isCurrentUser
+                        className={`p-3 rounded-lg break-words ${msg.isAIMessage
+                          ? "bg-primary/10 text-primary-foreground/80 italic border border-primary/20"
+                          : isCurrentUser
                             ? "bg-primary text-primary-foreground rounded-br-none shadow-lg"
                             : "bg-muted text-foreground rounded-tl-none"
-                        }`}
+                          }`}
                       >
                         {content}
                       </div>

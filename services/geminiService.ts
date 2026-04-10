@@ -1,13 +1,13 @@
 import { GoogleGenAI, GenerateContentResponse, Type } from "@google/genai";
 import type { Question, Quiz, CognitiveStateAnalysis, QuizResult, FocusSession, DailyMission, ChatMessage, PortfolioProject, TimelineEvent, Skill, GeneratedResumeContent, AgentExecutionResult, SleepEntry, DailyCheckin, FocusStory, AudioEnvironmentAnalysis, NotebookScript, NotebookSlide } from '../types';
 const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_API_KEY });
-// Use a broadly available model by default to avoid 403 due to access restrictions
-const ASSISTANT_MODEL = 'gemini-1.5-flash';
+
+const ASSISTANT_MODEL = 'gemini-2.5-flash';
 const IMAGE_GEN_MODEL = 'imagen-3.0-generate-002';
-// Feature flags (default off) to avoid calling restricted endpoints in local dev
+
 const ENABLE_IMAGE_GEN = import.meta.env.VITE_ENABLE_IMAGE_GEN === 'true';
 const ENABLE_SEARCH_TOOL = import.meta.env.VITE_ENABLE_SEARCH_TOOL === 'true';
-// Streaming can be blocked; default to disabled unless explicitly enabled
+
 const ENABLE_STREAM = import.meta.env.VITE_ENABLE_STREAM === 'true';
 const ASSISTANT_SYSTEM_INSTRUCTION = "You are Cerebrum AI, an expert cognitive coach and learning strategist within the NeuroLearn ecosystem. Your personality is that of a wise, encouraging mentor. Your purpose is to help users optimize their learning, enhance focus, and cultivate mental well-being. Your responses should be insightful, empathetic, and actionable, guiding users toward peak performance. Avoid generic AI phrases. Use markdown for clarity and structure. When a user uploads an image, analyze it in the context of their prompt.";
 export const getAssistantStream = async (messages: ChatMessage[]): Promise<AsyncGenerator<GenerateContentResponse>> => {
@@ -46,12 +46,12 @@ export const getAssistantStream = async (messages: ChatMessage[]): Promise<Async
             }
         });
     }
-    // Helper: create a single-chunk async generator from text
+
     async function* singleChunk(text: string): AsyncGenerator<GenerateContentResponse> {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         yield { text } as any;
     }
-    // If streaming disabled, do non-stream request compatible with caller
+
     if (!ENABLE_STREAM) {
         const nonStreamResponse = await ai.models.generateContent({
             model: ASSISTANT_MODEL,
@@ -62,7 +62,7 @@ export const getAssistantStream = async (messages: ChatMessage[]): Promise<Async
         });
         return singleChunk(nonStreamResponse.text);
     }
-    // Try streaming; on failure (e.g., 403), fall back to non-stream
+
     try {
         const response = await chat.sendMessageStream({ message: currentMessageParts });
         return response;
@@ -88,7 +88,7 @@ export const processAssistantRequest = async (messages: ChatMessage[]): Promise<
 }> => {
     const lastMessage = messages[messages.length - 1];
     const prompt = lastMessage.content;
-    // Step 1: Check if it's an image generation request.
+
     const intentSchema = {
         type: Type.OBJECT,
         properties: {
@@ -121,7 +121,7 @@ export const processAssistantRequest = async (messages: ChatMessage[]): Promise<
             });
             const intentData = JSON.parse(intentResponse.text.trim());
             if (intentData.action === 'generate_image' && intentData.image_prompt) {
-                // Step 2: Generate the image (requires access)
+
                 const imageResponse = await ai.models.generateImages({
                     model: IMAGE_GEN_MODEL,
                     prompt: intentData.image_prompt,
@@ -143,10 +143,10 @@ export const processAssistantRequest = async (messages: ChatMessage[]): Promise<
             }
         } catch (e) {
             console.warn("Image intent check failed, falling back to chat.", e);
-            // If intent check fails, proceed as a normal chat message.
+
         }
     }
-    // Fallback to text chat stream
+
     const stream = await getAssistantStream(messages);
     return {
         type: 'stream',
@@ -224,7 +224,7 @@ Ensure the correct answer is one of the provided options.`;
         ...quizData,
         id: quizId,
         questions: questionsWithIds,
-        difficulty: difficulty, // Override with user's selection
+        difficulty: difficulty,
         isPremium: false,
     };
 };
@@ -243,7 +243,7 @@ Output:`;
         model: ASSISTANT_MODEL,
         contents: prompt,
         config: {
-            thinkingConfig: { thinkingBudget: 0 } // for quick response
+            thinkingConfig: { thinkingBudget: 0 }
         }
     });
     return response.text.trim();
@@ -327,7 +327,7 @@ You MUST respond with ONLY a valid JSON object with the specified schema.`;
         config: {
             responseMimeType: 'application/json',
             responseSchema: schema,
-            thinkingConfig: { thinkingBudget: 0 } // faster response for classification
+            thinkingConfig: { thinkingBudget: 0 }
         }
     });
     return JSON.parse(response.text);
@@ -353,7 +353,7 @@ Your task is to generate a concise, helpful tip for the user based on a suggesti
         model: ASSISTANT_MODEL,
         contents: prompt,
         config: {
-            thinkingConfig: { thinkingBudget: 0 } // for quick response
+            thinkingConfig: { thinkingBudget: 0 }
         }
     });
     return response.text.trim();
@@ -364,24 +364,34 @@ export const generateStudyPlan = async (quizHistory: QuizResult[], focusHistory:
         items: {
             type: Type.OBJECT,
             properties: {
+
                 day: { type: Type.NUMBER, description: 'The day number, from 1 to 7.' },
+
                 title: { type: Type.STRING, description: 'A catchy, motivational title for the day\'s mission.' },
+
                 description: { type: Type.STRING, description: 'A brief, encouraging description of the task and its purpose.' },
+
                 activityType: { type: Type.STRING, enum: ['quiz', 'focus', 'review', 'generate'], description: "The type of activity: 'quiz' for an existing quiz, 'focus' for a pomodoro session, 'review' for a concept, 'generate' to create a new quiz." },
                 activityTarget: { type: Type.STRING, description: "The target of the activity. For 'quiz' or 'review', the quiz title. For 'focus', the duration (e.g., '25-min'). For 'generate', the topic for a new quiz." },
-                reasoning: { type: Type.STRING, description: 'A brief, encouraging rationale for why this specific mission was chosen for this day, based on user history.' }
+
+                reasoning: { type: Type.STRING, description: 'A brief, encouraging rationale for why this specific mission was chosen for this day,  based on user history.' }
             },
             required: ['day', 'title', 'description', 'activityType', 'activityTarget', 'reasoning']
         }
     };
+
+
     const formattedQuizHistory = quizHistory.length > 0
+
         ? quizHistory.map(q => `- ${q.title} (Difficulty: ${q.difficulty}, Score: ${q.score}%)`).join('\n')
         : 'No quiz history yet.';
     const averageFocusScore = focusHistory.length > 0
+
         ? (focusHistory.reduce((acc, session) => acc + session.score, 0) / focusHistory.length).toFixed(0)
         : 'No focus history yet.';
     const prompt = `
-        Based on the following user data, create a personalized, encouraging 7-day study plan to help them improve.
+    
+    Based on the following user data, create a personalized, encouraging 7-day study plan to help them improve.
         **Quiz History:**
         ${formattedQuizHistory}
         **Focus Analysis:**
@@ -398,12 +408,15 @@ export const generateStudyPlan = async (quizHistory: QuizResult[], focusHistory:
     `;
     const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
+
         contents: prompt,
+
         config: {
             responseMimeType: 'application/json',
             responseSchema: schema
         }
     });
+
     return JSON.parse(response.text);
 }
 export const getSupportiveReply = async (type: 'intention' | 'reflection', content: string): Promise<string> => {
@@ -413,8 +426,9 @@ export const getSupportiveReply = async (type: 'intention' | 'reflection', conte
     const response = await ai.models.generateContent({
         model: ASSISTANT_MODEL,
         contents: prompt,
+
         config: {
-            thinkingConfig: { thinkingBudget: 0 } // Low latency for quick replies
+            thinkingConfig: { thinkingBudget: 0 }
         }
     });
     return response.text;
@@ -425,7 +439,8 @@ export const getMindShiftGuidance = async (thought: string, step: 'challenge' | 
         prompt = `A user is having the negative thought: "${thought}". 
         Ask one insightful, Socratic question to gently challenge the evidence for this thought. 
         Frame it kindly. For example: 'What evidence suggests that thought is 100% true?' or 'Is there a more compassionate way to look at this situation?'.`;
-    } else { // 'reframe'
+    }
+    else {
         prompt = `Based on the negative thought "${thought}", suggest a more balanced and compassionate alternative thought.
         Start your response with 'A possible reframe could be:'. Be concise and supportive.`;
     }
@@ -643,7 +658,7 @@ export const generateSleepAdvice = async (duration: number, quality: number, his
         config: { responseMimeType: 'application/json', responseSchema: schema }
     });
     const result = JSON.parse(response.text);
-    // Clamp score to be safe
+
     result.score = Math.max(0, Math.min(100, result.score));
     return result;
 };
@@ -679,7 +694,7 @@ export const generateWellnessInsights = async (data: {
             required: ['title', 'insight']
         }
     };
-    // Summarize data to fit context window
+
     const checkinSummary = data.checkins.slice(-7).map(c => `Date: ${c.date}, Mood: ${c.mood}`).join('; ');
     const sleepSummary = data.sleep.slice(-7).map(s => `Date: ${s.date}, Duration: ${s.duration}h, Quality: ${s.quality}%`).join('; ');
     const focusSummary = data.focus.slice(-7).map(f => `Date: ${f.date.substring(0, 10)}, Duration: ${f.duration}min, Flow: ${f.flowState}%`).join('; ');
@@ -747,16 +762,16 @@ Make sure the roadmap is realistic, progressive, and covers the topic comprehens
                 }
             }
         });
-        // The response should already be parsed JSON due to responseSchema
+
         const data = JSON.parse(response.text);
-        // Validate the response format
+
         if (!data.days || !Array.isArray(data.days) || data.days.length !== 7) {
             throw new Error('Invalid response format from AI');
         }
         return data;
     } catch (error) {
         console.error('Error generating study roadmap:', error);
-        // Fallback to a default roadmap if generation fails
+
         return {
             days: Array(7).fill(0).map((_, i) => ({
                 day: i + 1,

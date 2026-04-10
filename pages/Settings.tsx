@@ -2,7 +2,7 @@ import React from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
 import { User, CreditCard, Shield, Store } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-// You can create this as a shared component or define it here if only used once.
+
 const ElegantShape = ({
   className,
   delay = 0,
@@ -54,33 +54,33 @@ export const Settings: React.FC = () => {
   ];
   return (
     <div className="min-h-full bg-[#030303] relative overflow-hidden p-4 sm:p-6 lg:p-8">
-      {}
+      { }
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl pointer-events-none" />
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <ElegantShape delay={0.3} width={450} height={110} rotate={10} gradient="from-blue-500/[0.12]" className="left-[-5%] top-[8%]" />
         <ElegantShape delay={0.5} width={350} height={90} rotate={-14} gradient="from-purple-500/[0.12]" className="right-[-3%] bottom-[10%]" />
       </div>
-      <motion.div 
+      <motion.div
         className="relative z-10 space-y-8 max-w-7xl mx-auto"
         initial="hidden"
         animate="visible"
         variants={{
           hidden: { opacity: 0 },
-          visible: { 
+          visible: {
             opacity: 1,
             transition: { staggerChildren: 0.1, delayChildren: 0.1 }
           }
         }}
       >
-        {}
+        { }
         <motion.div variants={{ hidden: { opacity: 0, y: -20 }, visible: { opacity: 1, y: 0 } }}>
           <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-200 to-violet-200">
             Settings
           </h1>
           <p className="text-white/70 mt-2 text-lg">Manage your account, plan, and ethical AI preferences.</p>
         </motion.div>
-        {}
-        <motion.div 
+        { }
+        <motion.div
           className="relative flex items-center gap-2 p-2 bg-white/[0.03] backdrop-blur-md rounded-2xl border border-white/10 w-full lg:w-max"
           variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
         >
@@ -109,8 +109,8 @@ export const Settings: React.FC = () => {
             </ReactRouterDOM.NavLink>
           ))}
         </motion.div>
-        {}
-        <motion.div 
+        { }
+        <motion.div
           className="mt-6"
           variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
         >

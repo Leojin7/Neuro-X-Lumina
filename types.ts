@@ -21,7 +21,7 @@ export interface Question {
   correctAnswer: string;
 }
 export interface Quiz {
-  id:string;
+  id: string;
   title: string;
   description: string;
   difficulty: 'Easy' | 'Medium' | 'Hard';
@@ -50,7 +50,7 @@ export interface QuizResult {
   completedAt: string; // ISO string
 }
 export interface RecentlyDeletedQuiz extends QuizResult {
-    deletedAt: number; // timestamp
+  deletedAt: number; // timestamp
 }
 export interface CognitiveStateAnalysis {
   cognitive_state: "Deep Focus" | "Neutral" | "Slightly Distracted" | "Visibly Stressed" | "Tired";
@@ -64,21 +64,21 @@ export interface AudioEnvironmentAnalysis {
   suggestion_id: "SUGGEST_SOUNDSCAPE" | "SUGGEST_HEADPHONES" | "SUGGEST_NOTHING";
 }
 export interface FocusStory {
-    id: string;
-    date: string; // ISO string
-    duration: number; // in minutes
-    coinsEarned: number;
-    cognitiveStateResult: CognitiveStateAnalysis | null;
-    flowState: number; // 0-100%
-    cognitiveLoad: 'low' | 'medium' | 'high';
+  id: string;
+  date: string; // ISO string
+  duration: number; // in minutes
+  coinsEarned: number;
+  cognitiveStateResult: CognitiveStateAnalysis | null;
+  flowState: number; // 0-100%
+  cognitiveLoad: 'low' | 'medium' | 'high';
 }
 export type SubscriptionTier = 'free' | 'pro' | 'elite';
 export interface CurrentUser {
-    uid: string;
-    displayName: string | null;
-    email: string | null;
-    photoURL: string | null;
-    creationTime?: string;
+  uid: string;
+  displayName: string | null;
+  email: string | null;
+  photoURL: string | null;
+  creationTime?: string;
 }
 export interface DailyMission {
   day: number;
@@ -134,36 +134,36 @@ export interface Note {
 // Types for Coding Arena
 export type Language = 'javascript' | 'python' | 'java' | 'cpp' | 'c';
 export interface TestCase {
-    input: any[];
-    expected: any;
-    isPublic: boolean;
+  input: any[];
+  expected: any;
+  isPublic: boolean;
 }
 export interface CodingProblem {
-    id: string;
-    title: string;
-    difficulty: 'Easy' | 'Medium' | 'Hard';
-    topic: string;
-    description: string;
-    functionSignature: string;
-    starterCode: Partial<Record<Language, string>>;
-    testCases: TestCase[];
+  id: string;
+  title: string;
+  difficulty: 'Easy' | 'Medium' | 'Hard';
+  topic: string;
+  description: string;
+  functionSignature: string;
+  starterCode: Partial<Record<Language, string>>;
+  testCases: TestCase[];
 }
 export interface SubmissionResultDetail {
-    testCase: TestCase;
-    passed: boolean;
-    output: any;
+  testCase: TestCase;
+  passed: boolean;
+  output: any;
 }
 export interface SubmissionResult {
-    status: 'Accepted' | 'Wrong Answer' | 'Time Limit Exceeded' | 'Runtime Error' | 'Running...';
-    passedCount: number;
-    totalCount: number;
-    details: SubmissionResultDetail[];
+  status: 'Accepted' | 'Wrong Answer' | 'Time Limit Exceeded' | 'Runtime Error' | 'Running...';
+  passedCount: number;
+  totalCount: number;
+  details: SubmissionResultDetail[];
 }
 export interface CodingSubmission {
-    problemId: string;
-    submittedAt: string; // ISO string
-    status: 'Accepted' | 'Wrong Answer'; // Simplified for history
-    language: Language;
+  problemId: string;
+  submittedAt: string; // ISO string
+  status: 'Accepted' | 'Wrong Answer'; // Simplified for history
+  language: Language;
 }
 // Types for Study Squads
 export interface SquadMember {
@@ -189,13 +189,13 @@ export interface ChatMessage {
   status?: 'loading' | 'error';
 }
 export interface SquadTimerState {
-    mode: 'pomodoro' | 'shortBreak' | 'longBreak';
-    timeLeft: number;
-    isActive: boolean;
+  mode: 'pomodoro' | 'shortBreak' | 'longBreak';
+  timeLeft: number;
+  isActive: boolean;
 }
 export interface StudySquad {
   id: string;
-  name:string;
+  name: string;
   topic: string;
   hostId: string;
   members: SquadMember[];
@@ -206,65 +206,65 @@ export interface StudySquad {
   joinCode: string;
 }
 export interface Integrations {
-    leetcode: {
-        username: string;
-        visible: boolean;
-    };
-    github: {
-        visible: boolean;
-    };
+  leetcode: {
+    username: string;
+    visible: boolean;
+  };
+  github: {
+    visible: boolean;
+  };
 }
 // Types for Portfolio Module
 export interface PortfolioProject {
-    id: string | number;
-    title: string;
-    description: string;
-    techStack: string[];
-    imageUrl: string;
-    repoUrl?: string;
-    liveUrl?: string;
+  id: string | number;
+  title: string;
+  description: string;
+  techStack: string[];
+  imageUrl: string;
+  repoUrl?: string;
+  liveUrl?: string;
 }
 export interface Skill {
-    name: string;
-    level: number; // 0-100
+  name: string;
+  level: number; // 0-100
 }
 export interface TimelineEvent {
-    id: string;
-    date: string;
-    title: string;
-    description: string;
-    icon: 'Milestone' | 'Project' | 'Learn' | 'Job';
+  id: string;
+  date: string;
+  title: string;
+  description: string;
+  icon: 'Milestone' | 'Project' | 'Learn' | 'Job';
 }
 export interface GitHubStats {
-    stars: number;
-    followers: number;
-    repos: number;
+  stars: number;
+  followers: number;
+  repos: number;
 }
 export interface LeetCodeStats {
-    solved: number;
-    easySolved: number;
-    mediumSolved: number;
-    hardSolved: number;
-    ranking: number;
-    totalEasy?: number;
-    totalMedium?: number;
-    totalHard?: number;
+  solved: number;
+  easySolved: number;
+  mediumSolved: number;
+  hardSolved: number;
+  ranking: number;
+  totalEasy?: number;
+  totalMedium?: number;
+  totalHard?: number;
 }
 // Types for AI-Generated Resume
 export interface GeneratedExperience {
-    title: string;
-    date: string;
-    bulletPoints: string[];
+  title: string;
+  date: string;
+  bulletPoints: string[];
 }
 export interface GeneratedProject {
-    title: string;
-    techStack: string[];
-    bulletPoints: string[];
+  title: string;
+  techStack: string[];
+  bulletPoints: string[];
 }
 export interface GeneratedResumeContent {
-    summary: string;
-    experience: GeneratedExperience[];
-    projects: GeneratedProject[];
+  summary: string;
+  experience: GeneratedExperience[];
+  projects: GeneratedProject[];
 }
 // Types for Agent Hub
 export type AgentType = 'research' | 'presentation';
@@ -277,9 +277,9 @@ export interface Agent {
   accentColor: string;
 }
 export interface AgentExecutionResult {
-    text?: string;
-    sources?: { web: { uri: string; title: string } }[];
-    presentation?: { slideTitle: string; bulletPoints: string[] }[];
+  text?: string;
+  sources?: { web: { uri: string; title: string } }[];
+  presentation?: { slideTitle: string; bulletPoints: string[] }[];
 }
 export interface Task {
   id: string;

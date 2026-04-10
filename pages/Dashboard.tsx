@@ -18,7 +18,7 @@ import CodingStats from '../components/CodingStats';
 import { motion, AnimatePresence } from 'framer-motion';
 import HabitTracker from '../components/HabitTracker';
 import NotesTaker from '../components/NotesTaker';
-// Elegant Shape Component for Background
+
 const ElegantShape = ({
   className,
   delay = 0,
@@ -61,14 +61,14 @@ const ElegantShape = ({
     </motion.div>
   </motion.div>
 );
-// Glass Card Wrapper Component
-const GlassCard = ({ 
-  children, 
-  title, 
-  icon, 
+
+const GlassCard = ({
+  children,
+  title,
+  icon,
   className = "",
-  delay = 0 
-}: { 
+  delay = 0
+}: {
   children: React.ReactNode;
   title?: string;
   icon?: React.ReactNode;
@@ -92,7 +92,7 @@ const GlassCard = ({
     {children}
   </motion.div>
 );
-// Glass Input Wrapper
+
 const GlassInputWrapper = ({ children }: { children: React.ReactNode }) => (
   <div className="rounded-2xl border border-border bg-input/50 backdrop-blur-sm transition-colors focus-within:border-primary/70 focus-within:bg-primary/10">
     {children}
@@ -112,7 +112,7 @@ const Dashboard: React.FC = () => {
     if (location.state?.topic) {
       setTopic(location.state.topic);
       const topicInput = document.getElementById('quiz-topic') as HTMLInputElement;
-      if(topicInput) topicInput.focus();
+      if (topicInput) topicInput.focus();
     }
   }, [location.state]);
   const userName = currentUser?.displayName || 'Learner';
@@ -149,7 +149,7 @@ const Dashboard: React.FC = () => {
   const numQuestionsOptions: number[] = [5, 10, 15];
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
-      {}
+      { }
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl" />
       <div className="absolute inset-0 overflow-hidden dark">
         <ElegantShape
@@ -185,9 +185,9 @@ const Dashboard: React.FC = () => {
           className="right-[20%] top-[5%]"
         />
       </div>
-      {}
+      { }
       <div className="relative z-10 p-6 space-y-8">
-        {}
+        { }
         <motion.header
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -195,7 +195,7 @@ const Dashboard: React.FC = () => {
           className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
         >
           <div>
-            {}
+            { }
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -227,7 +227,7 @@ const Dashboard: React.FC = () => {
             <FocusCoinWallet />
           </motion.div>
         </motion.header>
-        {}
+        { }
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -235,11 +235,11 @@ const Dashboard: React.FC = () => {
         >
           <DailyCheckin />
         </motion.div>
-        {}
+        { }
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-          {}
+          { }
           <div className="lg:col-span-3 space-y-8">
-            {}
+            { }
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -249,7 +249,7 @@ const Dashboard: React.FC = () => {
                 <DailyMissions />
               </SubscriptionGate>
             </motion.div>
-            {}
+            { }
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -257,7 +257,7 @@ const Dashboard: React.FC = () => {
             >
               <CodingStats />
             </motion.div>
-            {}
+            { }
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -265,9 +265,9 @@ const Dashboard: React.FC = () => {
             >
               <HabitTracker />
             </motion.div>
-            {}
-            <GlassCard 
-              title="Focus Trends" 
+            { }
+            <GlassCard
+              title="Focus Trends"
               icon={<TrendingUp size={20} />}
               delay={0.8}
             >
@@ -277,46 +277,46 @@ const Dashboard: React.FC = () => {
                     <BarChart data={focusData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
                       <defs>
                         <linearGradient id="colorFocus" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.8}/>
-                          <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
+                          <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.8} />
+                          <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                      <XAxis 
-                        dataKey="name" 
-                        stroke="hsl(var(--muted-foreground))" 
-                        fontSize={12} 
+                      <XAxis
+                        dataKey="name"
+                        stroke="hsl(var(--muted-foreground))"
+                        fontSize={12}
                         tickLine={false}
                         axisLine={false}
                       />
-                      <YAxis 
-                        stroke="hsl(var(--muted-foreground))" 
-                        fontSize={12} 
+                      <YAxis
+                        stroke="hsl(var(--muted-foreground))"
+                        fontSize={12}
                         tickLine={false}
                         axisLine={false}
-                        label={{ 
-                          value: 'Minutes', 
-                          angle: -90, 
-                          position: 'insideLeft', 
-                          fill: 'hsl(var(--muted-foreground))' 
-                        }} 
+                        label={{
+                          value: 'Minutes',
+                          angle: -90,
+                          position: 'insideLeft',
+                          fill: 'hsl(var(--muted-foreground))'
+                        }}
                       />
                       <Tooltip
                         cursor={{ fill: 'hsla(var(--primary) / 0.1)' }}
-                        contentStyle={{ 
-                          backgroundColor: 'hsl(var(--card))', 
-                          border: '1px solid hsl(var(--border))', 
+                        contentStyle={{
+                          backgroundColor: 'hsl(var(--card))',
+                          border: '1px solid hsl(var(--border))',
                           borderRadius: '12px',
                           color: 'hsl(var(--card-foreground))'
                         }}
                         labelStyle={{ color: 'hsl(var(--foreground))' }}
                         itemStyle={{ fontWeight: 'bold', color: 'hsl(var(--primary))' }}
                       />
-                      <Bar 
-                        dataKey="duration" 
-                        name="Focus Duration" 
-                        fill="url(#colorFocus)" 
-                        radius={[6, 6, 0, 0]} 
+                      <Bar
+                        dataKey="duration"
+                        name="Focus Duration"
+                        fill="url(#colorFocus)"
+                        radius={[6, 6, 0, 0]}
                       />
                     </BarChart>
                   </ResponsiveContainer>
@@ -332,11 +332,11 @@ const Dashboard: React.FC = () => {
               </div>
             </GlassCard>
           </div>
-          {}
+          { }
           <div className="lg:col-span-2 space-y-8">
-            {}
-            <GlassCard 
-              title="AI-Powered Learning" 
+            { }
+            <GlassCard
+              title="AI-Powered Learning"
               icon={<Brain size={20} />}
               className="relative"
               delay={0.9}
@@ -385,40 +385,38 @@ const Dashboard: React.FC = () => {
                     Customize
                   </label>
                   <div className="grid grid-cols-2 gap-4">
-                    {}
+                    { }
                     <div>
                       <div className="flex bg-muted/50 p-1 rounded-xl border border-border">
                         {difficultyOptions.map(d => (
-                          <button 
-                            type="button" 
-                            key={d} 
-                            onClick={() => setDifficulty(d)} 
-                            disabled={isGenerating} 
-                            className={`flex-1 text-sm font-semibold py-2 px-3 rounded-lg transition-all duration-200 ${
-                              difficulty === d 
-                                ? 'bg-primary text-primary-foreground shadow-lg' 
-                                : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-                            }`}
+                          <button
+                            type="button"
+                            key={d}
+                            onClick={() => setDifficulty(d)}
+                            disabled={isGenerating}
+                            className={`flex-1 text-sm font-semibold py-2 px-3 rounded-lg transition-all duration-200 ${difficulty === d
+                              ? 'bg-primary text-primary-foreground shadow-lg'
+                              : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                              }`}
                           >
                             {d}
                           </button>
                         ))}
                       </div>
                     </div>
-                    {}
+                    { }
                     <div>
                       <div className="flex bg-muted/50 p-1 rounded-xl border border-border">
                         {numQuestionsOptions.map(n => (
-                          <button 
-                            type="button" 
-                            key={n} 
-                            onClick={() => setNumQuestions(n)} 
-                            disabled={isGenerating} 
-                            className={`flex-1 text-sm font-semibold py-2 px-3 rounded-lg transition-all duration-200 ${
-                              numQuestions === n 
-                                ? 'bg-primary text-primary-foreground shadow-lg' 
-                                : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-                            }`}
+                          <button
+                            type="button"
+                            key={n}
+                            onClick={() => setNumQuestions(n)}
+                            disabled={isGenerating}
+                            className={`flex-1 text-sm font-semibold py-2 px-3 rounded-lg transition-all duration-200 ${numQuestions === n
+                              ? 'bg-primary text-primary-foreground shadow-lg'
+                              : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                              }`}
                           >
                             {n}
                           </button>
@@ -452,7 +450,7 @@ const Dashboard: React.FC = () => {
                 )}
               </AnimatePresence>
             </GlassCard>
-            {}
+            { }
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -462,7 +460,7 @@ const Dashboard: React.FC = () => {
             </motion.div>
           </div>
         </div>
-        {}
+        { }
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -471,7 +469,7 @@ const Dashboard: React.FC = () => {
           <NotesTaker />
         </motion.div>
       </div>
-      {}
+      { }
       <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/80 pointer-events-none" />
     </div>
   );

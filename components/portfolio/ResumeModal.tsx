@@ -6,6 +6,7 @@ import Button from '../Button';
 import { X, Download, Linkedin, Github, Mail, Briefcase, Code, Star, ChevronsRight, Loader2 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 
+
 const BulletPoint: React.FC<{ children: React.ReactNode }> = ({ children }) => (
     <li className="flex gap-2.5 items-start">
         <ChevronsRight size={14} className="text-teal-600 mt-1 flex-shrink-0" />
@@ -20,6 +21,7 @@ const ResumeModal = ({ isOpen, onClose }: ResumeModalProps) => {
     const { currentUser } = useUserStore();
     const { professionalTitle, skills, socialLinks, generatedResume } = usePortfolioStore();
     const resumeRef = useRef<HTMLDivElement>(null);
+
     const [isDownloading, setIsDownloading] = useState(false);
     const handleDownload = () => {
         if (!resumeRef.current) return;
@@ -38,7 +40,9 @@ const ResumeModal = ({ isOpen, onClose }: ResumeModalProps) => {
         });
     };
 
+
     if (!currentUser || !generatedResume) return null;
+
 
     const Section = ({ title, icon, children }: { title: string, icon: React.ReactNode, children: React.ReactNode }) => (
         <section className="mt-6">
@@ -49,6 +53,7 @@ const ResumeModal = ({ isOpen, onClose }: ResumeModalProps) => {
             {children}
         </section>
     );
+
 
     return (
         <AnimatePresence>
@@ -95,7 +100,7 @@ const ResumeModal = ({ isOpen, onClose }: ResumeModalProps) => {
                                     </Section>
                                     <Section title="Technical Skills" icon={<Star size={18} className="text-teal-600" />}>
                                         <p className="text-sm text-gray-700 text-center">
-                                            {skills.map(skill => skill.name).join('  •  ')}
+                                            {skills.map(skill => skill.name).join('  •  ')}
                                         </p>
                                     </Section>
                                     <Section title="Professional Experience" icon={<Briefcase size={18} className="text-teal-600" />}>

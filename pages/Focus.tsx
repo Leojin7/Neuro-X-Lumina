@@ -5,8 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Card from '../components/Card';
 import Button from '../components/Button';
 import CircularProgress from '../components/CircularProgress';
-import { 
-  Play, Pause, RotateCcw, Webcam, Sparkles, Loader2, AlertTriangle, 
+import {
+  Play, Pause, RotateCcw, Webcam, Sparkles, Loader2, AlertTriangle,
   VideoOff, Mic, MicOff, Waves, Trophy, Share2, Clock, ArrowLeftCircle,
   BrainCircuit, Circle, MousePointerClick, Frown, Battery, Info
 } from 'lucide-react';
@@ -66,10 +66,10 @@ const Focus: React.FC = () => {
   const [isActive, setIsActive] = useState(false);
   const navigate = ReactRouterDOM.useNavigate();
   const timerRef = useRef<number | null>(null);
-  // Select fields separately to avoid creating a new object every render
+
   const addCoins = useUserStore(state => state.addCoins);
   const addFocusStory = useUserStore(state => state.addFocusStory);
-  // Cognitive State Analysis
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const analysisIntervalRef = useRef<number | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -78,7 +78,7 @@ const Focus: React.FC = () => {
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [actionableAdvice, setActionableAdvice] = useState<string | null>(null);
   const [isAdviceLoading, setIsAdviceLoading] = useState(false);
-  // Audio State
+
   const [isAudioAnalyzing, setIsAudioAnalyzing] = useState(false);
   const [audioError, setAudioError] = useState<string | null>(null);
   const [isAudioLoading, setIsAudioLoading] = useState(false);
@@ -131,10 +131,10 @@ const Focus: React.FC = () => {
     }
     return () => stopTimer();
   }, [isActive, stopTimer, handleSessionComplete]);
-  // --- Enhanced Visual Analysis (camera) ---
+
   const captureAndAnalyze = useCallback(async () => {
     if (!videoRef.current || videoRef.current.readyState < 2) return;
-    // Set loading state with a timeout to ensure UI feedback is shown
+
     const loadingTimeout = setTimeout(() => {
       if (!isAnalysisLoading) setIsAnalysisLoading(true);
     }, 300);
@@ -145,21 +145,21 @@ const Focus: React.FC = () => {
       canvas.height = videoRef.current.videoHeight;
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
-      // Draw mirrored video feed
+
       ctx.save();
-      ctx.scale(-1, 1); // Mirror the context
+      ctx.scale(-1, 1);
       ctx.drawImage(videoRef.current, -canvas.width, 0, canvas.width, canvas.height);
       ctx.restore();
-      // Optimize image quality and size
+
       const base64Image = canvas.toDataURL('image/jpeg', 0.7).split(',')[1];
-      // Run analysis with timeout
+
       const analysisPromise = geminiService.analyzeCognitiveState(base64Image);
-      const timeoutPromise = new Promise((_, reject) => 
+      const timeoutPromise = new Promise((_, reject) =>
         setTimeout(() => reject(new Error('Analysis timed out')), 8000) // 8 second timeout
       );
       const result = await Promise.race([analysisPromise, timeoutPromise]) as any;
       setCognitiveStateResult(result);
-      // Get advice in parallel to save time
+
       Promise.resolve().then(async () => {
         try {
           const adviceText = await geminiService.getActionableAdvice(result.actionable_advice_id);
@@ -173,7 +173,7 @@ const Focus: React.FC = () => {
       });
     } catch (error) {
       console.error("Cognitive state analysis failed:", error);
-      // Only update state if component is still mounted
+
       setCognitiveStateResult({
         cognitive_state: 'Neutral',
         confidence_score: 0,
@@ -196,12 +196,12 @@ const Focus: React.FC = () => {
     });
     setActionableAdvice("Camera is starting up. Please wait...");
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { 
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
           width: { ideal: 640 },
           height: { ideal: 480 },
           facingMode: 'user'
-        } 
+        }
       });
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
@@ -211,12 +211,12 @@ const Focus: React.FC = () => {
         });
       }
       setIsAnalyzing(true);
-      // Initial analysis after camera is ready
+
       const checkReady = setInterval(() => {
         if (videoRef.current && videoRef.current.readyState >= 2) {
           clearInterval(checkReady);
           captureAndAnalyze();
-          analysisIntervalRef.current = window.setInterval(captureAndAnalyze, 10000); // 10 second interval
+          analysisIntervalRef.current = window.setInterval(captureAndAnalyze, 10000);
         }
       }, 100);
     } catch (err) {
@@ -242,31 +242,31 @@ const Focus: React.FC = () => {
     setCognitiveStateResult(null);
     setActionableAdvice(null);
   }, []);
-  // --- Audio environment analysis ---
-  const MOCK_SOUND_EVENTS = [ "Keyboard Taps", "Mouse Clicks", "Silence", "Silence", "Silence", "Computer Fan", "Traffic Hum (distant)", "Human Speech (faint)", "Sudden Noise (door close)", "Music (instrumental)" ];
+
+  const MOCK_SOUND_EVENTS = ["Keyboard Taps", "Mouse Clicks", "Silence", "Silence", "Silence", "Computer Fan", "Traffic Hum (distant)", "Human Speech (faint)", "Sudden Noise (door close)", "Music (instrumental)"];
   const analyzeAudio = useCallback(async () => {
     if (detectedSoundsRef.current.length === 0) return;
     setIsAudioLoading(true);
     setAudioSuggestionText(null);
     const soundsToAnalyze = [...detectedSoundsRef.current];
-    detectedSoundsRef.current = []; // Reset for the next interval
+    detectedSoundsRef.current = [];
     try {
-        const result = await geminiService.analyzeAudioEnvironment(soundsToAnalyze);
-        setAudioAnalysisResult(result);
-        setIsAudioSuggestionLoading(true);
-        const suggestion = await geminiService.getAudioEnvironmentSuggestion(result.suggestion_id, result.primary_distraction);
-        setAudioSuggestionText(suggestion);
-        setIsAudioSuggestionLoading(false);
+      const result = await geminiService.analyzeAudioEnvironment(soundsToAnalyze);
+      setAudioAnalysisResult(result);
+      setIsAudioSuggestionLoading(true);
+      const suggestion = await geminiService.getAudioEnvironmentSuggestion(result.suggestion_id, result.primary_distraction);
+      setAudioSuggestionText(suggestion);
+      setIsAudioSuggestionLoading(false);
     } catch (error) {
-        console.error("Audio environment analysis failed:", error);
-        setAudioAnalysisResult({
-            environment_quality: 'Distracting',
-            primary_distraction: 'Analysis Error',
-            suggestion_id: 'SUGGEST_HEADPHONES',
-        });
-        setAudioSuggestionText("There was an error analyzing your audio. Maybe try using headphones?");
+      console.error("Audio environment analysis failed:", error);
+      setAudioAnalysisResult({
+        environment_quality: 'Distracting',
+        primary_distraction: 'Analysis Error',
+        suggestion_id: 'SUGGEST_HEADPHONES',
+      });
+      setAudioSuggestionText("There was an error analyzing your audio. Maybe try using headphones?");
     } finally {
-        setIsAudioLoading(false);
+      setIsAudioLoading(false);
     }
   }, []);
   const startAudioAnalysis = async () => {
@@ -275,22 +275,21 @@ const Focus: React.FC = () => {
     detectedSoundsRef.current = [];
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      stream.getTracks().forEach(track => track.stop()); // Stop immediately, just for permission
+      stream.getTracks().forEach(track => track.stop());
       setIsAudioAnalyzing(true);
-      // Simulate sound detection and run analysis periodically
+
       audioIntervalRef.current = window.setInterval(() => {
-        // Simulate detecting a sound event
         const detectedSound = MOCK_SOUND_EVENTS[Math.floor(Math.random() * MOCK_SOUND_EVENTS.length)];
         if (detectedSound !== 'Silence') {
           detectedSoundsRef.current.push(detectedSound);
         }
-      }, 4000); // Simulate detecting a sound every 4 seconds
-      // Run analysis every 15 seconds
+      }, 4000);
+
       const analysisRunner = setInterval(analyzeAudio, 15000);
       audioIntervalRef.current = window.setInterval(() => {
         clearInterval(analysisRunner);
       }, 15000);
-      // Run initial analysis after a short delay
+
       setTimeout(analyzeAudio, 10000);
     } catch (err) {
       setAudioError("Microphone access is required for analysis.");
@@ -325,10 +324,9 @@ const Focus: React.FC = () => {
   const totalDuration = getTimeForMode(mode);
   const progress = ((totalDuration - timeLeft) / totalDuration) * 100;
   const getModeButtonClass = (buttonMode: TimerMode) =>
-    `px-4 py-2 rounded-md font-semibold transition-colors duration-200 text-sm ${
-      mode === buttonMode
-        ? 'bg-primary text-primary-foreground shadow-lg'
-        : 'bg-muted/50 text-muted-foreground hover:bg-muted'
+    `px-4 py-2 rounded-md font-semibold transition-colors duration-200 text-sm ${mode === buttonMode
+      ? 'bg-primary text-primary-foreground shadow-lg'
+      : 'bg-muted/50 text-muted-foreground hover:bg-muted'
     }`;
   const stateIcons: Record<string, React.ReactNode> = {
     'Deep Focus': <BrainCircuit className="text-green-400" />,
@@ -344,14 +342,14 @@ const Focus: React.FC = () => {
   };
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
-      {}
+      { }
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] to-rose-500/[0.03] blur-3xl" />
       <div className="dark">
         <ElegantShape delay={0.3} width={550} height={110} rotate={12} gradient="from-blue-500/[0.11]" className="left-[-10%] top-[9%]" />
         <ElegantShape delay={0.4} width={420} height={88} rotate={-11} gradient="from-violet-500/[0.12]" className="right-[-7%] top-[57%]" />
         <ElegantShape delay={0.5} width={310} height={74} rotate={-7} gradient="from-sky-400/[0.12]" className="left-[5%] bottom-[12%]" />
       </div>
-      {}
+      { }
       <div className="relative z-10 p-6 max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: -16 }}
@@ -377,9 +375,9 @@ const Focus: React.FC = () => {
           </div>
         </motion.div>
       </div>
-      {}
+      { }
       <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-5xl mx-auto px-6 items-start">
-        {}
+        { }
         <GlassCard>
           <div className="flex flex-col items-center py-2">
             <div className="flex justify-center mb-8">
@@ -419,7 +417,7 @@ const Focus: React.FC = () => {
             )}
           </div>
         </GlassCard>
-        {}
+        { }
         <div className="space-y-9">
           <GlassCard>
             <h3 className="text-lg font-semibold text-foreground mb-4">NeuroSync™ Visual Analysis</h3>
@@ -462,114 +460,114 @@ const Focus: React.FC = () => {
               </Button>
             </div>
             <AnimatePresence>
-                {isAnalyzing && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="mt-4 bg-primary/5 p-4 rounded-xl border border-primary/20 space-y-3"
-                  >
-                    {isAnalysisLoading ? (
-                      <div className="flex items-center gap-3 text-primary">
-                        <Loader2 size={20} className="animate-spin" />
-                        <p className="font-semibold">Analyzing cognitive state...</p>
+              {isAnalyzing && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="mt-4 bg-primary/5 p-4 rounded-xl border border-primary/20 space-y-3"
+                >
+                  {isAnalysisLoading ? (
+                    <div className="flex items-center gap-3 text-primary">
+                      <Loader2 size={20} className="animate-spin" />
+                      <p className="font-semibold">Analyzing cognitive state...</p>
+                    </div>
+                  ) : cognitiveStateResult ? (
+                    <>
+                      <div className="flex justify-between items-start">
+                        <div className="flex items-center gap-3">
+                          {stateIcons[cognitiveStateResult.cognitive_state]}
+                          <h4 className="font-bold text-lg text-foreground">{cognitiveStateResult.cognitive_state}</h4>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-xs text-muted-foreground">Confidence</p>
+                          <p className="font-semibold text-foreground">{Math.round(cognitiveStateResult.confidence_score * 100)}%</p>
+                        </div>
                       </div>
-                    ) : cognitiveStateResult ? (
-                      <>
-                        <div className="flex justify-between items-start">
-                           <div className="flex items-center gap-3">
-                              {stateIcons[cognitiveStateResult.cognitive_state]}
-                              <h4 className="font-bold text-lg text-foreground">{cognitiveStateResult.cognitive_state}</h4>
-                           </div>
-                           <div className="text-right">
-                              <p className="text-xs text-muted-foreground">Confidence</p>
-                              <p className="font-semibold text-foreground">{Math.round(cognitiveStateResult.confidence_score * 100)}%</p>
-                           </div>
-                        </div>
-                        <div>
-                          <p className="text-xs font-semibold text-muted-foreground mb-1">Key Indicators:</p>
-                          <ul className="text-sm text-foreground space-y-1">
-                            {cognitiveStateResult.key_indicators.map((indicator, i) => (
-                              <li key={i} className="flex items-center gap-2"><Info size={12} className="text-primary"/>{indicator}</li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div className="mt-2 pt-2 border-t border-primary/10 text-center">
-                            {isAdviceLoading ? (
-                                <div className="flex items-center justify-center gap-2 text-primary text-sm font-medium">
-                                    <Loader2 size={16} className="animate-spin" />
-                                    <span>Generating advice...</span>
-                                </div>
-                            ) : (
-                               <p className="text-sm text-primary font-medium">{actionableAdvice}</p>
-                            )}
-                        </div>
-                      </>
-                    ) : (
-                       <p className="text-muted-foreground text-sm">Waiting for first analysis...</p>
-                    )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                      <div>
+                        <p className="text-xs font-semibold text-muted-foreground mb-1">Key Indicators:</p>
+                        <ul className="text-sm text-foreground space-y-1">
+                          {cognitiveStateResult.key_indicators.map((indicator, i) => (
+                            <li key={i} className="flex items-center gap-2"><Info size={12} className="text-primary" />{indicator}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="mt-2 pt-2 border-t border-primary/10 text-center">
+                        {isAdviceLoading ? (
+                          <div className="flex items-center justify-center gap-2 text-primary text-sm font-medium">
+                            <Loader2 size={16} className="animate-spin" />
+                            <span>Generating advice...</span>
+                          </div>
+                        ) : (
+                          <p className="text-sm text-primary font-medium">{actionableAdvice}</p>
+                        )}
+                      </div>
+                    </>
+                  ) : (
+                    <p className="text-muted-foreground text-sm">Waiting for first analysis...</p>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </GlassCard>
           <GlassCard>
             <h3 className="text-lg font-semibold text-foreground mb-4">NeuroSync™ Audio Analysis</h3>
-             <AnimatePresence mode="wait">
-                {isAudioAnalyzing ? (
-                    <motion.div 
-                        key="analysis-active"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="space-y-4"
-                    >
-                        {isAudioLoading ? (
-                            <div className="h-24 flex items-center justify-center text-center text-muted-foreground">
-                                <Loader2 size={32} className="animate-spin text-primary" />
+            <AnimatePresence mode="wait">
+              {isAudioAnalyzing ? (
+                <motion.div
+                  key="analysis-active"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="space-y-4"
+                >
+                  {isAudioLoading ? (
+                    <div className="h-24 flex items-center justify-center text-center text-muted-foreground">
+                      <Loader2 size={32} className="animate-spin text-primary" />
+                    </div>
+                  ) : audioAnalysisResult ? (
+                    <div className="h-24 flex flex-col justify-center">
+                      <div>
+                        <p className="text-sm text-muted-foreground">Environment Quality</p>
+                        <p className={`text-2xl font-bold ${qualityColors[audioAnalysisResult.environment_quality]}`}>{audioAnalysisResult.environment_quality}</p>
+                      </div>
+                      <div className="mt-2">
+                        <p className="text-xs text-muted-foreground">Primary Distraction: <span className="font-semibold text-foreground">{audioAnalysisResult.primary_distraction}</span></p>
+                        <div className="mt-2">
+                          <p className="text-xs text-muted-foreground">Suggestion:</p>
+                          {isAudioSuggestionLoading ? (
+                            <div className="flex items-center gap-2 text-primary text-sm font-medium mt-1">
+                              <Loader2 size={16} className="animate-spin" />
+                              <span>Cerebrum is thinking...</span>
                             </div>
-                        ) : audioAnalysisResult ? (
-                            <div className="h-24 flex flex-col justify-center">
-                                <div>
-                                    <p className="text-sm text-muted-foreground">Environment Quality</p>
-                                    <p className={`text-2xl font-bold ${qualityColors[audioAnalysisResult.environment_quality]}`}>{audioAnalysisResult.environment_quality}</p>
-                                </div>
-                                <div className="mt-2">
-                                    <p className="text-xs text-muted-foreground">Primary Distraction: <span className="font-semibold text-foreground">{audioAnalysisResult.primary_distraction}</span></p>
-                                    <div className="mt-2">
-                                        <p className="text-xs text-muted-foreground">Suggestion:</p>
-                                        {isAudioSuggestionLoading ? (
-                                            <div className="flex items-center gap-2 text-primary text-sm font-medium mt-1">
-                                                <Loader2 size={16} className="animate-spin" />
-                                                <span>Cerebrum is thinking...</span>
-                                            </div>
-                                        ) : (
-                                            <p className="font-semibold text-primary mt-1">{audioSuggestionText}</p>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="h-24 flex items-center justify-center text-center text-muted-foreground">
-                                <Waves size={32} className="mx-auto mb-1 text-primary animate-pulse" />
-                                <p className="font-medium">Listening to your environment...</p>
-                            </div>
-                        )}
-                    </motion.div>
-                ) : (
-                    <motion.div 
-                        key="analysis-idle"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="h-24 flex items-center justify-center text-center text-muted-foreground"
-                    >
-                        <div>
-                            <Mic size={32} className="mx-auto mb-1" />
-                            <p className="font-medium">Start for live audio feedback</p>
-                            {audioError && <p className="text-red-400 text-xs mt-1">{audioError}</p>}
+                          ) : (
+                            <p className="font-semibold text-primary mt-1">{audioSuggestionText}</p>
+                          )}
                         </div>
-                    </motion.div>
-                )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="h-24 flex items-center justify-center text-center text-muted-foreground">
+                      <Waves size={32} className="mx-auto mb-1 text-primary animate-pulse" />
+                      <p className="font-medium">Listening to your environment...</p>
+                    </div>
+                  )}
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="analysis-idle"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="h-24 flex items-center justify-center text-center text-muted-foreground"
+                >
+                  <div>
+                    <Mic size={32} className="mx-auto mb-1" />
+                    <p className="font-medium">Start for live audio feedback</p>
+                    {audioError && <p className="text-red-400 text-xs mt-1">{audioError}</p>}
+                  </div>
+                </motion.div>
+              )}
             </AnimatePresence>
             <div className="flex items-center justify-start mt-6">
               <Button

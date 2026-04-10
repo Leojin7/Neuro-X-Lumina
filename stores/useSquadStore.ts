@@ -4,6 +4,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import type { StudySquad, SquadMember, CurrentUser } from '../types';
 import { useUserStore } from './useUserStore';
 import { encrypt } from '../services/encryptionService';
+import { encryptMessage, decryptMessage } from '../services/cryptoService';
 import { FirebaseSquadService } from '../services/firebaseDatabase';
 interface SquadState {
   squads: StudySquad[];
@@ -35,8 +36,8 @@ const MOCK_SQUADS: StudySquad[] = [
   {
     id: 'squad-2', name: 'Frontend Masters', topic: 'React & TypeScript', hostId: 'mock-user-2',
     members: [
-        { uid: 'mock-user-2', displayName: 'Samantha', photoURL: 'https://i.pravatar.cc/40?u=samantha' },
-        { uid: 'mock-user-3', displayName: 'Jordan', photoURL: 'https://i.pravatar.cc/40?u=jordan' },
+      { uid: 'mock-user-2', displayName: 'Samantha', photoURL: 'https://i.pravatar.cc/40?u=samantha' },
+      { uid: 'mock-user-3', displayName: 'Jordan', photoURL: 'https://i.pravatar.cc/40?u=jordan' },
     ],
     messages: [], timerState: { mode: 'pomodoro', timeLeft: 25 * 60, isActive: true },
     isPrivate: false, createdAt: new Date().toISOString(), joinCode: 'REACTUX'
@@ -91,9 +92,9 @@ export const useSquadStore = create<SquadState>()(
         }
         if (squad.members.some(m => m.uid === currentUser.uid)) return true; // Already in squad
         const newMember: SquadMember = {
-            uid: currentUser.uid, 
-            displayName: currentUser.displayName || 'User', 
-            photoURL: currentUser.photoURL || `https://i.pravatar.cc/40?u=${currentUser.uid}`
+          uid: currentUser.uid,
+          displayName: currentUser.displayName || 'User',
+          photoURL: currentUser.photoURL || `https://i.pravatar.cc/40?u=${currentUser.uid}`
         };
         try {
           await FirebaseSquadService.joinSquad(squadId, newMember);
@@ -107,7 +108,7 @@ export const useSquadStore = create<SquadState>()(
       joinSquadByCode: async (code) => {
         const squad = get().squads.find(s => s.joinCode === code.toUpperCase());
         if (!squad) {
-            return null;
+          return null;
         }
         const success = await get().joinSquad(squad.id);
         return success ? squad : null;
@@ -139,15 +140,15 @@ export const useSquadStore = create<SquadState>()(
         const currentUser = useUserStore.getState().currentUser;
         if (!currentUser) return;
         const author: SquadMember = {
-            uid: currentUser.uid, 
-            displayName: currentUser.displayName || 'User', 
-            photoURL: currentUser.photoURL || `https://i.pravatar.cc/40?u=${currentUser.uid}`
+          uid: currentUser.uid,
+          displayName: currentUser.displayName || 'User',
+          photoURL: currentUser.photoURL || `https://i.pravatar.cc/40?u=${currentUser.uid}`
         };
         const newMessage = {
-            id: `msg-${Date.now()}`,
-            author,
-            content: encrypt(content),
-            timestamp: new Date().toISOString(),
+          id: `msg-${Date.now()}`,
+          author,
+          content: encryptMessage(content),
+          timestamp: new Date().toISOString(),
         };
         try {
           await FirebaseSquadService.sendMessage(squadId, newMessage);
@@ -156,28 +157,28 @@ export const useSquadStore = create<SquadState>()(
         }
       },
       postAIMessage: async (squadId, content) => {
-          const aiAuthor: SquadMember = {
-              uid: 'lumina-ai-observer',
-              displayName: 'AI Observer',
-              photoURL: '', // No avatar for AI
-          };
-          const aiMessage = {
-              id: `ai-msg-${Date.now()}`,
-              author: aiAuthor,
-              content, // AI messages are not encrypted
-              timestamp: new Date().toISOString(),
-              isAIMessage: true,
-          };
-          try {
-            await FirebaseSquadService.sendMessage(squadId, aiMessage);
-          } catch (error) {
-            console.error('Failed to send AI message:', error);
-          }
+        const aiAuthor: SquadMember = {
+          uid: 'NeuroLearn-ai-observer',
+          displayName: 'AI Observer',
+          photoURL: '', // No avatar for AI
+        };
+        const aiMessage = {
+          id: `ai-msg-${Date.now()}`,
+          author: aiAuthor,
+          content, // AI messages are not encrypted
+          timestamp: new Date().toISOString(),
+          isAIMessage: true,
+        };
+        try {
+          await FirebaseSquadService.sendMessage(squadId, aiMessage);
+        } catch (error) {
+          console.error('Failed to send AI message:', error);
+        }
       },
       subscribeToSquad: (squadId: string) => {
         const unsubscribe = FirebaseSquadService.subscribeToSquad(squadId, (squad) => {
           set(state => ({
-            squads: squad 
+            squads: squad
               ? [...state.squads.filter(s => s.id !== squadId), squad]
               : state.squads.filter(s => s.id !== squadId)
           }));
@@ -269,7 +270,7 @@ export const useSquadStore = create<SquadState>()(
       },
     }),
     {
-      name: 'lumina-squad-store',
+      name: 'NeuroLearn-squad-store',
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         // Don't persist activeSubscriptions as they need to be recreated on app load

@@ -27,7 +27,7 @@ const Transparency: React.FC = () => {
     return (
         <div className="min-h-screen bg-background text-foreground relative overflow-hidden p-6">
             <div className="max-w-5xl mx-auto space-y-8">
-                {}
+                { }
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -50,7 +50,7 @@ const Transparency: React.FC = () => {
                     </p>
                 </motion.div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {}
+                    { }
                     <GlassCard delay={0.3} title="Data Collection & Usage" icon={<Database className="text-primary" />}>
                         <InfoBlock title="What We Collect">
                             <p><strong>Interaction Data:</strong> Quiz scores, focus session durations, and feature usage to personalize your learning path.</p>
@@ -58,21 +58,21 @@ const Transparency: React.FC = () => {
                             <p><strong>Anonymized Analytics:</strong> General usage patterns to improve NeuroLearn for everyone. We do not track personal information for analytics.</p>
                         </InfoBlock>
                     </GlassCard>
-                    {}
+                    { }
                     <GlassCard delay={0.4} title="AI Fairness & Bias" icon={<Shield className="text-green-400" />}>
                         <InfoBlock title="Our Commitment">
                             <p>We are committed to mitigating bias in our AI systems. Our models are regularly audited to prevent unfair outcomes based on demographics or background.</p>
                             <p><strong>Fairness Score (Simulated):</strong> <span className="font-bold text-green-400">98.5%</span> - based on internal testing against benchmark datasets for equitable performance.</p>
                         </InfoBlock>
                     </GlassCard>
-                    {}
+                    { }
                     <GlassCard delay={0.5} title="Explainable AI (XAI)" icon={<BarChart className="text-yellow-400" />}>
                         <InfoBlock title="Why This Recommendation?">
                             <p>We believe you should understand why our AI makes certain decisions. You'll find "Why?" tooltips on AI-generated content, like your daily study plan, explaining the reasoning.</p>
                             <p>For example: "This quiz was recommended because you scored lower on a related topic yesterday, offering a chance to reinforce your knowledge."</p>
                         </InfoBlock>
                     </GlassCard>
-                    {}
+                    { }
                     <GlassCard delay={0.6} title="Your Data, Your Control" icon={<Delete className="text-red-400" />}>
                         <InfoBlock title="Data Management">
                             <p>You have the right to manage your data. While full data export and deletion are in development, you can manage your learning history in the app.</p>

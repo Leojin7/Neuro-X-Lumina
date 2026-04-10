@@ -19,14 +19,14 @@ const MoodTracker: React.FC = () => {
         { mood: 'good', color: 'bg-emerald-400' },
         { mood: 'great', color: 'bg-cyan-400' },
     ];
-    const WEEKS_TO_SHOW = 17; // ~4 months
+    const WEEKS_TO_SHOW = 17;
     const today = new Date();
-    // Align start to the beginning of week (Monday) like GitHub
+
     const start = new Date(today);
     start.setHours(0, 0, 0, 0);
-    const dayOfWeek = (start.getDay() + 6) % 7; // 0 = Monday
+    const dayOfWeek = (start.getDay() + 6) % 7;
     start.setDate(start.getDate() - (WEEKS_TO_SHOW * 7 - 1) - dayOfWeek);
-    // Build weeks array: weeks -> 7 days each (Mon..Sun)
+
     const weeks: Date[][] = [];
     for (let w = 0; w < WEEKS_TO_SHOW; w++) {
         const column: Date[] = [];
@@ -38,7 +38,7 @@ const MoodTracker: React.FC = () => {
         weeks.push(column);
     }
     const checkinsByDate = Object.fromEntries(dailyCheckins.map(c => [c.date, c]));
-    // Normalize to UTC YYYY-MM-DD so it matches `dailyCheckins` stored by the user store
+
     const getDayKey = (date: Date) => {
         const y = date.getFullYear();
         const m = date.getMonth();
@@ -49,7 +49,7 @@ const MoodTracker: React.FC = () => {
     return (
         <Card title="Mood Flow">
             {dailyCheckins.length === 0 ? (
-                 <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground py-8">
+                <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground py-8">
                     <BarChart2 size={40} className="mb-4" />
                     <h3 className="font-semibold text-foreground">Log your mood daily</h3>
                     <p className="text-sm">Complete the daily check-in to see your trends here.</p>
@@ -57,7 +57,7 @@ const MoodTracker: React.FC = () => {
             ) : (
                 <div className="flex flex-col gap-2">
                     <div className="overflow-x-auto">
-                        {}
+                        { }
                         <div className="flex gap-1 pl-6 mb-1 text-[10px] text-muted-foreground select-none">
                             {weeks.map((col, idx) => {
                                 const firstDay = col[0];
@@ -75,15 +75,15 @@ const MoodTracker: React.FC = () => {
                             })}
                         </div>
                         <div className="flex gap-1">
-                            {}
+                            { }
                             <div className="grid grid-rows-7 gap-1.5 text-[10px] text-muted-foreground select-none mr-2 sticky left-0 bg-card/0">
-                                {['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map((d, i) => (
+                                {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d, i) => (
                                     <div key={`lab-${d}`} className="flex items-center justify-end pr-2" style={{ height: '14px' }}>
                                         {(i === 0 || i === 2 || i === 4) ? d : ''}
                                     </div>
                                 ))}
                             </div>
-                            {}
+                            { }
                             <div className="flex gap-1 w-max">
                                 {weeks.map((col, cIdx) => (
                                     <div key={`c-${cIdx}`} className="grid grid-rows-7 gap-1.5">

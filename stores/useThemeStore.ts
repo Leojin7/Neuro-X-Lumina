@@ -13,7 +13,7 @@ export const useThemeStore = create<ThemeState>()(
       setTheme: (theme) => set({ theme }),
     }),
     {
-      name: 'lumina-theme-store',
+      name: 'NeuroLearn-theme-store',
       storage: createJSONStorage(() => localStorage),
     }
   )

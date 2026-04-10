@@ -48,7 +48,7 @@ const WellnessAnalytics = () => {
         );
     }
     if (error) {
-         return (
+        return (
             <div className="text-center py-16 text-red-400">
                 <p>{error}</p>
             </div>
@@ -87,12 +87,12 @@ const WellnessAnalytics = () => {
                         </motion.div>
                     ))}
                 </AnimatePresence>
-                 {insights.length === 0 && !isLoading && (
-                     <div className="text-center py-16 text-white/60">
-                         <p>Not enough data to generate insights yet.</p>
-                         <p className="text-sm">Keep using NeuroLearn's features to unlock your stories!</p>
-                     </div>
-                 )}
+                {insights.length === 0 && !isLoading && (
+                    <div className="text-center py-16 text-white/60">
+                        <p>Not enough data to generate insights yet.</p>
+                        <p className="text-sm">Keep using NeuroLearn's features to unlock your stories!</p>
+                    </div>
+                )}
             </div>
         </div>
     );

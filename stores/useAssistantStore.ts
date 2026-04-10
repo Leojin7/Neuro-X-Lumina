@@ -16,16 +16,16 @@ const useAssistantStore = create<AssistantState>((set, get) => ({
     {
       id: 'initial-message',
       role: 'ai',
-      content: 'Hello! I\'m Cerebrum AI. How can I help you today? You can ask me to explain an image, generate a picture, give you productivity tips, and more.',
+      content: 'Hello! I\'m Cerebrum AI. How can I help you today? You can ask me to explain an image, topics , give you productivity tips, and more.',
     },
   ],
   toggleAssistant: () => set(state => ({ isOpen: !state.isOpen })),
   sendMessage: async (prompt: string, image?: { mimeType: string, data: string }) => {
-    const userMessage: ChatMessage = { 
-        id: `user-${Date.now()}`, 
-        role: 'user', 
-        content: prompt,
-        image,
+    const userMessage: ChatMessage = {
+      id: `user-${Date.now()}`,
+      role: 'user',
+      content: prompt,
+      image,
     };
     set(state => ({ messages: [...state.messages, userMessage] }));
     const messagesWithNewPrompt = get().messages;
@@ -46,11 +46,11 @@ const useAssistantStore = create<AssistantState>((set, get) => ({
         }));
       } else if (response.type === 'image') {
         set(state => ({
-          messages: state.messages.map(m => m.id === loadingMessageId ? { 
-              ...m, 
-              content: response.content,
-              image: response.image,
-              status: undefined 
+          messages: state.messages.map(m => m.id === loadingMessageId ? {
+            ...m,
+            content: response.content,
+            image: response.image,
+            status: undefined
           } : m),
         }));
       }
@@ -65,33 +65,33 @@ const useAssistantStore = create<AssistantState>((set, get) => ({
     const { messages } = get();
     const lastUserMessageIndex = messages.map(m => m.role).lastIndexOf('user');
     if (lastUserMessageIndex === -1) return;
-    // The AI message to be regenerated is the one after the last user message.
+
     const lastAiMessage = messages[lastUserMessageIndex + 1];
     if (lastAiMessage?.image) {
-        toast.error("Cannot regenerate an image response. Please try a new prompt.");
-        return;
+      toast.error("Cannot regenerate an image response. Please try a new prompt.");
+      return;
     }
     const messagesToResend = messages.slice(0, lastUserMessageIndex + 1);
     set({ messages: messagesToResend });
     const loadingMessageId = `ai-${Date.now()}`;
     set(state => ({ messages: [...state.messages, { id: loadingMessageId, role: 'ai', content: '', status: 'loading' }] }));
     try {
-        const stream = await getAssistantStream(get().messages);
-        let fullResponse = '';
-        for await (const chunk of stream) {
-            fullResponse += chunk.text;
-            set(state => ({
-                messages: state.messages.map(m => m.id === loadingMessageId ? { ...m, content: fullResponse } : m),
-            }));
-        }
+      const stream = await getAssistantStream(get().messages);
+      let fullResponse = '';
+      for await (const chunk of stream) {
+        fullResponse += chunk.text;
         set(state => ({
-            messages: state.messages.map(m => m.id === loadingMessageId ? { ...m, status: undefined } : m),
+          messages: state.messages.map(m => m.id === loadingMessageId ? { ...m, content: fullResponse } : m),
         }));
+      }
+      set(state => ({
+        messages: state.messages.map(m => m.id === loadingMessageId ? { ...m, status: undefined } : m),
+      }));
     } catch (error) {
-        console.error("Gemini stream failed on regenerate:", error);
-        set(state => ({
-            messages: state.messages.map(m => m.id === loadingMessageId ? { ...m, content: 'Sorry, I encountered another error.', status: 'error' } : m),
-        }));
+      console.error("Gemini stream failed on regenerate:", error);
+      set(state => ({
+        messages: state.messages.map(m => m.id === loadingMessageId ? { ...m, content: 'Sorry, I encountered another error.', status: 'error' } : m),
+      }));
     }
   },
 }));
